@@ -3,7 +3,7 @@ import type {
   TimetableEntry,
   TimetableFilters,
 } from "../types/timetable";
-import { api } from "../pages/server";
+import { api } from "../server";
 
 export const fetchTimetable = async (
   filters: TimetableFilters,

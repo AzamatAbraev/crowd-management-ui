@@ -10,6 +10,9 @@ export default defineConfig({
       },
     }),
   ],
+  define: {
+    global: "window",
+  },
   server: {
     proxy: {
       "/api": {

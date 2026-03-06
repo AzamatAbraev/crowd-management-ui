@@ -23,5 +23,16 @@ export interface TimetableFilters {
   teacher?: string;
   subject?: string;
   classroom?: string;
+  startTime?: string;
+  endTime?: string;
   group?: string;
+}
+
+export interface TimetableMetadata {
+  subjects: string[];
+  teachers: string[];
+  classrooms: string[];
+  classes: string[];
+  times: string[];
+  endTimes: string[];
 }

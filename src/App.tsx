@@ -1,19 +1,34 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { LoginPage } from './pages/login/LoginPage';
-import { HomePage } from './pages/home/HomePage';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/login/LandingPage';
 import TimetablePage from './pages/timetable/TimetablePage';
-import Dashboard from './pages/occupancy/OccupancyPage';
-import FloorDashboard from './pages/floor-dashboard/FloorDashboard';
+import DashboardLayout from './components/layout/DashboardLayout';
+import OverviewPage from './pages/dashboard/OverviewPage';
+import FloorLayoutPage from './pages/dashboard/FloorLayoutPage';
+import AnalyticsPage from './pages/dashboard/AnalyticsPage';
+import SensorsPage from './pages/dashboard/SensorsPage';
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/timetable" element={<TimetablePage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/floor-dashboard" element={<FloorDashboard />} />
+        {/* Landing Page Route */}
+        <Route path="/" element={<LandingPage />} />
+        
+        {/* Legacy redirect for Keycloak login */}
+        <Route path="/home" element={<Navigate to="/dashboard/overview" replace />} />
+        
+        {/* New Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Navigate to="overview" replace />} />
+          <Route path="overview" element={<OverviewPage />} />
+          <Route path="floor" element={<FloorLayoutPage />} />
+          <Route path="timetable" element={<TimetablePage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="sensors" element={<SensorsPage />} />
+          {/* Placeholders for sidebar links */}
+          <Route path="alerts" element={<div style={{padding: '2rem'}}>Alerts Page (Coming Soon)</div>} />
+          <Route path="settings" element={<div style={{padding: '2rem'}}>Settings Page (Coming Soon)</div>} />
+        </Route>
       </Routes>
     </Router>
   );

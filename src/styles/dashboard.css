@@ -1,0 +1,81 @@
+:root {
+  --bg-dark: #0e1614;
+  --bg-panel: #141f1c;
+  --bg-panel-hover: #182622;
+  --bg-panel-active: #1a2a26;
+  --border-color: #1f2d29;
+  
+  --primary-teal: #1cb588;
+  --primary-teal-hover: #159b72;
+  --primary-teal-transparent: rgba(28, 181, 136, 0.15);
+  
+  --text-main: #f3f4f6;
+  --text-muted: #8e9e99;
+  
+  --status-red: #ef4444;
+  --status-yellow: #f59e0b;
+  --status-green: #10b981;
+  --status-blue: #3b82f6;
+
+  --sidebar-width: 260px;
+}
+
+body.light-mode {
+  --bg-dark: #f0f4f3;
+  --bg-panel: #ffffff;
+  --bg-panel-hover: #e8efec;
+  --bg-panel-active: #dcedea;
+  --border-color: #cbd5e1;
+  
+  --primary-teal: #10b981;
+  --primary-teal-hover: #059669;
+  --primary-teal-transparent: rgba(16, 185, 129, 0.15);
+  
+  --text-main: #1f2937;
+  --text-muted: #64748b;
+  
+  /* Status colors remain mostly the same, maybe slightly adjusted for light background */
+  --status-red: #ef4444;
+  --status-yellow: #f59e0b;
+  --status-green: #10b981;
+  --status-blue: #3b82f6;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.015em;
+}
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Scrollbar tweaks */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-panel-hover);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-color);
+}
+
+.glass-panel {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}

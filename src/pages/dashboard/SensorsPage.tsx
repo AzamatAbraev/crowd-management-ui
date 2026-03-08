@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../server';
 import { AxiosError, type AxiosResponse } from 'axios';
-import { Radio, Activity, RefreshCw } from 'lucide-react';
+import { Radio, Activity, RefreshCw, MapPin, Clock } from 'lucide-react';
+import { deviceService } from '../../services/deviceService';
+import { buildingService } from '../../services/buildingService';
+import type { Device } from '../../types/device';
+import type { Building } from '../../types/building';
 
 interface OccupancyData {
   count: number;
@@ -20,8 +24,29 @@ const SensorsPage: React.FC = () => {
   const [systemStatus, setSystemStatus] = useState<string>('UNKNOWN');
   const [activeNodes, setActiveNodes] = useState<number>(0);
   const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
+  const [devicesData, setDevicesData] = useState<Record<string, Device>>({});
+  const [buildingsData, setBuildingsData] = useState<Record<string, Building>>({});
 
   const API_URL = '/people/count';
+
+  const fetchMetadata = async () => {
+    try {
+      const [devs, bldgs] = await Promise.all([
+        deviceService.getAllDevices(),
+        buildingService.getAllBuildings()
+      ]);
+      
+      const devMap: Record<string, Device> = {};
+      devs.forEach(d => devMap[d.id] = d);
+      setDevicesData(devMap);
+
+      const bldgMap: Record<string, Building> = {};
+      bldgs.forEach(b => bldgMap[b.id] = b);
+      setBuildingsData(bldgMap);
+    } catch (e) {
+      console.error("Failed to load metadata", e);
+    }
+  };
 
   const fetchCount = async (): Promise<void> => {
     try {
@@ -47,16 +72,22 @@ const SensorsPage: React.FC = () => {
   };
 
   useEffect(() => {
+    fetchMetadata(); // Load buildings and devices metadata once
+  }, []);
+
+  useEffect(() => {
     fetchCount();
 
-    let interval: number | null = null;
+    let interval: number | ReturnType<typeof setInterval> | null = null;
     if (isPolling) {
       // Poll every 3 seconds for live simulation
-      interval = window.setInterval(fetchCount, 3000);
+      interval = setInterval(() => {
+        fetchCount();
+      }, 3000);
     }
 
     return () => {
-      if (interval) window.clearInterval(interval);
+      if (interval) clearInterval(interval as number);
     };
   }, [isPolling]);
 
@@ -169,31 +200,52 @@ const SensorsPage: React.FC = () => {
             {Object.entries(deviceCounts)
               // Sort alphabetically by device name
               .sort(([a], [b]) => a.localeCompare(b))
-              .map(([device, value]) => (
-                <div key={device} className="glass-panel" style={{ 
-                  padding: '1rem', 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  borderLeft: value > 0 ? '3px solid var(--primary-teal)' : value < 0 ? '3px solid var(--status-red)' : '3px solid var(--border-color)'
-                }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
-                      {device.toUpperCase()}
-                    </span>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                      Node Online
-                    </span>
-                  </div>
-                  <div style={{ 
-                    fontSize: '1.25rem', 
-                    fontWeight: 800, 
-                    color: value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--text-main)'
+              .map(([device, value]) => {
+                const devMeta = devicesData[device];
+                const bldg = devMeta?.location ? buildingsData[devMeta.location] : null;
+
+                return (
+                  <div key={device} className="glass-panel" style={{ 
+                    padding: '1.25rem', 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    borderLeft: value > 0 ? '3px solid var(--primary-teal)' : value < 0 ? '3px solid var(--status-red)' : '3px solid var(--border-color)'
                   }}>
-                    {value > 0 ? `+${value}` : value}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                        <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                          {devMeta?.name || device.toUpperCase()}
+                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', color: devMeta && devMeta.status === 'ONLINE' ? 'var(--status-green)' : 'var(--text-muted)' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: devMeta && devMeta.status === 'ONLINE' ? 'var(--status-green)' : 'var(--text-muted)' }} />
+                          {devMeta ? devMeta.status : 'Unknown Status'}
+                        </div>
+                      </div>
+                      <div style={{ 
+                        fontSize: '1.5rem', 
+                        fontWeight: 800, 
+                        color: value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--text-main)'
+                      }}>
+                        {value > 0 ? `+${value}` : value}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        <MapPin size={12} /> 
+                        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {bldg ? bldg.name : (devMeta?.location || 'Unassigned Location')}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        <Clock size={12} /> 
+                        <span>{devMeta?.lastSeen || 'No recent ping'}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       )}

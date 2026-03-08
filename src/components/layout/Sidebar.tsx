@@ -8,7 +8,8 @@ import {
   BellRing, 
   Settings,
   GraduationCap,
-  CalendarRange
+  CalendarRange,
+  Cpu
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -18,6 +19,7 @@ const Sidebar: React.FC = () => {
     { name: 'University Timetable', path: '/dashboard/timetable', icon: CalendarRange },
     { name: 'Historical Analytics', path: '/dashboard/analytics', icon: BarChart3 },
     { name: 'Sensors', path: '/dashboard/sensors', icon: Radio },
+    { name: 'Device Management', path: '/dashboard/devices', icon: Cpu },
     { name: 'Alerts', path: '/dashboard/alerts', icon: BellRing, badge: 3 },
     { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];

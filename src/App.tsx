@@ -6,6 +6,7 @@ import OverviewPage from './pages/dashboard/OverviewPage';
 import FloorLayoutPage from './pages/dashboard/FloorLayoutPage';
 import AnalyticsPage from './pages/dashboard/AnalyticsPage';
 import SensorsPage from './pages/dashboard/SensorsPage';
+import DeviceManagementPage from './pages/dashboard/DeviceManagementPage';
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="timetable" element={<TimetablePage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="sensors" element={<SensorsPage />} />
+          <Route path="devices" element={<DeviceManagementPage />} />
           {/* Placeholders for sidebar links */}
           <Route path="alerts" element={<div style={{padding: '2rem'}}>Alerts Page (Coming Soon)</div>} />
           <Route path="settings" element={<div style={{padding: '2rem'}}>Settings Page (Coming Soon)</div>} />

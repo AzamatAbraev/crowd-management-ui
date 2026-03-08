@@ -5,6 +5,10 @@ import { Radio, Activity, RefreshCw } from 'lucide-react';
 
 interface OccupancyData {
   count: number;
+  lastDevice: string;
+  systemStatus: string;
+  activeNodes: number;
+  deviceCounts: Record<string, number>;
 }
 
 const SensorsPage: React.FC = () => {
@@ -12,6 +16,10 @@ const SensorsPage: React.FC = () => {
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const [status, setStatus] = useState<string>('Connecting...');
   const [isPolling, setIsPolling] = useState<boolean>(true);
+  const [lastDevice, setLastDevice] = useState<string>('None');
+  const [systemStatus, setSystemStatus] = useState<string>('UNKNOWN');
+  const [activeNodes, setActiveNodes] = useState<number>(0);
+  const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
 
   const API_URL = '/people/count';
 
@@ -20,6 +28,10 @@ const SensorsPage: React.FC = () => {
       const response: AxiosResponse<OccupancyData> = await api.get(API_URL);
 
       setCount(response.data.count);
+      setLastDevice(response.data.lastDevice);
+      setSystemStatus(response.data.systemStatus);
+      setActiveNodes(response.data.activeNodes);
+      setDeviceCounts(response.data.deviceCounts || {});
       setLastUpdated(new Date().toLocaleTimeString());
       setStatus('Connected (Live Feed)');
     } catch (error) {
@@ -50,7 +62,7 @@ const SensorsPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
@@ -62,13 +74,13 @@ const SensorsPage: React.FC = () => {
             Real-time occupancy data from simulation devices
           </p>
         </div>
-        
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            backgroundColor: status.includes('Connected') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: status.includes('Connected') ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
             color: status.includes('Connected') ? 'var(--status-green)' : 'var(--status-red)',
             padding: '6px 12px',
             borderRadius: '20px',
@@ -80,7 +92,7 @@ const SensorsPage: React.FC = () => {
             {status}
           </div>
 
-          <button 
+          <button
             onClick={() => setIsPolling(!isPolling)}
             style={{
               display: 'flex',
@@ -104,7 +116,7 @@ const SensorsPage: React.FC = () => {
 
       {/* Main Display */}
       <div className="glass-panel" style={{ padding: '4rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        
+
         <div style={{
           backgroundColor: 'var(--bg-dark)',
           border: '1px solid var(--border-color)',
@@ -132,11 +144,59 @@ const SensorsPage: React.FC = () => {
             Last data ping: <strong style={{ color: 'var(--text-main)' }}>{lastUpdated || "Waiting for data..."}</strong>
           </p>
           <p style={{ margin: '0.5rem 0 0', color: 'var(--primary-teal)', fontSize: '0.85rem' }}>
-            Updates every 3 seconds from Device: <strong>SIM-001</strong>
+            Updates every 3 seconds from Device: <strong>{lastDevice}</strong>
           </p>
+          {systemStatus !== 'UNKNOWN' && (
+            <p style={{ margin: '0.5rem 0 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+              System Status: <strong>{systemStatus}</strong> | Active Nodes: <strong>{activeNodes}</strong>
+            </p>
+          )}
         </div>
 
       </div>
+
+      {/* Individual Devices Grid */}
+      {Object.keys(deviceCounts).length > 0 && (
+        <div style={{ marginTop: '1rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
+            Individual Node Sensors
+          </h3>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
+            gap: '1rem' 
+          }}>
+            {Object.entries(deviceCounts)
+              // Sort alphabetically by device name
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([device, value]) => (
+                <div key={device} className="glass-panel" style={{ 
+                  padding: '1rem', 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  borderLeft: value > 0 ? '3px solid var(--primary-teal)' : value < 0 ? '3px solid var(--status-red)' : '3px solid var(--border-color)'
+                }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                      {device.toUpperCase()}
+                    </span>
+                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                      Node Online
+                    </span>
+                  </div>
+                  <div style={{ 
+                    fontSize: '1.25rem', 
+                    fontWeight: 800, 
+                    color: value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--text-main)'
+                  }}>
+                    {value > 0 ? `+${value}` : value}
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes spin {

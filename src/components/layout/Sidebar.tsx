@@ -11,17 +11,28 @@ import {
   CalendarRange,
   Cpu
 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+
+interface NavItem {
+  name: string;
+  path: string;
+  icon: React.ElementType;
+  badge?: number;
+  roles?: string[];
+}
 
 const Sidebar: React.FC = () => {
-  const navItems = [
-    { name: 'Live Overview', path: '/dashboard/overview', icon: LayoutDashboard },
-    { name: 'Floor Layout', path: '/dashboard/floor', icon: Building2 },
-    { name: 'University Timetable', path: '/dashboard/timetable', icon: CalendarRange },
-    { name: 'Historical Analytics', path: '/dashboard/analytics', icon: BarChart3 },
-    { name: 'Sensors', path: '/dashboard/sensors', icon: Radio },
-    { name: 'Device Management', path: '/dashboard/devices', icon: Cpu },
+  const { hasAnyRole } = useAuth();
+
+  const navItems: NavItem[] = [
+    { name: 'Live Overview', path: '/dashboard/overview', icon: LayoutDashboard, roles: ['view-occupancy'] },
+    { name: 'Floor Layout', path: '/dashboard/floor', icon: Building2, roles: ['view-buildings'] },
+    { name: 'University Timetable', path: '/dashboard/timetable', icon: CalendarRange, roles: ['view-timetable'] },
+    { name: 'Historical Analytics', path: '/dashboard/analytics', icon: BarChart3, roles: ['view-occupancy'] },
+    { name: 'Sensors', path: '/dashboard/sensors', icon: Radio, roles: ['view-devices'] },
+    { name: 'Device Management', path: '/dashboard/devices', icon: Cpu, roles: ['manage-devices'] },
     { name: 'Alerts', path: '/dashboard/alerts', icon: BellRing, badge: 3 },
-    { name: 'Settings', path: '/dashboard/settings', icon: Settings },
+    { name: 'Settings', path: '/dashboard/settings', icon: Settings, roles: ['admin'] }, // Leave as admin default
   ];
 
   return (
@@ -57,7 +68,9 @@ const Sidebar: React.FC = () => {
           Main Menu
         </div>
         
-        {navItems.map((item) => (
+        {navItems
+          .filter(item => !item.roles || hasAnyRole(item.roles))
+          .map((item) => (
           <NavLink
             key={item.path}
             to={item.path}

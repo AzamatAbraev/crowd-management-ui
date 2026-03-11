@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Bell, Settings, Sun, Moon, LogOut } from 'lucide-react';
 import { useTheme } from './ThemeContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Topbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { user } = useAuth();
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const getRoleDisplayName = (roles: string[] | undefined) => {
+    if (!roles || roles.length === 0) return 'Guest';
+    if (roles.includes('admin')) return 'Administrator';
+    if (roles.includes('manage-devices')) return 'Manager';
+    if (roles.includes('view-occupancy')) return 'Viewer';
+    return roles[0].replace('-', ' ');
+  };
 
   return (
     <header style={{
@@ -95,8 +105,12 @@ const Topbar: React.FC = () => {
         {/* User Profile & Logout */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>Admin User</div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Super Administrator</div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+              {user ? `${user.firstName} ${user.lastName}` : 'Guest User'}
+            </div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {getRoleDisplayName(user?.roles)}
+            </div>
           </div>
           <div style={{ 
             width: '36px', 

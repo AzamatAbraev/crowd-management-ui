@@ -1,26 +1,4 @@
 :root {
-  --bg-dark: #0e1614;
-  --bg-panel: #141f1c;
-  --bg-panel-hover: #182622;
-  --bg-panel-active: #1a2a26;
-  --border-color: #1f2d29;
-  
-  --primary-teal: #1cb588;
-  --primary-teal-hover: #159b72;
-  --primary-teal-transparent: rgba(28, 181, 136, 0.15);
-  
-  --text-main: #f3f4f6;
-  --text-muted: #8e9e99;
-  
-  --status-red: #ef4444;
-  --status-yellow: #f59e0b;
-  --status-green: #10b981;
-  --status-blue: #3b82f6;
-
-  --sidebar-width: 260px;
-}
-
-body.light-mode {
   --bg-dark: #f0f4f3;
   --bg-panel: #ffffff;
   --bg-panel-hover: #e8efec;
@@ -34,11 +12,27 @@ body.light-mode {
   --text-main: #1f2937;
   --text-muted: #64748b;
   
-  /* Status colors remain mostly the same, maybe slightly adjusted for light background */
   --status-red: #ef4444;
   --status-yellow: #f59e0b;
   --status-green: #10b981;
   --status-blue: #3b82f6;
+
+  --sidebar-width: 260px;
+}
+
+body.dark-mode {
+  --bg-dark: #0e1614;
+  --bg-panel: #141f1c;
+  --bg-panel-hover: #182622;
+  --bg-panel-active: #1a2a26;
+  --border-color: #1f2d29;
+  
+  --primary-teal: #1cb588;
+  --primary-teal-hover: #159b72;
+  --primary-teal-transparent: rgba(28, 181, 136, 0.15);
+  
+  --text-main: #f3f4f6;
+  --text-muted: #8e9e99;
 }
 
 body {

@@ -10,30 +10,31 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('dark');
+  // Force 'light' as default baseline
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
-    // Check local storage or system preference on mount
     const savedTheme = localStorage.getItem('dashboard-theme') as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
-    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    } else {
+      // If no preference, we default to light regardless of system setting to satisfy the user request
       setTheme('light');
     }
   }, []);
 
   useEffect(() => {
     // Apply theme class to body
-    if (theme === 'light') {
-      document.body.classList.add('light-mode');
+    if (theme === 'dark') {
+      document.body.classList.add('dark-mode');
     } else {
-      document.body.classList.remove('light-mode');
+      document.body.classList.remove('dark-mode');
     }
     localStorage.setItem('dashboard-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   return (

@@ -1,200 +1,94 @@
-import React from 'react';
-import { ArrowLeft, Download, Edit3, Smartphone, Thermometer, Wind, Plus, Minus, Layers } from 'lucide-react';
+import React, { useState } from 'react';
+
+// --- DUMMY DATA ---
+// TODO: Replace with API call to /buildings or /layout when available.
+const BUILDINGS = [
+  { id: 'lib',  name: 'Main Library',      floors: 4 },
+  { id: 'eng',  name: 'Engineering Hall',  floors: 5 },
+  { id: 'sci',  name: 'Science Complex',   floors: 3 },
+  { id: 'union',name: 'Student Union',     floors: 2 },
+];
+
+// TODO: Replace with real /people/count or /layout/floor?building=X&floor=Y
+const FLOOR_ROOMS: Record<string, { room: string; pct: number }[]> = {
+  '1': [{ room: 'Lab 101', pct: 90 }, { room: 'Seminar A', pct: 45 }, { room: 'Office Suite', pct: 20 }],
+  '2': [{ room: 'Lab 201', pct: 60 }, { room: 'Study Lounge', pct: 75 }, { room: 'Meeting Rm', pct: 10 }],
+  '3': [{ room: 'Lab 301', pct: 30 }, { room: 'Lecture Hall', pct: 85 }],
+  '4': [{ room: 'Archive', pct: 5 }, { room: 'Office 401', pct: 40 }],
+  '5': [{ room: 'Rooftop Lab', pct: 15 }],
+};
+
+const colorFor = (pct: number) =>
+  pct > 80 ? 'var(--status-red)' : pct > 55 ? 'var(--status-yellow)' : 'var(--primary-teal)';
 
 const FloorLayoutPage: React.FC = () => {
+  const [selectedBuilding, setSelectedBuilding] = useState(BUILDINGS[0].id);
+  const [selectedFloor, setSelectedFloor] = useState(1);
+
+  const building = BUILDINGS.find(b => b.id === selectedBuilding) ?? BUILDINGS[0];
+  const rooms = FLOOR_ROOMS[String(selectedFloor)] ?? [];
+
   return (
     <div style={{ display: 'flex', gap: '1.5rem', height: '100%' }}>
-      
-      {/* Internal Sidebar for Building/Floors */}
-      <div style={{ width: '240px', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        <div>
-          <button style={{ background: 'none', border: 'none', color: 'var(--primary-teal)', fontSize: '0.75rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', padding: 0, marginBottom: '1rem', letterSpacing: '0.5px' }}>
-            <ArrowLeft size={16} /> CAMPUS OVERVIEW
-          </button>
-          <h2 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>Science Building</h2>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.25rem' }}>Innovation District, North Campus</div>
-        </div>
 
-        {/* Floors List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '1px', marginBottom: '0.5rem' }}>
-            FLOORS
-          </div>
-          {[5, 4, 3, 2, 1].map((floor) => (
-            <button key={floor} style={{
-              background: floor === 3 ? 'var(--primary-teal)' : 'transparent',
-              border: 'none',
-              padding: '0.75rem 1rem',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              color: floor === 3 ? '#fff' : 'var(--text-muted)',
-              cursor: 'pointer',
-              fontWeight: floor === 3 ? 600 : 500
-            }}>
-              <div style={{ 
-                width: '24px', height: '24px', 
-                backgroundColor: floor === 3 ? 'rgba(255,255,255,0.2)' : 'var(--bg-panel-hover)', 
-                borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '0.75rem', fontWeight: 700, color: floor === 3 ? '#fff' : 'var(--text-main)'
-              }}>
-                {floor}
-              </div>
-              Floor {floor} {floor === 3 && "(Active)"}
+      {/* Left sidebar – building & floor selection */}
+      <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '1.5rem', flexShrink: 0 }}>
+        <div>
+          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Building</div>
+          {BUILDINGS.map(b => (
+            <button key={b.id} onClick={() => { setSelectedBuilding(b.id); setSelectedFloor(1); }} style={{ width: '100%', textAlign: 'left', padding: '0.6rem 0.75rem', marginBottom: '0.25rem', borderRadius: '8px', border: 'none', backgroundColor: selectedBuilding === b.id ? 'var(--primary-teal)' : 'transparent', color: selectedBuilding === b.id ? '#fff' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}>
+              {b.name}
             </button>
           ))}
         </div>
 
-        {/* Live Capacity Sidebar Stats */}
-        <div className="glass-panel" style={{ marginTop: 'auto', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '1px' }}>
-            LIVE CAPACITY (F3)
-          </div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-            <span style={{ fontSize: '2rem', fontWeight: 700 }}>142</span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>/ 200 max</span>
-          </div>
-          {/* Progress bar */}
-          <div style={{ height: '6px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '3px', overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: '71%', backgroundColor: 'var(--primary-teal)', borderRadius: '3px' }}></div>
-          </div>
-          
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '1px', marginTop: '0.5rem' }}>
-            TRENDS (LAST 4H)
-          </div>
-          {/* Dummy Bar Chart */}
-          <div style={{ display: 'flex', gap: '4px', alignItems: 'flex-end', height: '40px' }}>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal-hover)', height: '40%', borderRadius: '2px' }}></div>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal-hover)', height: '60%', borderRadius: '2px' }}></div>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal-hover)', height: '80%', borderRadius: '2px' }}></div>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal)', height: '100%', borderRadius: '2px' }}></div>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal-hover)', height: '70%', borderRadius: '2px' }}></div>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal-hover)', height: '50%', borderRadius: '2px' }}></div>
-            <div style={{ flex: 1, backgroundColor: 'var(--primary-teal-hover)', height: '30%', borderRadius: '2px' }}></div>
-          </div>
+        <div>
+          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Floor</div>
+          {Array.from({ length: building.floors }, (_, i) => i + 1).reverse().map(f => (
+            <button key={f} onClick={() => setSelectedFloor(f)} style={{ width: '100%', textAlign: 'left', padding: '0.6rem 0.75rem', marginBottom: '0.25rem', borderRadius: '8px', border: 'none', backgroundColor: selectedFloor === f ? 'var(--primary-teal-transparent)' : 'transparent', color: selectedFloor === f ? 'var(--primary-teal)' : 'var(--text-muted)', fontWeight: selectedFloor === f ? 700 : 500, fontSize: '0.875rem', cursor: 'pointer' }}>
+              Floor {f}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Main Floor Layout Area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>Floor 3 Layout</h1>
-            <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--primary-teal)'}}></div> Low (0-50%)
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--status-yellow)'}}></div> Medium (51-80%)
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: 'var(--status-red)'}}></div> High (81-100%)
-              </div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <button style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-panel)', border: '1px solid var(--border-color)', color: 'var(--text-main)', padding: '0.5rem 1rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}>
-              <Download size={16} /> Export
-            </button>
-            <button style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--primary-teal)', border: 'none', color: '#fff', padding: '0.5rem 1rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}>
-              <Edit3 size={16} /> Layout Editor
-            </button>
-          </div>
+      {/* Main area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.25rem', minWidth: 0 }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)' }}>{building.name} – Floor {selectedFloor}</h1>
+          <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Live room occupancy</p>
         </div>
 
-        {/* Room Grid Canvas Placeholder */}
-        <div className="glass-panel" style={{ flex: 1, position: 'relative', overflow: 'hidden', padding: '1.5rem', display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: '1.5rem' }}>
-          
-          {/* Room 301 */}
-          <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'var(--bg-dark)', padding: '1.25rem', display: 'flex', flexDirection: 'column', gridRow: 'span 2' }}>
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-               <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--primary-teal)' }}>ROOM 301</div>
-               <div style={{ backgroundColor: 'var(--status-red)', color: 'white', fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>98%</div>
-             </div>
-             <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>Advanced Physics Lab</div>
-             <div style={{ marginTop: 'auto', display: 'flex', gap: '-10px' }}>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#555', border: '2px solid var(--bg-dark)', zIndex: 1 }}></div>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#666', border: '2px solid var(--bg-dark)', zIndex: 2, marginLeft: '-8px' }}></div>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: 'var(--bg-panel-hover)', border: '2px solid var(--bg-dark)', zIndex: 3, marginLeft: '-8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', color: 'var(--text-main)', fontWeight: 600 }}>+22</div>
-             </div>
-          </div>
-
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
-            {/* Room 305 */}
-            <div style={{ flex: 1, border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'var(--bg-dark)', padding: '1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--primary-teal)' }}>ROOM 305</div>
-                <div style={{ backgroundColor: 'var(--primary-teal)', color: 'white', fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>12%</div>
-              </div>
-              <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>Faculty Office</div>
+        {/* Legend */}
+        <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.75rem', fontWeight: 600 }}>
+          {[['Low (≤55%)', 'var(--primary-teal)'], ['Medium (56–80%)', 'var(--status-yellow)'], ['High (>80%)', 'var(--status-red)']].map(([label, color]) => (
+            <div key={String(label)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: String(color) }} /> {label}
             </div>
-
-            {/* Room 306 */}
-            <div style={{ flex: 1, border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'var(--bg-dark)', padding: '1.25rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--primary-teal)' }}>ROOM 306</div>
-                <div style={{ backgroundColor: 'var(--status-yellow)', color: 'white', fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>54%</div>
-              </div>
-              <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>Study Lounge</div>
-            </div>
-          </div>
-
-          {/* Room 302 */}
-          <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', backgroundColor: 'var(--bg-dark)', padding: '1.25rem', minHeight: '180px' }}>
-             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-               <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--primary-teal)' }}>ROOM 302</div>
-               <div style={{ backgroundColor: 'var(--primary-teal)', color: 'white', fontSize: '0.7rem', padding: '2px 8px', borderRadius: '10px', fontWeight: 600 }}>25%</div>
-             </div>
-             <div style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>Seminar Room B</div>
-          </div>
-          
-          {/* Right Floating Controls */}
-          <div style={{ position: 'absolute', bottom: '1.5rem', right: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <button style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'var(--primary-teal)', cursor: 'pointer' }}><Plus size={18} /></button>
-              <button style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'var(--primary-teal)', cursor: 'pointer' }}><Minus size={18} /></button>
-              <button style={{ width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '6px', color: 'var(--primary-teal)', cursor: 'pointer', marginTop: '0.5rem' }}><Layers size={18} /></button>
-          </div>
-
+          ))}
         </div>
 
-        {/* Footer Stats Row */}
-        <div style={{ display: 'flex', gap: '1.5rem' }}>
-          
-          <div className="glass-panel" style={{ flex: 1, padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ padding: '0.75rem', backgroundColor: 'var(--primary-teal-transparent)', borderRadius: '8px' }}>
-              <Smartphone size={24} color="var(--primary-teal)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '1px' }}>ACTIVE DEVICES</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>342</div>
-            </div>
+        {/* Rooms grid */}
+        {rooms.length === 0 ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--bg-panel)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>No rooms configured for this floor.</div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', flex: 1, alignContent: 'start' }}>
+            {rooms.map((r, i) => {
+              const c = colorFor(r.pct);
+              return (
+                <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: `2px solid ${c}`, borderRadius: '10px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>{r.room}</span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: c, backgroundColor: `${c}20`, padding: '2px 7px', borderRadius: '8px' }}>{r.pct}%</span>
+                  </div>
+                  <div style={{ height: '5px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${r.pct}%`, backgroundColor: c, borderRadius: '3px' }} />
+                  </div>
+                </div>
+              );
+            })}
           </div>
-
-          <div className="glass-panel" style={{ flex: 1, padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ padding: '0.75rem', backgroundColor: 'var(--status-yellow)20', borderRadius: '8px' }}>
-              <Thermometer size={24} color="var(--status-yellow)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '1px' }}>AVG TEMPERATURE</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>21.4°C</div>
-            </div>
-          </div>
-
-          <div className="glass-panel" style={{ flex: 1, padding: '1.25rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ padding: '0.75rem', backgroundColor: 'rgba(59, 130, 246, 0.15)', borderRadius: '8px' }}>
-              <Wind size={24} color="var(--status-blue)" />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, letterSpacing: '1px' }}>AIR QUALITY</div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)' }}>Excellent</div>
-            </div>
-          </div>
-
-        </div>
-
+        )}
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import AdminUserManagementPage from './pages/admin/AdminUserManagementPage';
 import AdminDevicePage from './pages/admin/AdminDevicePage';
 import AdminSystemManagementPage from './pages/admin/AdminSystemManagementPage';
 import AdminStatisticsPage from './pages/admin/AdminStatisticsPage';
+import AdminLiveMonitorPage from './pages/admin/AdminLiveMonitorPage';
 import OverviewPage from './pages/dashboard/OverviewPage';
 import ViewerCampusMap from './pages/live/ViewerCampusMap';
 import ViewerBuildingPlan from './pages/live/ViewerBuildingPlan';
@@ -79,6 +80,7 @@ export default function App() {
           {/* Standalone admin section pages */}
           <Route path="/admin/devices" element={<RequireAdmin><AdminDevicePage /></RequireAdmin>} />
           <Route path="/admin/statistics" element={<RequireAdmin><AdminStatisticsPage /></RequireAdmin>} />
+          <Route path="/admin/monitor" element={<RequireAdmin><AdminLiveMonitorPage /></RequireAdmin>} />
           <Route path="/admin/system" element={<RequireSystemAdmin><AdminSystemManagementPage /></RequireSystemAdmin>} />
           <Route path="/admin/users" element={<RequireTheKing><AdminUserManagementPage /></RequireTheKing>} />
           

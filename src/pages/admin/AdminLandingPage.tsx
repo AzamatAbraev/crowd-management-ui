@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2 } from 'lucide-react';
+import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
@@ -22,6 +22,15 @@ interface SectionDef {
 }
 
 const ALL_SECTIONS: SectionDef[] = [
+  {
+    id: 'monitor',
+    label: 'Live Monitor',
+    description: 'Real-time device feed, occupancy events log, and fleet online/offline status.',
+    icon: <Radio size={40} />,
+    color: '#10b981',
+    route: '/admin/monitor',
+    badge: 'Live',
+  },
   {
     id: 'devices',
     label: 'Device Management',

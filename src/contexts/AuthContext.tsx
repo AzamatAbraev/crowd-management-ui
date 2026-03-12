@@ -14,6 +14,9 @@ interface AuthContextType {
   loading: boolean;
   hasRole: (role: string) => boolean;
   hasAnyRole: (roles: string[]) => boolean;
+  isTheKing: boolean;
+  isSystemAdmin: boolean;
+  isFacilityManager: boolean;
   isAdmin: boolean;
   isManager: boolean;
   isViewer: boolean;
@@ -24,9 +27,12 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   hasRole: () => false,
   hasAnyRole: () => false,
+  isTheKing: false,
+  isSystemAdmin: false,
+  isFacilityManager: false,
   isAdmin: false,
   isManager: false,
-  isViewer: true, // Default safe baseline
+  isViewer: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -75,7 +81,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Determine High-Level Role Groups
-  const isAdmin = user?.roles?.includes('admin') || user?.username === 'admin' || false;
+  const isTheKing = user?.roles?.includes('theking') || false;
+  const isSystemAdmin = user?.roles?.includes('system_admin') || false;
+  const isFacilityManager = user?.roles?.includes('facility_manager') || false;
+
+  // isAdmin is true for theking, system_admin, facility_manager, and legacy 'admin' users
+  const isAdmin = isTheKing || isSystemAdmin || isFacilityManager || user?.roles?.includes('admin') || user?.username === 'admin' || false;
   
   // A Manager is someone who isn't purely an admin, but has device or actionable management rights
   const isManager = !isAdmin && (user?.roles?.includes('manage-devices') || user?.roles?.includes('reset-occupancy') || false);
@@ -85,7 +96,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, loading, hasRole, hasAnyRole, isAdmin, isManager, isViewer }}>
+    <AuthContext.Provider value={{ user, loading, hasRole, hasAnyRole, isTheKing, isSystemAdmin, isFacilityManager, isAdmin, isManager, isViewer }}>
       {children}
     </AuthContext.Provider>
   );

@@ -5,6 +5,10 @@ import TimetablePage from './pages/timetable/TimetablePage';
 import DashboardLayout from './components/layout/DashboardLayout';
 import ViewerLayout from './components/layout/ViewerLayout';
 import AdminLandingPage from './pages/admin/AdminLandingPage';
+import AdminUserManagementPage from './pages/admin/AdminUserManagementPage';
+import AdminDevicePage from './pages/admin/AdminDevicePage';
+import AdminSystemManagementPage from './pages/admin/AdminSystemManagementPage';
+import AdminStatisticsPage from './pages/admin/AdminStatisticsPage';
 import OverviewPage from './pages/dashboard/OverviewPage';
 import ViewerCampusMap from './pages/live/ViewerCampusMap';
 import ViewerBuildingPlan from './pages/live/ViewerBuildingPlan';
@@ -17,6 +21,19 @@ import DeviceManagementPage from './pages/dashboard/DeviceManagementPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // --- Protective Route Wrappers ---
+const RequireTheKing = ({ children }: { children: React.ReactNode }) => {
+  const { isTheKing, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return isTheKing ? children : <Navigate to="/live" replace />;
+};
+
+// system_admin OR theking
+const RequireSystemAdmin = ({ children }: { children: React.ReactNode }) => {
+  const { isTheKing, isSystemAdmin, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return (isTheKing || isSystemAdmin) ? children : <Navigate to="/admin" replace />;
+};
+
 const RequireAdmin = ({ children }: { children: React.ReactNode }) => {
   const { user, isAdmin, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
@@ -59,6 +76,11 @@ export default function App() {
           
           {/* 1. Admin Exclusive Domain */}
           <Route path="/admin" element={<RequireAdmin><AdminLandingPage /></RequireAdmin>} />
+          {/* Standalone admin section pages */}
+          <Route path="/admin/devices" element={<RequireAdmin><AdminDevicePage /></RequireAdmin>} />
+          <Route path="/admin/statistics" element={<RequireAdmin><AdminStatisticsPage /></RequireAdmin>} />
+          <Route path="/admin/system" element={<RequireSystemAdmin><AdminSystemManagementPage /></RequireSystemAdmin>} />
+          <Route path="/admin/users" element={<RequireTheKing><AdminUserManagementPage /></RequireTheKing>} />
           
           {/* 2. Viewer Minimalist Domain */}
           <Route path="/live" element={<ViewerLayout />}>

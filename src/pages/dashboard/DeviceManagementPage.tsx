@@ -511,18 +511,14 @@ const DeviceManagementPage: React.FC = () => {
 
               {/* Location Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Location (Building)</label>
-                <select 
+                <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Location (Building / Floor / Room)</label>
+                <input 
                   required
+                  placeholder="e.g. ATB / floor_1 / Canteen"
                   value={formData.location}
                   onChange={e => setFormData({...formData, location: e.target.value})}
                   style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)' }}
-                >
-                  <option value="" disabled>Select a building</option>
-                  {buildings.map(b => (
-                    <option key={b.id} value={b.id}>{b.name} ({b.id})</option>
-                  ))}
-                </select>
+                />
               </div>
 
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>

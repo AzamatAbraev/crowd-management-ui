@@ -229,7 +229,6 @@ const SensorsPage: React.FC = () => {
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([device, value]) => {
                 const devMeta = devicesData[device];
-                const bldg    = devMeta?.location ? buildingsData[devMeta.location] : null;
                 const isOnline = devMeta?.status === 'ONLINE';
                 const isOffline = devMeta?.status === 'OFFLINE';
                 // A device is "stale" if its lastSeen is > 60 seconds ago, regardless of DB status
@@ -283,7 +282,7 @@ const SensorsPage: React.FC = () => {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                         <MapPin size={11} />
                         <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {bldg ? bldg.name : (devMeta?.location || 'Unassigned')}
+                          {devMeta?.location || 'Unassigned'}
                         </span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: isOffline ? 'var(--status-red)' : 'var(--text-muted)' }}>

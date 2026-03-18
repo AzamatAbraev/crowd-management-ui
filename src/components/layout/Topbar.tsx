@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Settings, Sun, Moon, LogOut } from 'lucide-react';
+import { Search, Bell, Sun, Moon, LogOut } from 'lucide-react';
 import { useTheme } from './ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -7,6 +7,7 @@ const Topbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const [time, setTime] = useState(new Date());
+  const [searchFocused, setSearchFocused] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -21,117 +22,155 @@ const Topbar: React.FC = () => {
     return roles[0].replace('-', ' ');
   };
 
+  const initials = user
+    ? `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`.toUpperCase()
+    : 'G';
+
   return (
     <header style={{
-      height: '70px',
-      backgroundColor: 'var(--bg-dark)',
+      height: 'var(--topbar-height)',
+      backgroundColor: 'var(--bg-panel)',
       borderBottom: '1px solid var(--border-color)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '0 1.5rem'
+      padding: '0 var(--space-6)',
+      gap: 'var(--space-4)',
+      flexShrink: 0,
+      boxShadow: 'var(--shadow-xs)',
+      position: 'sticky',
+      top: 0,
+      zIndex: 10,
     }}>
-      
-      {/* Left section (Breadcrumb / Title placeholder if needed for specific routes) */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-         {/* Live Indicator */}
-         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'var(--primary-teal-transparent)', padding: '4px 10px', borderRadius: '20px' }}>
-           <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--primary-teal)' }}></div>
-           <span style={{ color: 'var(--primary-teal)', fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.5px' }}>LIVE</span>
-         </div>
 
-         {/* Time */}
-         <div style={{ color: 'var(--text-main)', fontWeight: 500, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'var(--bg-panel)', padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--border-color)' }}>
-           <span>{time.toLocaleTimeString('en-GB')}</span>
-         </div>
+      {/* ── Left: LIVE indicator + time ───────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flexShrink: 0 }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-2)',
+          backgroundColor: 'var(--primary-teal-transparent)',
+          padding: '4px 10px',
+          borderRadius: 'var(--radius-full)',
+        }}>
+          <div className="live-dot" />
+          <span style={{ color: 'var(--primary-teal)', fontSize: 'var(--text-xs)', fontWeight: 700, letterSpacing: '0.08em' }}>
+            LIVE
+          </span>
+        </div>
+
+        <div style={{
+          color: 'var(--text-secondary)',
+          fontWeight: 500,
+          fontSize: '0.875rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'var(--space-2)',
+          backgroundColor: 'var(--bg-base)',
+          padding: '5px 10px',
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid var(--border-color)',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          {time.toLocaleTimeString('en-GB')}
+        </div>
       </div>
 
-      {/* Center Search */}
-      <div style={{ flex: 1, maxWidth: '400px', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          backgroundColor: 'var(--bg-panel)', 
-          border: '1px solid var(--border-color)',
-          borderRadius: '8px',
-          padding: '0.5rem 1rem',
-          width: '100%',
-          gap: '0.5rem'
+      {/* ── Center: Search ────────────────────────────────── */}
+      <div style={{ flex: 1, maxWidth: '380px' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          backgroundColor: 'var(--bg-base)',
+          border: `1px solid ${searchFocused ? 'var(--primary-teal)' : 'var(--border-color)'}`,
+          borderRadius: 'var(--radius-md)',
+          padding: '6px 12px',
+          gap: 'var(--space-2)',
+          transition: 'var(--transition-fast)',
+          boxShadow: searchFocused ? '0 0 0 3px var(--primary-teal-transparent)' : 'none',
         }}>
-          <Search size={16} color="var(--text-muted)" />
-          <input 
-            type="text" 
-            placeholder="Search facilities..." 
+          <Search size={15} color="var(--text-placeholder)" style={{ flexShrink: 0 }} />
+          <input
+            type="text"
+            placeholder="Search facilities…"
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
             style={{
               backgroundColor: 'transparent',
               border: 'none',
               outline: 'none',
               color: 'var(--text-main)',
               width: '100%',
-              fontSize: '0.9rem'
+              fontSize: '0.875rem',
+              fontFamily: 'inherit',
             }}
           />
         </div>
       </div>
 
-      {/* Right section */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button 
-            onClick={toggleTheme}
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              color: 'var(--text-muted)'
-            }}
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Bell size={20} color="var(--text-muted)" />
-            <span style={{ position: 'absolute', top: '-2px', right: '-2px', width: '8px', height: '8px', backgroundColor: 'var(--status-red)', borderRadius: '50%' }}></span>
-          </button>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Settings size={20} color="var(--text-muted)" />
-          </button>
-        </div>
+      {/* ── Right: Icon actions + user ────────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', flexShrink: 0 }}>
 
-        {/* User Profile & Logout */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="btn-icon"
+          title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          style={{ color: 'var(--text-muted)' }}
+        >
+          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+
+        {/* Notifications */}
+        <button className="btn-icon" style={{ position: 'relative', color: 'var(--text-muted)' }}>
+          <Bell size={18} />
+          <span style={{
+            position: 'absolute',
+            top: '6px',
+            right: '6px',
+            width: '7px',
+            height: '7px',
+            backgroundColor: 'var(--status-red)',
+            borderRadius: '50%',
+            border: '1.5px solid var(--bg-panel)',
+          }} />
+        </button>
+
+        {/* Vertical separator */}
+        <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--border-color)', margin: '0 var(--space-2)' }} />
+
+        {/* User profile */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.2 }}>
               {user ? `${user.firstName} ${user.lastName}` : 'Guest User'}
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 500, marginTop: '1px' }}>
               {getRoleDisplayName(user?.roles)}
             </div>
           </div>
-          <div style={{ 
-            width: '36px', 
-            height: '36px', 
-            borderRadius: '50%', 
-            backgroundColor: '#ffb084',
+
+          {/* Avatar */}
+          <div style={{
+            width: '34px',
+            height: '34px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, var(--primary-teal) 0%, var(--primary-teal-dark) 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            overflow: 'hidden',
-            border: '2px solid var(--border-color)'
+            flexShrink: 0,
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            color: '#fff',
+            letterSpacing: '0.05em',
+            border: '2px solid var(--border-color)',
           }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            {initials}
           </div>
-          
-          <div style={{ height: '24px', width: '1px', backgroundColor: 'var(--border-color)', margin: '0 0.5rem' }}></div>
-          
-          <button 
+
+          {/* Logout */}
+          <button
             onClick={() => {
               const form = document.createElement('form');
               form.method = 'POST';
@@ -139,19 +178,13 @@ const Topbar: React.FC = () => {
               document.body.appendChild(form);
               form.submit();
             }}
-            style={{ 
-              background: 'none', 
-              border: 'none', 
-              cursor: 'pointer', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              color: 'var(--status-red)',
-              padding: '0.25rem'
-            }}
-            title="Logout"
+            className="btn-icon"
+            title="Sign out"
+            style={{ color: 'var(--status-red)' }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--status-red-tint)'; }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
           >
-            <LogOut size={20} />
+            <LogOut size={17} />
           </button>
         </div>
       </div>

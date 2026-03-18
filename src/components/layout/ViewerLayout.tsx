@@ -9,7 +9,7 @@ const ViewerLayout: React.FC = () => {
     <ThemeProvider>
       <div className="dashboard-layout" style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw' }}>
         <ViewerTopbar />
-        <main style={{ flex: 1, overflowY: 'auto', padding: '2rem', backgroundColor: 'var(--bg-dark)' }}>
+        <main style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-8)', backgroundColor: 'var(--bg-base)' }}>
            {/* Center content to avoid extreme width stretching on big screens */}
            <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
              <Outlet />

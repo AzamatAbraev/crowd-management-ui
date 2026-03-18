@@ -163,7 +163,7 @@ const AdminLiveMonitorPage: React.FC = () => {
           </button>
           <div style={{ width: 1, height: 24, backgroundColor: 'var(--border-color)' }} />
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div style={{ backgroundColor: '#10b981', padding: '0.4rem', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ backgroundColor: 'var(--status-green)', padding: '0.4rem', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Radio size={20} color="#fff" />
             </div>
             <div>

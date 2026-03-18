@@ -46,24 +46,24 @@ const ViewerCampusMap: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive Map Area (Simplified Rectangles) */}
+      {/* Interactive Map Area */}
       <div style={{ 
         flex: 1, 
-        backgroundColor: 'var(--bg-dark)', 
-        borderRadius: '16px', 
+        backgroundColor: 'var(--bg-base)', 
+        borderRadius: 'var(--radius-2xl)', 
         border: '1px solid var(--border-color)',
         position: 'relative',
-        minHeight: '600px',
+        minHeight: '580px',
         overflow: 'hidden',
         backgroundImage: 'radial-gradient(var(--border-color) 1px, transparent 1px)',
-        backgroundSize: '30px 30px'
+        backgroundSize: '28px 28px'
       }}>
         
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '2rem' }}>
             
             <button 
                onClick={() => navigate(`/live/building/${BUILDINGS[0].id}`)}
-               style={{ position: 'absolute', top: '15%', left: '20%', width: '220px', height: '140px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[0].color}`, borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
+               style={{ position: 'absolute', top: '15%', left: '20%', width: '220px', height: '140px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[0].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
                className="hover-lift"
             >
               {BUILDINGS[0].name}
@@ -71,7 +71,7 @@ const ViewerCampusMap: React.FC = () => {
 
             <button 
                onClick={() => navigate(`/live/building/${BUILDINGS[1].id}`)}
-               style={{ position: 'absolute', top: '10%', right: '25%', width: '180px', height: '200px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[1].color}`, borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
+               style={{ position: 'absolute', top: '10%', right: '25%', width: '180px', height: '200px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[1].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
                className="hover-lift"
             >
               {BUILDINGS[1].name}
@@ -79,7 +79,7 @@ const ViewerCampusMap: React.FC = () => {
 
             <button 
                onClick={() => navigate(`/live/building/${BUILDINGS[2].id}`)}
-               style={{ position: 'absolute', top: '45%', left: '35%', width: '300px', height: '160px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[2].color}`, borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
+               style={{ position: 'absolute', top: '45%', left: '35%', width: '300px', height: '160px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[2].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
                className="hover-lift"
             >
               {BUILDINGS[2].name}
@@ -87,7 +87,7 @@ const ViewerCampusMap: React.FC = () => {
 
             <button 
                onClick={() => navigate(`/live/building/${BUILDINGS[3].id}`)}
-               style={{ position: 'absolute', bottom: '15%', left: '15%', width: '200px', height: '150px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[3].color}`, borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
+               style={{ position: 'absolute', bottom: '15%', left: '15%', width: '200px', height: '150px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[3].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
                className="hover-lift"
             >
               {BUILDINGS[3].name}
@@ -95,7 +95,7 @@ const ViewerCampusMap: React.FC = () => {
 
             <button 
                onClick={() => navigate(`/live/building/${BUILDINGS[4].id}`)}
-               style={{ position: 'absolute', bottom: '25%', right: '15%', width: '160px', height: '220px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[4].color}`, borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1.1rem', transition: 'all 0.2s', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
+               style={{ position: 'absolute', bottom: '25%', right: '15%', width: '160px', height: '220px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[4].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
                className="hover-lift"
             >
               {BUILDINGS[4].name}

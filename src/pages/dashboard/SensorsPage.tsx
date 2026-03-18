@@ -34,15 +34,15 @@ const formatLastSeen = (ts: string | undefined): string => {
 // ── Fleet stat pill ────────────────────────────────────────────────────────────
 const FleetStat: React.FC<{ icon: React.ReactNode; label: string; value: number; color: string }> = ({ icon, label, value, color }) => (
   <div style={{
-    display: 'flex', alignItems: 'center', gap: '0.75rem',
-    padding: '0.85rem 1.25rem', backgroundColor: 'var(--bg-panel)',
-    border: '1px solid var(--border-color)', borderRadius: 10,
-    flex: 1,
+    display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
+    padding: 'var(--space-4) var(--space-5)', backgroundColor: 'var(--bg-panel)',
+    border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)',
+    boxShadow: 'var(--shadow-sm)', flex: 1,
   }}>
-    <div style={{ color, display: 'flex' }}>{icon}</div>
+    <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: `color-mix(in srgb, ${color} 12%, transparent)`, color, flexShrink: 0 }}>{icon}</div>
     <div>
-      <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: 2 }}>{label}</div>
+      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</div>
+      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 3 }}>{label}</div>
     </div>
   </div>
 );
@@ -131,17 +131,17 @@ const SensorsPage: React.FC = () => {
   const isConnected = status.includes('Connected');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="animate-in stagger-1" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <Radio color="var(--primary-teal)" />
-            Live IoT Sensor Feed
+          <h1 style={{ margin: 0, fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', letterSpacing: '-0.02em' }}>
+            <Radio size={20} color="var(--primary-teal)" />
+            Live Sensor Feed
           </h1>
-          <p style={{ margin: '0.25rem 0 0', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            Real-time occupancy data from simulation devices
+          <p style={{ margin: 'var(--space-1) 0 0', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+            Real-time occupancy data from IoT devices
           </p>
         </div>
 
@@ -158,14 +158,16 @@ const SensorsPage: React.FC = () => {
             {status}
           </div>
 
-          <button onClick={() => setIsPolling(!isPolling)} style={{
-            display: 'flex', alignItems: 'center', gap: '0.5rem',
+          <button onClick={() => setIsPolling(!isPolling)} className="btn" style={{
             background: isPolling ? 'var(--primary-teal-transparent)' : 'var(--bg-panel-hover)',
             color: 'var(--primary-teal)', border: '1px solid var(--primary-teal)',
-            padding: '6px 14px', borderRadius: 7, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem',
-          }}>
-            <RefreshCw size={15} className={isPolling ? 'spin' : ''} />
-            {isPolling ? 'Pause Polling' : 'Resume Polling'}
+            fontSize: '0.8125rem',
+          }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.97)'; }}
+            onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            <RefreshCw size={14} className={isPolling ? 'spin' : ''} />
+            {isPolling ? 'Pause' : 'Resume'}
           </button>
         </div>
       </div>
@@ -184,17 +186,17 @@ const SensorsPage: React.FC = () => {
       )}
 
       {/* ── Main Count Display ──────────────────────────────────────────────── */}
-      <div className="glass-panel" style={{ padding: '3.5rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)', padding: 'var(--space-12) var(--space-8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{
-          backgroundColor: 'var(--bg-dark)', border: '1px solid var(--border-color)',
-          borderRadius: '50%', width: 220, height: 220,
+          backgroundColor: 'var(--bg-base)', border: '1px solid var(--border-color)',
+          borderRadius: '50%', width: 200, height: 200,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          boxShadow: isConnected ? '0 0 48px var(--primary-teal-transparent)' : 'none',
+          boxShadow: isConnected ? '0 0 40px var(--primary-teal-transparent)' : 'none',
           transition: 'all 0.4s ease',
         }}>
-          <Activity size={28} color="var(--text-muted)" style={{ marginBottom: '0.75rem' }} />
-          <div style={{ fontSize: '4.5rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1 }}>{count}</div>
-          <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.5rem', fontWeight: 600, letterSpacing: '1.5px', textTransform: 'uppercase' }}>People Inside</div>
+          <Activity size={24} color="var(--text-muted)" style={{ marginBottom: 'var(--space-3)' }} />
+          <div style={{ fontSize: '4rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{count}</div>
+          <div style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', marginTop: 'var(--space-2)', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>People Inside</div>
         </div>
 
         <div style={{ marginTop: '2rem', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -238,13 +240,20 @@ const SensorsPage: React.FC = () => {
                 const accentColor = value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--border-color)';
 
                 return (
-                  <div key={device} className="glass-panel" style={{
-                    padding: '1.1rem 1.25rem',
-                    display: 'flex', flexDirection: 'column', gap: '0.875rem',
+                  <div key={device} style={{
+                    padding: 'var(--space-3) var(--space-4)',
+                    display: 'flex', flexDirection: 'column', gap: 'var(--space-3)',
                     borderLeft: `3px solid ${isOffline || stale ? 'var(--status-red)' : accentColor}`,
+                    backgroundColor: 'var(--bg-panel)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: 'var(--radius-lg)',
+                    boxShadow: 'var(--shadow-sm)',
                     opacity: isOffline ? 0.65 : 1,
-                    transition: 'opacity 0.3s',
-                  }}>
+                    transition: 'var(--transition-base)',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'none'; }}
+                  >
                     {/* Card header: name + delta */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>

@@ -8,189 +8,201 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if the user is already authenticated
     api.get('/people/count')
-      .then(() => {
-        // If the request succeeds, the user is logged in
-        navigate('/dashboard/overview');
-      })
-      .catch(() => {
-        // Not logged in (401), stay on the landing page
-      });
+      .then(() => navigate('/home'))
+      .catch(() => { /* stay on landing */ });
   }, [navigate]);
 
   const login = () => {
     window.location.href = "http://localhost:8082/oauth2/authorization/keycloak";
   };
 
+  const features = [
+    {
+      icon: <Users size={24} color="var(--primary-teal)" />,
+      title: 'Live Footfall',
+      desc: 'Real-time capacity tracking across every campus zone.',
+    },
+    {
+      icon: <Building2 size={24} color="var(--primary-teal)" />,
+      title: 'Floor Layouts',
+      desc: 'Room status mapped to architectural floor blueprints.',
+    },
+    {
+      icon: <BarChart3 size={24} color="var(--primary-teal)" />,
+      title: 'Deep Analytics',
+      desc: '90-day trends, building efficiency, and space utilisation.',
+    },
+  ];
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: 'var(--bg-dark)',
-      color: 'var(--text-main)',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
-      {/* Navbar */}
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-base)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
+
+      {/* ── Navbar ──────────────────────────────────────────────── */}
       <nav style={{
-        padding: '1.5rem 4rem',
+        height: 'var(--topbar-height)',
+        padding: '0 var(--space-16)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottom: '1px solid var(--border-color)',
-        backgroundColor: 'var(--bg-panel)'
+        backgroundColor: 'var(--bg-panel)',
+        boxShadow: 'var(--shadow-xs)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ 
-            backgroundColor: 'var(--primary-teal)', 
-            padding: '0.5rem', 
-            borderRadius: '8px',
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          <div style={{
+            backgroundColor: 'var(--primary-teal)',
+            padding: '7px',
+            borderRadius: 'var(--radius-md)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            boxShadow: 'var(--shadow-sm)',
           }}>
-            <ShieldCheck size={28} color="#000" />
+            <ShieldCheck size={20} color="#fff" />
           </div>
-          <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, letterSpacing: '0.5px' }}>Joy Bo'shmi</h1>
+          <span style={{ fontSize: '0.9375rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-main)' }}>
+            Joy Bo'shmi
+          </span>
         </div>
-        
-        <div style={{ display: 'flex', gap: '1.5rem' }}>
-          <button onClick={login} style={{
-            background: 'transparent',
-            color: 'var(--text-main)',
-            border: 'none',
-            fontSize: '1rem',
-            fontWeight: 600,
-            cursor: 'pointer',
-            padding: '0.5rem 1rem'
-          }}>Sign In</button>
-          
-          <button onClick={login} style={{
-            background: 'var(--primary-teal)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '0.75rem 1.5rem',
-            fontSize: '1rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            transition: 'background 0.2s'
-          }}>
-            Get Started <ArrowRight size={18} />
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+          <button
+            onClick={login}
+            className="btn btn-primary"
+            style={{ gap: 'var(--space-2)' }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.97)'; }}
+            onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            Sign In <ArrowRight size={15} />
           </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '4rem', textAlign: 'center' }}>
-        
-        <div style={{
-          backgroundColor: 'var(--primary-teal-transparent)',
-          color: 'var(--primary-teal)',
-          padding: '0.5rem 1rem',
-          borderRadius: '20px',
-          fontWeight: 700,
-          fontSize: '0.85rem',
-          letterSpacing: '1px',
-          marginBottom: '2rem',
-          display: 'inline-block'
-        }}>
-          UNIVERSITY CAMPUS MANAGEMENT
+      {/* ── Hero ────────────────────────────────────────────────── */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-16) var(--space-8)', textAlign: 'center' }}>
+
+        {/* Eyebrow label */}
+        <div className="badge badge-teal animate-in stagger-1" style={{ marginBottom: 'var(--space-6)', fontSize: 'var(--text-xs)', letterSpacing: '0.1em' }}>
+          UNIVERSITY CAMPUS INTELLIGENCE
         </div>
 
-        <h2 style={{ 
-          fontSize: '4.5rem', 
-          fontWeight: 800, 
-          lineHeight: 1.1, 
-          maxWidth: '900px', 
-          margin: '0 0 1.5rem 0',
-          letterSpacing: '-1px' 
+        <h1 className="animate-in stagger-2" style={{
+          fontSize: 'clamp(2.8rem, 6vw, 3.052rem)',
+          fontWeight: 800,
+          lineHeight: 1.1,
+          maxWidth: '820px',
+          margin: '0 0 var(--space-6) 0',
+          letterSpacing: '-0.04em',
+          color: 'var(--text-main)',
         }}>
           Smarter Spaces.<br />
           <span style={{ color: 'var(--primary-teal)' }}>Better Decisions.</span>
-        </h2>
+        </h1>
 
-        <p style={{
-          fontSize: '1.25rem',
+        <p className="animate-in stagger-3" style={{
+          fontSize: '1.0625rem',
           color: 'var(--text-muted)',
-          maxWidth: '650px',
-          lineHeight: 1.6,
-          marginBottom: '3rem'
+          maxWidth: '480px',
+          lineHeight: 'var(--leading-relaxed)',
+          marginBottom: 'var(--space-10)',
         }}>
-          Real-time occupancy tracking, historical space analytics, and live timetabling tailored for modern universities. Securely powered by Keycloak SSO.
+          Real-time occupancy tracking, space analytics, and live timetabling for modern universities. Secured by Keycloak SSO.
         </p>
 
-        <div style={{ display: 'flex', gap: '1.5rem' }}>
-          <button onClick={login} style={{
-            background: 'var(--primary-teal)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '1rem 2rem',
-            fontSize: '1.1rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            boxShadow: '0 4px 14px 0 rgba(28, 181, 136, 0.39)',
-            transition: 'transform 0.2s'
-          }}>
-            Access Dashboard <LayoutDashboard size={20} />
+        <div className="animate-in stagger-4" style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center' }}>
+          <button
+            onClick={login}
+            className="btn btn-primary"
+            style={{
+              padding: 'var(--space-3) var(--space-8)',
+              fontSize: '1rem',
+              gap: 'var(--space-3)',
+              boxShadow: 'var(--shadow-teal)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 24px var(--primary-teal-glow)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'var(--shadow-teal)'; }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.97)'; }}
+            onMouseUp={e => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+          >
+            <LayoutDashboard size={18} /> Access Dashboard
           </button>
         </div>
 
-        {/* Feature Highlights Row */}
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          gap: '2rem', 
-          marginTop: '6rem',
-          maxWidth: '1000px',
-          width: '100%'
+        {/* ── Feature Cards ────────────────────────────────────── */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: 'var(--space-6)',
+          marginTop: 'var(--space-16)',
+          maxWidth: '960px',
+          width: '100%',
         }}>
-          {/* Feature 1 */}
-          <div className="glass-panel" style={{ flex: 1, padding: '2rem', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '12px', width: 'fit-content' }}>
-              <Users size={32} color="var(--primary-teal)" />
+          {features.map((f, i) => (
+            <div
+              key={i}
+              className={`glass-panel animate-in stagger-${i + 4}`}
+              style={{
+                padding: 'var(--space-8)',
+                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--space-4)',
+                transition: 'var(--transition-base)',
+                cursor: 'default',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                e.currentTarget.style.borderColor = 'var(--primary-teal)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }}
+            >
+              <div style={{
+                width: '48px',
+                height: '48px',
+                backgroundColor: 'var(--primary-teal-transparent)',
+                borderRadius: 'var(--radius-lg)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                {f.icon}
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: 'var(--space-2)', letterSpacing: '-0.01em' }}>
+                  {f.title}
+                </h3>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: 'var(--leading-relaxed)', margin: 0 }}>
+                  {f.desc}
+                </p>
+              </div>
             </div>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>Live Footfall</h3>
-            <p style={{ margin: 0, color: 'var(--text-muted)', lineHeight: 1.5, fontSize: '0.95rem' }}>Track real-time capacity limits and zone overflow across your campus.</p>
-          </div>
-          
-          {/* Feature 2 */}
-          <div className="glass-panel" style={{ flex: 1, padding: '2rem', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '12px', width: 'fit-content' }}>
-              <Building2 size={32} color="var(--primary-teal)" />
-            </div>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>Floor Layouts</h3>
-            <p style={{ margin: 0, color: 'var(--text-muted)', lineHeight: 1.5, fontSize: '0.95rem' }}>Interactive room and facility status mapped directly to architectural blueprints.</p>
-          </div>
-          
-          {/* Feature 3 */}
-          <div className="glass-panel" style={{ flex: 1, padding: '2rem', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ padding: '1rem', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '12px', width: 'fit-content' }}>
-              <BarChart3 size={32} color="var(--primary-teal)" />
-            </div>
-            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>Deep Analytics</h3>
-            <p style={{ margin: 0, color: 'var(--text-muted)', lineHeight: 1.5, fontSize: '0.95rem' }}>Analyze 90-day footprint trends and identify building efficiency rates.</p>
-          </div>
+          ))}
         </div>
-
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ──────────────────────────────────────────────── */}
       <footer style={{
-        padding: '2rem',
-        textAlign: 'center',
+        padding: 'var(--space-6) var(--space-16)',
         borderTop: '1px solid var(--border-color)',
         color: 'var(--text-muted)',
-        fontSize: '0.9rem'
+        fontSize: 'var(--text-sm)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
       }}>
-        © 2026 Joy Bo'shmi Campus Systems. Authorized access only.
+        <span>© 2026 Joy Bo'shmi Campus Systems</span>
+        <span style={{ color: 'var(--text-placeholder)' }}>Authorized access only</span>
       </footer>
     </div>
   );

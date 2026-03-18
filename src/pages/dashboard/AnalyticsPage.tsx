@@ -29,56 +29,64 @@ const BUILDING_TABLE = [
   { name: 'Engineering Hall',footfall: 12400, avgOcc: 31, peak: '09:00–11:00', risk: 'Low'      },
 ];
 
-const RISK_COLORS: Record<string, string> = {
-  High:     'var(--status-red)',
-  Moderate: 'var(--status-yellow)',
-  Low:      'var(--status-green)',
-};
+
 
 const AnalyticsPage: React.FC = () => {
   const [range, setRange] = useState<'7d' | '30d' | '90d'>('7d');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)' }}>Historical Analytics</h1>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+      <div className="animate-in stagger-1" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Historical Analytics</h1>
+          <p style={{ margin: 'var(--space-1) 0 0', color: 'var(--text-muted)', fontSize: '0.875rem' }}>Occupancy trends and building-level insights</p>
+        </div>
+        <div style={{ display: 'flex', gap: 'var(--space-1)', alignItems: 'center' }}>
           {(['7d', '30d', '90d'] as const).map(r => (
-            <button key={r} onClick={() => setRange(r)} style={{ padding: '5px 12px', borderRadius: '6px', border: `1px solid ${range === r ? 'var(--primary-teal)' : 'var(--border-color)'}`, backgroundColor: range === r ? 'var(--primary-teal-transparent)' : 'transparent', color: range === r ? 'var(--primary-teal)' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
+            <button key={r} onClick={() => setRange(r)} className="btn" style={{
+              padding: '4px 12px',
+              fontSize: '0.8125rem',
+              background: range === r ? 'var(--primary-teal-transparent)' : 'transparent',
+              color: range === r ? 'var(--primary-teal)' : 'var(--text-muted)',
+              border: `1px solid ${range === r ? 'var(--primary-teal)' : 'var(--border-color)'}`,
+            }}
+              onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.97)'; }}
+              onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+            >
               {r}
             </button>
           ))}
-          <button style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '5px 12px', borderRadius: '6px', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
-            <Download size={14} /> Export
+          <button className="btn btn-ghost" style={{ padding: '4px 12px', fontSize: '0.8125rem', gap: 'var(--space-1)' }}>
+            <Download size={13} /> Export
           </button>
         </div>
       </div>
 
       {/* Summary Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 'var(--space-4)' }}>
         {SUMMARY_STATS.map((s, i) => (
-          <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '1.1rem' }}>
-            <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.4rem' }}>{s.label}</div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-main)' }}>{s.value}</span>
-              <span style={{ fontSize: '0.75rem', color: s.change.startsWith('+') && !s.up ? 'var(--status-red)' : 'var(--primary-teal)', fontWeight: 600 }}>{s.change}</span>
+          <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-5)', boxShadow: 'var(--shadow-sm)' }}>
+            <div className="section-label" style={{ marginBottom: 'var(--space-2)' }}>{s.label}</div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)' }}>
+              <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>{s.value}</span>
+              <span style={{ fontSize: 'var(--text-xs)', color: s.change.startsWith('+') && !s.up ? 'var(--status-red)' : 'var(--primary-teal)', fontWeight: 700 }}>{s.change}</span>
             </div>
           </div>
         ))}
       </div>
 
       {/* Occupancy Trend Chart */}
-      <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+      <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-5)' }}>
           <div>
-            <h3 style={{ margin: 0, fontWeight: 600, color: 'var(--text-main)', fontSize: '0.95rem' }}>Occupancy Trends ({range})</h3>
-            <p style={{ margin: '0.2rem 0 0', fontSize: '0.8rem', color: 'var(--text-muted)' }}>% capacity by building</p>
+            <h3 style={{ margin: 0, fontWeight: 700, color: 'var(--text-main)', fontSize: '0.9375rem', letterSpacing: '-0.01em' }}>Occupancy Trends <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>({range})</span></h3>
+            <p style={{ margin: 'var(--space-1) 0 0', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>% capacity utilization by building</p>
           </div>
-          <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem', fontWeight: 600 }}>
-            {[['Library', 'var(--primary-teal)'], ['Union', '#3b82f6'], ['Engineering', '#a855f7']].map(([label, color]) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: String(color) }} /> {label}
+          <div style={{ display: 'flex', gap: 'var(--space-4)', fontSize: 'var(--text-xs)', fontWeight: 600 }}>
+            {[['Library', 'var(--primary-teal)'], ['Union', 'var(--status-blue)'], ['Engineering', 'var(--status-purple)']].map(([label, color]) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', color }}>
+                <div style={{ width: '8px', height: '2px', borderRadius: '1px', backgroundColor: String(color) }} /> {label}
               </div>
             ))}
           </div>
@@ -86,45 +94,45 @@ const AnalyticsPage: React.FC = () => {
         <div style={{ height: '200px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={WEEKLY_CHART} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <CartesianGrid stroke="var(--border-color)" strokeDasharray="3 3" />
+              <CartesianGrid stroke="var(--border-color)" strokeDasharray="4 4" vertical={false} />
               <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
-              <Tooltip contentStyle={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '8px', fontSize: '0.8rem' }} formatter={(v) => [`${v}%`]} />
-              <Line type="monotone" dataKey="library" stroke="var(--primary-teal)" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="union" stroke="#3b82f6" strokeWidth={2} dot={false} />
-              <Line type="monotone" dataKey="eng" stroke="#a855f7" strokeWidth={2} dot={false} />
+              <Tooltip contentStyle={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', fontSize: '0.8125rem', boxShadow: 'var(--shadow-md)' }} formatter={(v) => [`${v}%`]} />
+              <Line type="monotone" dataKey="library" stroke="var(--primary-teal)" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="union" stroke="var(--status-blue)" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="eng" stroke="var(--status-purple)" strokeWidth={1.5} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>
       </div>
 
       {/* Buildings Table */}
-      <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '12px', overflow: 'hidden' }}>
-        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-main)' }}>Building Summary</div>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+      <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ padding: 'var(--space-4) var(--space-6)', borderBottom: '1px solid var(--border-color)', fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-main)', letterSpacing: '-0.01em' }}>Building Summary</div>
+        <table className="data-table">
           <thead>
-            <tr style={{ backgroundColor: 'var(--bg-panel-hover)' }}>
-              {['Building', 'Total Footfall', 'Avg Occupancy', 'Peak Hours', 'Risk'].map(h => (
-                <th key={h} style={{ padding: '0.75rem 1.5rem', textAlign: 'left', fontWeight: 700, color: 'var(--text-muted)', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
+            <tr>
+              {['Building', 'Total Footfall', 'Avg Occupancy', 'Peak Hours', 'Risk Level'].map((h, i) => (
+                <th key={h} className={i >= 1 && i <= 2 ? 'right' : ''}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {BUILDING_TABLE.map((b, i) => (
-              <tr key={i} style={{ borderTop: '1px solid var(--border-color)' }}>
-                <td style={{ padding: '0.875rem 1.5rem', fontWeight: 600, color: 'var(--text-main)' }}>{b.name}</td>
-                <td style={{ padding: '0.875rem 1.5rem', color: 'var(--text-muted)' }}>{b.footfall.toLocaleString()}</td>
-                <td style={{ padding: '0.875rem 1.5rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    {b.avgOcc}%
-                    <div style={{ flex: 1, height: '4px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '2px', maxWidth: '60px' }}>
-                      <div style={{ height: '100%', width: `${b.avgOcc}%`, backgroundColor: 'var(--primary-teal)', borderRadius: '2px' }} />
+              <tr key={i}>
+                <td style={{ fontWeight: 600, color: 'var(--text-main)' }}>{b.name}</td>
+                <td className="right" style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--text-secondary)' }}>{b.footfall.toLocaleString()}</td>
+                <td className="right">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
+                    <span style={{ fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: 'var(--text-main)' }}>{b.avgOcc}%</span>
+                    <div style={{ width: '48px', height: '4px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${b.avgOcc}%`, backgroundColor: 'var(--primary-teal)', borderRadius: 'var(--radius-full)' }} />
                     </div>
                   </div>
                 </td>
-                <td style={{ padding: '0.875rem 1.5rem', color: 'var(--text-muted)' }}>{b.peak}</td>
-                <td style={{ padding: '0.875rem 1.5rem' }}>
-                  <span style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, backgroundColor: `${RISK_COLORS[b.risk]}20`, color: RISK_COLORS[b.risk] }}>{b.risk}</span>
+                <td style={{ color: 'var(--text-muted)' }}>{b.peak}</td>
+                <td>
+                  <span className={`badge badge-${b.risk === 'High' ? 'red' : b.risk === 'Moderate' ? 'yellow' : 'green'}`}>{b.risk}</span>
                 </td>
               </tr>
             ))}

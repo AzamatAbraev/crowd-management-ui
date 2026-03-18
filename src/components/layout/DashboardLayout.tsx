@@ -12,7 +12,7 @@ const DashboardLayout: React.FC = () => {
         <Sidebar />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <Topbar />
-          <main style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', backgroundColor: 'var(--bg-dark)' }}>
+          <main style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-8)', backgroundColor: 'var(--bg-base)' }}>
             <Outlet />
           </main>
         </div>

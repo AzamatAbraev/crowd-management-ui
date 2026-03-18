@@ -4,20 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
 
-// ── Role-to-section access matrix ────────────────────────────────────────────
-// theking       → devices, system, statistics, users
-// system_admin  → devices, system, statistics
-// facility_manager → devices, statistics
-
 interface SectionDef {
   id: string;
   label: string;
   description: string;
   icon: React.ReactNode;
-  color: string;
+  accentColor: string;
   route: string;
   badge?: string;
-  /** Which roles can see this card (undefined = all admin roles) */
   allowedFor?: string[];
 }
 
@@ -25,43 +19,43 @@ const ALL_SECTIONS: SectionDef[] = [
   {
     id: 'monitor',
     label: 'Live Monitor',
-    description: 'Real-time device feed, occupancy events log, and fleet online/offline status.',
-    icon: <Radio size={40} />,
-    color: '#10b981',
+    description: 'Real-time device feed and occupancy log.',
+    icon: <Radio size={32} />,
+    accentColor: 'var(--status-green)',
     route: '/admin/monitor',
     badge: 'Live',
   },
   {
     id: 'devices',
     label: 'Device Management',
-    description: 'Register sensors, monitor health, and configure IoT endpoints.',
-    icon: <Cpu size={40} />,
-    color: 'var(--primary-teal)',
+    description: 'Register, monitor, and configure IoT sensors.',
+    icon: <Cpu size={32} />,
+    accentColor: 'var(--primary-teal)',
     route: '/admin/devices',
   },
   {
     id: 'system',
     label: 'System Management',
-    description: 'Global configurations, alert thresholds, and security rules.',
-    icon: <Settings size={40} />,
-    color: '#8a9eff',
+    description: 'Alert thresholds, configurations, and access rules.',
+    icon: <Settings size={32} />,
+    accentColor: 'var(--status-blue)',
     route: '/admin/system',
     allowedFor: ['theking', 'system_admin'],
   },
   {
     id: 'statistics',
     label: 'Statistics & Analytics',
-    description: 'Historical occupancy trends, building footfall, and risk analysis.',
-    icon: <BarChart2 size={40} />,
-    color: '#a855f7',
+    description: 'Historical occupancy trends and risk analysis.',
+    icon: <BarChart2 size={32} />,
+    accentColor: 'var(--status-purple)',
     route: '/admin/statistics',
   },
   {
     id: 'users',
     label: 'User Management',
-    description: 'Create, edit, delete users and manage their Keycloak roles.',
-    icon: <Users size={40} />,
-    color: '#f59e0b',
+    description: 'Manage users and Keycloak role assignments.',
+    icon: <Users size={32} />,
+    accentColor: 'var(--status-amber)',
     route: '/admin/users',
     badge: 'Super Admin',
     allowedFor: ['theking'],
@@ -80,73 +74,175 @@ const AdminLandingPage: React.FC = () => {
     form.submit();
   };
 
-  // Determine which sections this user can see
   const activeRole = isTheKing ? 'theking' : isSystemAdmin ? 'system_admin' : isFacilityManager ? 'facility_manager' : 'admin';
-  const visibleSections = ALL_SECTIONS.filter(s =>
-    !s.allowedFor || s.allowedFor.includes(activeRole)
-  );
-
-  const roleLabel = isTheKing ? 'Super Admin (The King)' : isSystemAdmin ? 'System Administrator' : isFacilityManager ? 'Facility Manager' : 'Administrator';
+  const visibleSections = ALL_SECTIONS.filter(s => !s.allowedFor || s.allowedFor.includes(activeRole));
+  const roleLabel = isTheKing ? 'Super Admin' : isSystemAdmin ? 'System Administrator' : isFacilityManager ? 'Facility Manager' : 'Administrator';
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
-      {/* Topbar */}
-      <nav style={{ padding: '1.5rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ backgroundColor: 'var(--primary-teal)', padding: '0.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ShieldCheck size={28} color="#000" />
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-base)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
+
+      {/* ── Topbar ──────────────────────────────────────────────── */}
+      <nav style={{
+        height: 'var(--topbar-height)',
+        padding: '0 var(--space-10)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottom: '1px solid var(--border-color)',
+        backgroundColor: 'var(--bg-panel)',
+        boxShadow: 'var(--shadow-xs)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+        flexShrink: 0,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+          <div style={{
+            backgroundColor: 'var(--primary-teal)',
+            padding: '7px',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: 'var(--shadow-sm)',
+          }}>
+            <ShieldCheck size={20} color="#fff" />
           </div>
-          <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, letterSpacing: '0.5px' }}>Joy Bo'shmi Admin</h1>
+          <span style={{ fontSize: '0.9375rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-main)' }}>
+            Joy Bo'shmi
+          </span>
+          <span className="badge badge-teal" style={{ letterSpacing: '0.06em' }}>ADMIN</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+            <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.2 }}>
               {user ? `${user.firstName} ${user.lastName}` : 'Administrator'}
             </div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--primary-teal)', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 700 }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--primary-teal)', fontWeight: 600, marginTop: '1px', letterSpacing: '0.02em' }}>
               {roleLabel}
             </div>
           </div>
-          <button onClick={handleLogout}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--status-red)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600, padding: '0.5rem 1rem', borderRadius: '8px', transition: 'background-color 0.2s' }}
-            onMouseOver={e => e.currentTarget.style.backgroundColor = 'rgba(255,71,87,0.1)'}
-            onMouseOut={e => e.currentTarget.style.backgroundColor = 'transparent'}>
-            Logout <LogOut size={16} />
+          <button
+            onClick={handleLogout}
+            className="btn btn-danger"
+            style={{ fontSize: '0.8125rem', padding: '6px 12px' }}
+            onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.97)'; }}
+            onMouseUp={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            <LogOut size={14} /> Sign Out
           </button>
         </div>
       </nav>
 
-      {/* Main */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center' }}>
-        <div style={{ marginBottom: '3rem' }}>
-          <h2 style={{ fontSize: '2.2rem', fontWeight: 700, marginBottom: '0.75rem' }}>Welcome to the Control Center</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: '560px', margin: '0 auto' }}>
-            Select an operational domain to continue. You have access to <strong>{visibleSections.length}</strong> section{visibleSections.length !== 1 ? 's' : ''} based on your role.
+      {/* ── Main ────────────────────────────────────────────────── */}
+      <main style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 'var(--space-16) var(--space-8)',
+        textAlign: 'center',
+      }}>
+        <div className="animate-in stagger-1" style={{ marginBottom: 'var(--space-12)' }}>
+          <h1 style={{
+            fontSize: 'var(--text-xl)',
+            fontWeight: 800,
+            letterSpacing: '-0.03em',
+            marginBottom: 'var(--space-3)',
+            color: 'var(--text-main)',
+          }}>
+            Control Center
+          </h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9375rem', maxWidth: '400px', margin: '0 auto', lineHeight: 'var(--leading-relaxed)' }}>
+            {visibleSections.length} section{visibleSections.length !== 1 ? 's' : ''} available for your role.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '2rem', maxWidth: '1100px', width: '100%', justifyContent: 'center', flexWrap: 'wrap' }}>
-          {visibleSections.map(section => (
+        {/* Section Cards */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: 'var(--space-5)',
+          maxWidth: '1100px',
+          width: '100%',
+        }}>
+          {visibleSections.map((section, i) => (
             <button
               key={section.id}
               onClick={() => navigate(section.route)}
-              className="glass-panel"
-              style={{ flex: '1 1 300px', minHeight: '260px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.25rem', padding: '2rem', cursor: 'pointer', border: '1px solid var(--border-color)', transition: 'all 0.3s ease', background: 'var(--bg-panel)', maxWidth: 350 }}
-              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.borderColor = section.color; e.currentTarget.style.boxShadow = `0 12px 32px rgba(0,0,0,0.15)`; }}
-              onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.boxShadow = 'none'; }}
+              className={`animate-in stagger-${Math.min(i + 2, 6)}`}
+              style={{
+                minHeight: '220px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                gap: 'var(--space-4)',
+                padding: 'var(--space-8)',
+                cursor: 'pointer',
+                border: '1px solid var(--border-color)',
+                borderRadius: 'var(--radius-xl)',
+                backgroundColor: 'var(--bg-panel)',
+                boxShadow: 'var(--shadow-sm)',
+                textAlign: 'left',
+                transition: 'var(--transition-base)',
+                fontFamily: 'inherit',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                e.currentTarget.style.borderColor = section.accentColor;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+              }}
+              onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)'; }}
+              onMouseUp={e => { e.currentTarget.style.transform = 'translateY(-4px)'; }}
             >
-              <div style={{ width: 80, height: 80, borderRadius: '50%', backgroundColor: section.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', color: section.color }}>
+              {/* Top accent line */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', backgroundColor: section.accentColor, borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0', opacity: 0.7 }} />
+
+              {/* Icon */}
+              <div style={{
+                width: '52px',
+                height: '52px',
+                borderRadius: 'var(--radius-lg)',
+                backgroundColor: `color-mix(in srgb, ${section.accentColor} 12%, transparent)`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: section.accentColor,
+                flexShrink: 0,
+              }}>
                 {section.icon}
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.35rem', margin: '0 0 0.4rem 0', fontWeight: 700 }}>{section.label}</h3>
-                <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.875rem', lineHeight: 1.5 }}>{section.description}</p>
-                {section.badge && (
-                  <span style={{ display: 'inline-block', marginTop: '0.6rem', fontSize: '0.65rem', fontWeight: 800, backgroundColor: section.color + '22', color: section.color, padding: '2px 8px', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    {section.badge}
-                  </span>
-                )}
+
+              {/* Text */}
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.01em' }}>
+                    {section.label}
+                  </h3>
+                  {section.badge && (
+                    <span className="badge" style={{
+                      backgroundColor: `color-mix(in srgb, ${section.accentColor} 12%, transparent)`,
+                      color: section.accentColor,
+                      fontSize: '0.5625rem',
+                      letterSpacing: '0.06em',
+                      fontWeight: 700,
+                    }}>
+                      {section.badge.toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', margin: 0, lineHeight: 'var(--leading-relaxed)' }}>
+                  {section.description}
+                </p>
               </div>
             </button>
           ))}

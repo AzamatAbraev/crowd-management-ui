@@ -26,7 +26,7 @@ const secondsAgo = (ts: string | undefined): number => {
 const formatLastSeen = (ts: string | undefined): string => {
   if (!ts) return 'Never';
   const secs = secondsAgo(ts);
-  if (secs < 60)  return `${secs}s ago`;
+  if (secs < 60) return `${secs}s ago`;
   if (secs < 3600) return `${Math.floor(secs / 60)}m ago`;
   return `${Math.floor(secs / 3600)}h ago`;
 };
@@ -48,15 +48,15 @@ const FleetStat: React.FC<{ icon: React.ReactNode; label: string; value: number;
 );
 
 const SensorsPage: React.FC = () => {
-  const [count, setCount]               = useState<number>(0);
-  const [lastUpdated, setLastUpdated]   = useState<string>('');
-  const [status, setStatus]             = useState<string>('Connecting...');
-  const [isPolling, setIsPolling]       = useState<boolean>(true);
-  const [lastDevice, setLastDevice]     = useState<string>('None');
+  const [count, setCount] = useState<number>(0);
+  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const [status, setStatus] = useState<string>('Connecting...');
+  const [isPolling, setIsPolling] = useState<boolean>(true);
+  const [lastDevice, setLastDevice] = useState<string>('None');
   const [systemStatus, setSystemStatus] = useState<string>('UNKNOWN');
-  const [activeNodes, setActiveNodes]   = useState<number>(0);
+  const [activeNodes, setActiveNodes] = useState<number>(0);
   const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
-  const [devicesData, setDevicesData]   = useState<Record<string, Device>>({});
+  const [devicesData, setDevicesData] = useState<Record<string, Device>>({});
   const [buildingsData, setBuildingsData] = useState<Record<string, Building>>({});
 
   const API_URL = '/people/count';
@@ -66,6 +66,8 @@ const SensorsPage: React.FC = () => {
   // so device ONLINE/OFFLINE status from MQTT LWT is reflected in the UI
   // without a page refresh.
   const fetchMetadata = useCallback(async () => {
+    console.log(buildingsData);
+
     try {
       const [devs, bldgs] = await Promise.all([
         deviceService.getAllDevices(),
@@ -123,10 +125,10 @@ const SensorsPage: React.FC = () => {
   }, [isPolling, fetchCount]);
 
   // ── Derived fleet stats ──────────────────────────────────────────────────────
-  const allDevices        = Object.values(devicesData);
-  const onlineDevices     = allDevices.filter(d => d.status === 'ONLINE');
-  const offlineDevices    = allDevices.filter(d => d.status === 'OFFLINE');
-  const totalFleet        = allDevices.length;
+  const allDevices = Object.values(devicesData);
+  const onlineDevices = allDevices.filter(d => d.status === 'ONLINE');
+  const offlineDevices = allDevices.filter(d => d.status === 'OFFLINE');
+  const totalFleet = allDevices.length;
 
   const isConnected = status.includes('Connected');
 
@@ -178,10 +180,10 @@ const SensorsPage: React.FC = () => {
           "Active Nodes: 20" text. Now it's real and live-refreshed every 10s. */}
       {totalFleet > 0 && (
         <div style={{ display: 'flex', gap: '0.875rem' }}>
-          <FleetStat icon={<Server size={20} />}  label="Total Fleet"   value={totalFleet}          color="var(--text-muted)" />
-          <FleetStat icon={<Wifi size={20} />}    label="Online"        value={onlineDevices.length} color="var(--status-green)" />
-          <FleetStat icon={<WifiOff size={20} />} label="Offline"       value={offlineDevices.length} color="var(--status-red)" />
-          <FleetStat icon={<Activity size={20} />} label="Reporting Now" value={activeNodes}          color="var(--primary-teal)" />
+          <FleetStat icon={<Server size={20} />} label="Total Fleet" value={totalFleet} color="var(--text-muted)" />
+          <FleetStat icon={<Wifi size={20} />} label="Online" value={onlineDevices.length} color="var(--status-green)" />
+          <FleetStat icon={<WifiOff size={20} />} label="Offline" value={offlineDevices.length} color="var(--status-red)" />
+          <FleetStat icon={<Activity size={20} />} label="Reporting Now" value={activeNodes} color="var(--primary-teal)" />
         </div>
       )}
 
@@ -234,7 +236,7 @@ const SensorsPage: React.FC = () => {
                 const isOnline = devMeta?.status === 'ONLINE';
                 const isOffline = devMeta?.status === 'OFFLINE';
                 // A device is "stale" if its lastSeen is > 60 seconds ago, regardless of DB status
-                const stale   = secondsAgo(devMeta?.lastSeen) > 60;
+                const stale = secondsAgo(devMeta?.lastSeen) > 60;
 
                 // Border colour: green accent if sending entries, red for exits, grey otherwise
                 const accentColor = value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--border-color)';
@@ -251,8 +253,8 @@ const SensorsPage: React.FC = () => {
                     opacity: isOffline ? 0.65 : 1,
                     transition: 'var(--transition-base)',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'none'; }}
+                    onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'none'; }}
                   >
                     {/* Card header: name + delta */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>

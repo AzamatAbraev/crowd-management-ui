@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Server, 
-  Wifi, 
-  WifiOff, 
-  Battery, 
+import {
+  Server,
+  Wifi,
+  WifiOff,
+  Battery,
   BatteryWarning,
   RefreshCw,
   Search,
@@ -36,6 +36,8 @@ const DeviceManagementPage: React.FC = () => {
 
   const fetchDevices = async () => {
     setLoading(true);
+    console.log(buildings);
+
     const data = await deviceService.getAllDevices();
     setDevices(data);
     setLoading(false);
@@ -55,8 +57,8 @@ const DeviceManagementPage: React.FC = () => {
   }, []);
 
   // Filter devices based on search
-  const filteredDevices = devices.filter(d => 
-    d.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredDevices = devices.filter(d =>
+    d.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (d.location && d.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (d.name && d.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
@@ -68,7 +70,7 @@ const DeviceManagementPage: React.FC = () => {
   const warningDevs = devices.filter(d => d.status === 'MAINTENANCE' || d.health !== 'GOOD').length;
 
   const getStatusColor = (status: DeviceStatus) => {
-    switch(status) {
+    switch (status) {
       case 'ONLINE': return 'var(--status-green)';
       case 'OFFLINE': return 'var(--status-red)';
       case 'MAINTENANCE': return 'var(--status-yellow)';
@@ -78,7 +80,7 @@ const DeviceManagementPage: React.FC = () => {
   };
 
   const getStatusBg = (status: DeviceStatus) => {
-    switch(status) {
+    switch (status) {
       case 'ONLINE': return 'rgba(16, 185, 129, 0.1)';
       case 'OFFLINE': return 'rgba(239, 68, 68, 0.1)';
       case 'MAINTENANCE': return 'rgba(245, 158, 11, 0.1)';
@@ -91,7 +93,7 @@ const DeviceManagementPage: React.FC = () => {
     if (!registeredAt) return 0;
     const past = new Date(registeredAt).getTime();
     const now = new Date().getTime();
-    return Math.floor((now - past) / (1000 * 60 * 60)); 
+    return Math.floor((now - past) / (1000 * 60 * 60));
   };
 
   const handleStatusUpdate = async (id: string, state: 'ONLINE' | 'MAINTENANCE') => {
@@ -162,7 +164,7 @@ const DeviceManagementPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', height: '100%' }}>
-      
+
       {/* HEADER */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
@@ -174,16 +176,16 @@ const DeviceManagementPage: React.FC = () => {
             Monitor and control the campus IoT sensor fleet
           </p>
         </div>
-        <div style={{display: 'flex', gap: '1rem'}}>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           <button onClick={fetchDevices} className="primary-button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--bg-panel)', color: 'var(--text-main)', border: '1px solid var(--border-color)', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>
             <RefreshCw size={16} /> Refresh
           </button>
-          <button 
+          <button
             onClick={() => {
               setFormData({ id: '', name: '', type: 'ULTRASONIC_SENSOR', location: '' });
               setShowAddModal(true);
             }}
-            className="primary-button" 
+            className="primary-button"
             style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--primary-teal)', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}
           >
             <Plus size={16} /> Add Device
@@ -213,17 +215,17 @@ const DeviceManagementPage: React.FC = () => {
 
       {/* MAIN CONTENT AREA */}
       <div style={{ display: 'flex', gap: '1.5rem', flex: 1, minHeight: 0 }}>
-        
+
         {/* LEFT COMPONENT: DATA GRID */}
         <div className="glass-panel" style={{ flex: selectedDevice ? 2 : 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', transition: 'flex 0.3s ease' }}>
-          
+
           {/* Toolbar */}
           <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ position: 'relative', width: '300px' }}>
               <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-              <input 
-                type="text" 
-                placeholder="Search Device ID or Location..." 
+              <input
+                type="text"
+                placeholder="Search Device ID or Location..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -259,45 +261,46 @@ const DeviceManagementPage: React.FC = () => {
                 {filteredDevices.length > 0 ? filteredDevices.map(device => {
                   const battery = device.batteryLevel ?? 0;
                   return (
-                  <tr 
-                    key={device.id} 
-                    onClick={() => setSelectedDevice(device)}
-                    style={{ 
-                      borderBottom: '1px solid var(--border-color)', 
-                      cursor: 'pointer',
-                      backgroundColor: selectedDevice?.id === device.id ? 'var(--bg-panel-active)' : 'transparent',
-                      transition: 'background-color 0.2s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-panel-hover)'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = selectedDevice?.id === device.id ? 'var(--bg-panel-active)' : 'transparent'}
-                  >
-                    <td style={{ padding: '1rem 1.5rem', fontWeight: 600, color: 'var(--text-main)' }}>{device.name || device.id}</td>
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      <span style={{ 
-                        padding: '4px 10px', 
-                        borderRadius: '20px', 
-                        fontSize: '0.75rem', 
-                        fontWeight: 600,
-                        backgroundColor: getStatusBg(device.status),
-                        color: getStatusColor(device.status),
-                        display: 'inline-block'
-                      }}>
-                        {device.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-main)' }}>{device.location || 'Unassigned'}</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{device.type}</div>
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      {battery <= 20 ? <BatteryWarning size={16} color="var(--status-red)" /> : <Battery size={16} color={battery === 100 ? 'var(--primary-teal)' : 'var(--text-main)'} />}
-                      <span style={{ fontSize: '0.85rem', color: battery <= 20 ? 'var(--status-red)' : 'var(--text-main)', fontWeight: 500 }}>
-                        {device.batteryLevel !== null ? `${battery}%` : 'AC Power'}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{device.lastSeen || 'Never'}</td>
-                  </tr>
-                )}) : (
+                    <tr
+                      key={device.id}
+                      onClick={() => setSelectedDevice(device)}
+                      style={{
+                        borderBottom: '1px solid var(--border-color)',
+                        cursor: 'pointer',
+                        backgroundColor: selectedDevice?.id === device.id ? 'var(--bg-panel-active)' : 'transparent',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-panel-hover)'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = selectedDevice?.id === device.id ? 'var(--bg-panel-active)' : 'transparent'}
+                    >
+                      <td style={{ padding: '1rem 1.5rem', fontWeight: 600, color: 'var(--text-main)' }}>{device.name || device.id}</td>
+                      <td style={{ padding: '1rem 1.5rem' }}>
+                        <span style={{
+                          padding: '4px 10px',
+                          borderRadius: '20px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          backgroundColor: getStatusBg(device.status),
+                          color: getStatusColor(device.status),
+                          display: 'inline-block'
+                        }}>
+                          {device.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem' }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-main)' }}>{device.location || 'Unassigned'}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{device.type}</div>
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        {battery <= 20 ? <BatteryWarning size={16} color="var(--status-red)" /> : <Battery size={16} color={battery === 100 ? 'var(--primary-teal)' : 'var(--text-main)'} />}
+                        <span style={{ fontSize: '0.85rem', color: battery <= 20 ? 'var(--status-red)' : 'var(--text-main)', fontWeight: 500 }}>
+                          {device.batteryLevel !== null ? `${battery}%` : 'AC Power'}
+                        </span>
+                      </td>
+                      <td style={{ padding: '1rem 1.5rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>{device.lastSeen || 'Never'}</td>
+                    </tr>
+                  )
+                }) : (
                   <tr>
                     <td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
                       {loading ? 'Discovering Devices...' : 'No devices found matching your criteria.'}
@@ -312,13 +315,13 @@ const DeviceManagementPage: React.FC = () => {
         {/* RIGHT COMPONENT: DETAIL DRAWER */}
         {selectedDevice && (
           <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', animation: 'slideIn 0.3s ease-out' }}>
-            
+
             <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <h2 style={{ margin: '0 0 0.25rem 0', fontSize: '1.25rem', color: 'var(--text-main)' }}>{selectedDevice.name || selectedDevice.id}</h2>
                 <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>ID: {selectedDevice.id}</span>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedDevice(null)}
                 style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1.2rem', padding: '0 4px' }}
               >
@@ -327,7 +330,7 @@ const DeviceManagementPage: React.FC = () => {
             </div>
 
             <div style={{ padding: '1.5rem', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              
+
               {/* Identity & Status */}
               <div style={{ padding: '1rem', backgroundColor: 'var(--bg-dark)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
@@ -336,11 +339,11 @@ const DeviceManagementPage: React.FC = () => {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}><MapPin size={12} style={{marginRight: '4px'}}/>Location</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}><MapPin size={12} style={{ marginRight: '4px' }} />Location</div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 500 }}>{selectedDevice.location || 'Unassigned'}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}><Clock size={12} style={{marginRight: '4px'}}/>Uptime</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}><Clock size={12} style={{ marginRight: '4px' }} />Uptime</div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 500 }}>{calculateUptime(selectedDevice.registeredAt)} hrs</div>
                   </div>
                 </div>
@@ -349,7 +352,7 @@ const DeviceManagementPage: React.FC = () => {
               {/* Network & Power Diagnostics */}
               <div>
                 <h3 style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 600 }}>Diagnostics</h3>
-                
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem' }}>
                     <span style={{ color: 'var(--text-muted)' }}>Firmware</span>
@@ -370,58 +373,80 @@ const DeviceManagementPage: React.FC = () => {
 
             {/* Action Buttons */}
             <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button 
+              <button
                 onClick={openEditModal}
-                style={{ 
-                flex: 1, 
-                padding: '0.75rem', 
-                backgroundColor: 'var(--bg-panel)', 
-                border: '1px solid var(--border-color)', 
-                color: 'var(--text-main)', 
-                borderRadius: '6px', 
-                cursor: 'pointer',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '0.5rem',
-                minWidth: '100px'
-              }}>
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  backgroundColor: 'var(--bg-panel)',
+                  border: '1px solid var(--border-color)',
+                  color: 'var(--text-main)',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  minWidth: '100px'
+                }}>
                 <Edit2 size={14} /> Edit
               </button>
 
               {selectedDevice.status !== 'MAINTENANCE' ? (
-                <button 
+                <button
                   onClick={() => handleStatusUpdate(selectedDevice.id, 'MAINTENANCE')}
-                  style={{ 
-                  flex: 1, 
-                  padding: '0.75rem', 
-                  backgroundColor: 'var(--bg-panel-hover)', 
-                  border: '1px solid var(--border-color)', 
-                  color: 'var(--status-yellow)', 
-                  borderRadius: '6px', 
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                  fontSize: '0.85rem',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  minWidth: '100px'
-                }}>
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    backgroundColor: 'var(--bg-panel-hover)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--status-yellow)',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    minWidth: '100px'
+                  }}>
                   Maintenance
                 </button>
               ) : (
-                <button 
+                <button
                   onClick={() => handleStatusUpdate(selectedDevice.id, 'ONLINE')}
-                  style={{ 
-                  flex: 1, 
-                  padding: '0.75rem', 
-                  backgroundColor: 'var(--bg-panel-hover)', 
-                  border: '1px solid var(--border-color)', 
-                  color: 'var(--status-green)', 
-                  borderRadius: '6px', 
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem',
+                    backgroundColor: 'var(--bg-panel-hover)',
+                    border: '1px solid var(--border-color)',
+                    color: 'var(--status-green)',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    minWidth: '100px'
+                  }}>
+                  Mark Online
+                </button>
+              )}
+
+              <button
+                onClick={() => handleDeleteDevice(selectedDevice.id)}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  border: '1px solid var(--status-red)',
+                  color: 'var(--status-red)',
+                  borderRadius: '6px',
                   cursor: 'pointer',
                   fontWeight: 600,
                   fontSize: '0.85rem',
@@ -431,28 +456,6 @@ const DeviceManagementPage: React.FC = () => {
                   gap: '0.5rem',
                   minWidth: '100px'
                 }}>
-                  Mark Online
-                </button>
-              )}
-              
-              <button 
-                onClick={() => handleDeleteDevice(selectedDevice.id)}
-                style={{ 
-                flex: 1, 
-                padding: '0.75rem', 
-                backgroundColor: 'rgba(239, 68, 68, 0.1)', 
-                border: '1px solid var(--status-red)', 
-                color: 'var(--status-red)', 
-                borderRadius: '6px', 
-                cursor: 'pointer',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '0.5rem',
-                minWidth: '100px'
-              }}>
                 <Trash2 size={14} /> Delete
               </button>
             </div>
@@ -468,16 +471,16 @@ const DeviceManagementPage: React.FC = () => {
             <h2 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1.25rem' }}>
               {showAddModal ? 'Add New Device' : 'Edit Device'}
             </h2>
-            
+
             <form onSubmit={showAddModal ? handleAddSubmit : handleEditSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {/* ID Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Device ID (e.g. MAC / Serial)</label>
-                <input 
+                <input
                   required
                   disabled={showEditModal}
                   value={formData.id}
-                  onChange={e => setFormData({...formData, id: e.target.value})}
+                  onChange={e => setFormData({ ...formData, id: e.target.value })}
                   style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', opacity: showEditModal ? 0.6 : 1 }}
                 />
               </div>
@@ -485,10 +488,10 @@ const DeviceManagementPage: React.FC = () => {
               {/* Name Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Name</label>
-                <input 
+                <input
                   required
                   value={formData.name}
-                  onChange={e => setFormData({...formData, name: e.target.value})}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
                   style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)' }}
                 />
               </div>
@@ -496,9 +499,9 @@ const DeviceManagementPage: React.FC = () => {
               {/* Type Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Type</label>
-                <select 
+                <select
                   value={formData.type}
-                  onChange={e => setFormData({...formData, type: e.target.value})}
+                  onChange={e => setFormData({ ...formData, type: e.target.value })}
                   style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)' }}
                 >
                   <option value="ULTRASONIC_SENSOR">Ultrasonic Sensor</option>
@@ -512,11 +515,11 @@ const DeviceManagementPage: React.FC = () => {
               {/* Location Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Location (Building / Floor / Room)</label>
-                <input 
+                <input
                   required
                   placeholder="e.g. ATB / floor_1 / Canteen"
                   value={formData.location}
-                  onChange={e => setFormData({...formData, location: e.target.value})}
+                  onChange={e => setFormData({ ...formData, location: e.target.value })}
                   style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)' }}
                 />
               </div>

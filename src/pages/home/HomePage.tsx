@@ -1,11 +1,7 @@
 export function HomePage() {
   const handleLogout = () => {
-    // We create a hidden form to perform a POST request.
-    // This is necessary because Spring Security's logout 
-    // is protected against CSRF by default and prefers POST.
     const form = document.createElement('form');
     form.method = 'POST';
-    // Use the absolute URL to ensure we hit the Gateway directly
     form.action = 'http://localhost:8082/logout';
 
     document.body.appendChild(form);

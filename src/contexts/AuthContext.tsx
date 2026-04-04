@@ -48,7 +48,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Fetch user information from the newly implemented UserController on the Gateway/API
         const response = await api.get('/user/me').catch(() => null);
         
         if (response && response.data) {
@@ -71,7 +70,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const hasRole = (role: string) => {
     if (!user || (!user.roles)) return false;
-    // We can still keep a meta 'admin' role bypass just in case
     return user.roles.includes(role) || user.roles.includes('admin'); 
   };
   
@@ -80,18 +78,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return roles.some(r => hasRole(r));
   };
 
-  // Determine High-Level Role Groups
   const isTheKing = user?.roles?.includes('theking') || false;
   const isSystemAdmin = user?.roles?.includes('system_admin') || false;
   const isFacilityManager = user?.roles?.includes('facility_manager') || false;
 
-  // isAdmin is true for theking, system_admin, facility_manager, and legacy 'admin' users
   const isAdmin = isTheKing || isSystemAdmin || isFacilityManager || user?.roles?.includes('admin') || user?.username === 'admin' || false;
   
-  // A Manager is someone who isn't purely an admin, but has device or actionable management rights
   const isManager = !isAdmin && (user?.roles?.includes('manage-devices') || user?.roles?.includes('reset-occupancy') || false);
   
-  // A Viewer only has read roles and no actionable rights
   const isViewer = !isAdmin && !isManager;
 
 

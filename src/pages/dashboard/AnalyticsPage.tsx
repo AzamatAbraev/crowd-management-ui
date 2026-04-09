@@ -5,13 +5,13 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 // --- DUMMY DATA ---
 // TODO: Replace with API call to /analytics/occupancy?range=7d or similar.
 const WEEKLY_CHART = [
-  { day: 'Mon', library: 68, union: 72, eng: 41 },
-  { day: 'Tue', library: 75, union: 66, eng: 55 },
-  { day: 'Wed', library: 82, union: 80, eng: 60 },
-  { day: 'Thu', library: 90, union: 85, eng: 48 },
-  { day: 'Fri', library: 70, union: 78, eng: 35 },
-  { day: 'Sat', library: 40, union: 45, eng: 15 },
-  { day: 'Sun', library: 20, union: 22, eng: 8  },
+  { day: 'Mon', lrc: 68, atb: 72, shb: 41 },
+  { day: 'Tue', lrc: 75, atb: 66, shb: 55 },
+  { day: 'Wed', lrc: 82, atb: 80, shb: 60 },
+  { day: 'Thu', lrc: 90, atb: 85, shb: 48 },
+  { day: 'Fri', lrc: 70, atb: 78, shb: 35 },
+  { day: 'Sat', lrc: 40, atb: 45, shb: 15 },
+  { day: 'Sun', lrc: 20, atb: 22, shb: 8  },
 ];
 
 // TODO: Replace with API call to /analytics/summary?range=7d
@@ -24,9 +24,10 @@ const SUMMARY_STATS = [
 
 // TODO: Replace with API call to /analytics/buildings
 const BUILDING_TABLE = [
-  { name: 'Main Library',    footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High'     },
-  { name: 'Student Union',   footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
-  { name: 'Engineering Hall',footfall: 12400, avgOcc: 31, peak: '09:00–11:00', risk: 'Low'      },
+  { name: 'Learning Resource Center', footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High'     },
+  { name: 'Amir Temur Building',      footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
+  { name: 'Shakhrisabz Building',     footfall: 22400, avgOcc: 45, peak: '09:00–11:00', risk: 'Low'      },
+  { name: 'Istiqbol Building',        footfall: 18890, avgOcc: 40, peak: '10:00–12:00', risk: 'Low'      },
 ];
 
 
@@ -84,7 +85,7 @@ const AnalyticsPage: React.FC = () => {
             <p style={{ margin: 'var(--space-1) 0 0', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>% capacity utilization by building</p>
           </div>
           <div style={{ display: 'flex', gap: 'var(--space-4)', fontSize: 'var(--text-xs)', fontWeight: 600 }}>
-            {[['Library', 'var(--primary-teal)'], ['Union', 'var(--status-blue)'], ['Engineering', 'var(--status-purple)']].map(([label, color]) => (
+            {[['LRC', 'var(--primary-teal)'], ['ATB', 'var(--status-blue)'], ['SHB', 'var(--status-purple)']].map(([label, color]) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', color }}>
                 <div style={{ width: '8px', height: '2px', borderRadius: '1px', backgroundColor: String(color) }} /> {label}
               </div>
@@ -98,9 +99,9 @@ const AnalyticsPage: React.FC = () => {
               <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
               <Tooltip contentStyle={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', fontSize: '0.8125rem', boxShadow: 'var(--shadow-md)' }} formatter={(v) => [`${v}%`]} />
-              <Line type="monotone" dataKey="library" stroke="var(--primary-teal)" strokeWidth={1.5} dot={false} />
-              <Line type="monotone" dataKey="union" stroke="var(--status-blue)" strokeWidth={1.5} dot={false} />
-              <Line type="monotone" dataKey="eng" stroke="var(--status-purple)" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="lrc" stroke="var(--primary-teal)" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="atb" stroke="var(--status-blue)" strokeWidth={1.5} dot={false} />
+              <Line type="monotone" dataKey="shb" stroke="var(--status-purple)" strokeWidth={1.5} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </div>

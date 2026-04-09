@@ -17,18 +17,17 @@ import ViewerAreaDetails from './pages/live/ViewerAreaDetails';
 import ViewerSchedulePage from './pages/live/ViewerSchedulePage';
 import FloorLayoutPage from './pages/dashboard/FloorLayoutPage';
 import AnalyticsPage from './pages/dashboard/AnalyticsPage';
+import GrafanaPage from './pages/dashboard/GrafanaPage';
 import SensorsPage from './pages/dashboard/SensorsPage';
 import DeviceManagementPage from './pages/dashboard/DeviceManagementPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-// --- Protective Route Wrappers ---
 const RequireTheKing = ({ children }: { children: React.ReactNode }) => {
   const { isTheKing, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
   return isTheKing ? children : <Navigate to="/live" replace />;
 };
 
-// system_admin OR theking
 const RequireSystemAdmin = ({ children }: { children: React.ReactNode }) => {
   const { isTheKing, isSystemAdmin, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
@@ -38,8 +37,6 @@ const RequireSystemAdmin = ({ children }: { children: React.ReactNode }) => {
 const RequireAdmin = ({ children }: { children: React.ReactNode }) => {
   const { user, isAdmin, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
-  
-  // Extra robust check: if they have the 'admin' role explicitly in the user object
   const effectivelyAdmin = isAdmin || user?.roles?.includes('admin');
   
   return effectivelyAdmin ? children : <Navigate to="/live" replace />;
@@ -69,40 +66,28 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public / Landing Route */}
           <Route path="/" element={<LandingPage />} />
-          
-          {/* Auth Gateway Redirect */}
           <Route path="/home" element={<SmartRedirect />} />
-          
-          {/* 1. Admin Exclusive Domain */}
           <Route path="/admin" element={<RequireAdmin><AdminLandingPage /></RequireAdmin>} />
-          {/* Standalone admin section pages */}
           <Route path="/admin/devices" element={<RequireAdmin><AdminDevicePage /></RequireAdmin>} />
           <Route path="/admin/statistics" element={<RequireAdmin><AdminStatisticsPage /></RequireAdmin>} />
           <Route path="/admin/monitor" element={<RequireAdmin><AdminLiveMonitorPage /></RequireAdmin>} />
+          <Route path="/admin/grafana" element={<RequireAdmin><GrafanaPage /></RequireAdmin>} />
           <Route path="/admin/system" element={<RequireSystemAdmin><AdminSystemManagementPage /></RequireSystemAdmin>} />
           <Route path="/admin/users" element={<RequireTheKing><AdminUserManagementPage /></RequireTheKing>} />
-          
-          {/* 2. Viewer Minimalist Domain */}
           <Route path="/live" element={<ViewerLayout />}>
              <Route index element={<ViewerCampusMap />} />
              <Route path="building/:buildingId" element={<ViewerBuildingPlan />} />
              <Route path="area/:areaId" element={<ViewerAreaDetails />} />
              <Route path="schedule" element={<ViewerSchedulePage />} />
           </Route>
-
-          {/* 3. Faculty Manager Dashboard Domain */}
           <Route path="/dashboard" element={<RequireManager><DashboardLayout /></RequireManager>}>
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<OverviewPage />} />
             <Route path="floor" element={<FloorLayoutPage />} />
             <Route path="timetable" element={<TimetablePage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
-            
-            {/* Some specific routes inside the dashboard might still require strict admin checks */}
             <Route path="sensors" element={<SensorsPage />} />
-            {/* Devices is accessible by admins+managers (already inside RequireManager wrapper) */}
             <Route path="devices" element={<DeviceManagementPage />} />
             <Route path="alerts" element={<div style={{padding: '2rem', color: 'var(--text-main)'}}>Alerts Page (Coming Soon)</div>} />
             <Route path="settings" element={<RequireAdmin><div style={{padding: '2rem', color: 'var(--text-main)'}}>Settings Page (Coming Soon)</div></RequireAdmin>} />

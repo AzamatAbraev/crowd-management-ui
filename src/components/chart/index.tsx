@@ -42,10 +42,10 @@ export const OccupancyTrendsChart = () => {
           </text>
         );
       })}
-      <path d={toArea(TREND_DATA.library)} fill="url(#libGrad)" />
-      <path d={toPath(TREND_DATA.library)} fill="none" stroke="#10b77f" strokeWidth="2.5" strokeLinejoin="round" />
-      <path d={toPath(TREND_DATA.union)} fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinejoin="round" strokeOpacity="0.85" />
-      <path d={toPath(TREND_DATA.science)} fill="none" stroke="#a855f7" strokeWidth="2" strokeLinejoin="round" strokeOpacity="0.85" />
+      <path d={toArea(TREND_DATA.LRC)} fill="url(#libGrad)" />
+      <path d={toPath(TREND_DATA.LRC)} fill="none" stroke="#10b77f" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d={toPath(TREND_DATA.ATB)} fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinejoin="round" strokeOpacity="0.85" />
+      <path d={toPath(TREND_DATA.SHB)} fill="none" stroke="#a855f7" strokeWidth="2" strokeLinejoin="round" strokeOpacity="0.85" />
     </svg>
   );
 };

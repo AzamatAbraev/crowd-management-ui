@@ -1,21 +1,73 @@
 import React, { useState } from 'react';
 
-// --- DUMMY DATA ---
-// TODO: Replace with API call to /buildings or /layout when available.
+
 const BUILDINGS = [
-  { id: 'lib',  name: 'Main Library',      floors: 4 },
-  { id: 'eng',  name: 'Engineering Hall',  floors: 5 },
-  { id: 'sci',  name: 'Science Complex',   floors: 3 },
-  { id: 'union',name: 'Student Union',     floors: 2 },
+  { id: 'LRC',          name: 'Learning Resource Center',           floors: 2 },
+  { id: 'ATB',          name: 'Amir Temur Building',                floors: 3 },
+  { id: 'SHB',          name: 'Shakhrisabz Building',               floors: 4 },
+  { id: 'IB',           name: 'Istiqbol Building',                  floors: 4 },
+  { id: 'Lyceum',       name: 'Lyceum',                             floors: 2 },
+  { id: 'Sports Hall',  name: 'Sports Hall',                        floors: 2 },
 ];
 
-// TODO: Replace with real /people/count or /layout/floor?building=X&floor=Y
-const FLOOR_ROOMS: Record<string, { room: string; pct: number }[]> = {
-  '1': [{ room: 'Lab 101', pct: 90 }, { room: 'Seminar A', pct: 45 }, { room: 'Office Suite', pct: 20 }],
-  '2': [{ room: 'Lab 201', pct: 60 }, { room: 'Study Lounge', pct: 75 }, { room: 'Meeting Rm', pct: 10 }],
-  '3': [{ room: 'Lab 301', pct: 30 }, { room: 'Lecture Hall', pct: 85 }],
-  '4': [{ room: 'Archive', pct: 5 }, { room: 'Office 401', pct: 40 }],
-  '5': [{ room: 'Rooftop Lab', pct: 15 }],
+// Rooms sourced from timetable.xml classrooms + iot-device-simulator config.py
+// Rooms with "PC Lab" tag match the "CL" classrooms in the timetable
+const BUILDING_FLOOR_ROOMS: Record<string, Record<string, { room: string; pct: number; isLab?: boolean }[]>> = {
+  'LRC': {
+    '1': [{ room: 'Room 113', pct: 55 }],
+    '2': [{ room: 'General Area', pct: 46 }],
+  },
+  'ATB': {
+    '1': [{ room: 'Canteen', pct: 72 }],
+    '2': [
+      { room: 'ATB207',     pct: 48 },
+      { room: 'ATB212 CL',  pct: 60, isLab: true },
+      { room: 'ATB214 CL',  pct: 35, isLab: true },
+      { room: 'Room 214',   pct: 40 },
+    ],
+    '3': [
+      { room: 'Room 311',   pct: 65 },
+      { room: 'ATB301',     pct: 50 },
+      { room: 'ATB306',     pct: 30 },
+    ],
+  },
+  'SHB': {
+    '1': [{ room: 'Student Zone', pct: 65 }],
+    '2': [{ room: 'Room 216', pct: 50 }],
+    '3': [
+      { room: 'General Area', pct: 30 },
+      { room: 'SHB303 CL',   pct: 55, isLab: true },
+      { room: 'SHB304 CL',   pct: 40, isLab: true },
+    ],
+    '4': [
+      { room: 'Room 406',   pct: 30 },
+      { room: 'SHB404',     pct: 45 },
+      { room: 'SHB408 CL',  pct: 50, isLab: true },
+    ],
+  },
+  'IB': {
+    '1': [{ room: 'Canteen', pct: 60 }],
+    '2': [
+      { room: 'Room 214',   pct: 47 },
+      { room: 'IB202 CL',   pct: 70, isLab: true },
+      { room: 'IB208 CL',   pct: 45, isLab: true },
+      { room: 'IB215 CL',   pct: 55, isLab: true },
+    ],
+    '3': [
+      { room: 'Room 311',   pct: 37 },
+      { room: 'IB301',      pct: 60 },
+      { room: 'IB311 CL',   pct: 80, isLab: true },
+    ],
+    '4': [{ room: 'Room 311', pct: 25 }],
+  },
+  'Lyceum': {
+    '1': [{ room: 'Canteen', pct: 55 }],
+    '2': [{ room: 'Lyceum Hall', pct: 40 }],
+  },
+  'Sports Hall': {
+    '1': [{ room: 'Main Hall', pct: 33 }],
+    '2': [{ room: 'GYM', pct: 45 }],
+  },
 };
 
 const colorFor = (pct: number) =>
@@ -26,12 +78,11 @@ const FloorLayoutPage: React.FC = () => {
   const [selectedFloor, setSelectedFloor] = useState(1);
 
   const building = BUILDINGS.find(b => b.id === selectedBuilding) ?? BUILDINGS[0];
-  const rooms = FLOOR_ROOMS[String(selectedFloor)] ?? [];
+  const rooms = BUILDING_FLOOR_ROOMS[building.id]?.[String(selectedFloor)] ?? [];
 
   return (
     <div style={{ display: 'flex', gap: '1.5rem', height: '100%' }}>
 
-      {/* Left sidebar – building & floor selection */}
       <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '1.5rem', flexShrink: 0 }}>
         <div>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Building</div>
@@ -60,12 +111,15 @@ const FloorLayoutPage: React.FC = () => {
         </div>
 
         {/* Legend */}
-        <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.75rem', fontWeight: 600 }}>
+        <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.75rem', fontWeight: 600, flexWrap: 'wrap' }}>
           {[['Low (≤55%)', 'var(--primary-teal)'], ['Medium (56–80%)', 'var(--status-yellow)'], ['High (>80%)', 'var(--status-red)']].map(([label, color]) => (
             <div key={String(label)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
               <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: String(color) }} /> {label}
             </div>
           ))}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
+            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: 'var(--status-blue)' }} /> PC Lab
+          </div>
         </div>
 
         {/* Rooms grid */}
@@ -77,9 +131,16 @@ const FloorLayoutPage: React.FC = () => {
               const c = colorFor(r.pct);
               return (
                 <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: `2px solid ${c}`, borderRadius: '10px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>{r.room}</span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: c, backgroundColor: `${c}20`, padding: '2px 7px', borderRadius: '8px' }}>{r.pct}%</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <div>
+                      <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>{r.room}</span>
+                      {r.isLab && (
+                        <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--status-blue)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          PC Lab
+                        </div>
+                      )}
+                    </div>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: c, backgroundColor: `${c}20`, padding: '2px 7px', borderRadius: '8px', flexShrink: 0 }}>{r.pct}%</span>
                   </div>
                   <div style={{ height: '5px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '3px', overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${r.pct}%`, backgroundColor: c, borderRadius: '3px' }} />

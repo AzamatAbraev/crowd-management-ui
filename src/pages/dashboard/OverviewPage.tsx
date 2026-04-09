@@ -6,16 +6,17 @@ interface OccupancyData { deviceCounts: Record<string, number>; }
 interface ZoneRow { name: string; count: number; capacity: number; }
 
 const DUMMY_ZONES: ZoneRow[] = [
-  { name: 'Main Library',     count: 312, capacity: 400 },
-  { name: 'Student Union',    count: 280, capacity: 350 },
-  { name: 'Engineering Hall', count: 95,  capacity: 200 },
-  { name: 'Science Complex',  count: 140, capacity: 220 },
-  { name: 'Lecture Hall A',   count: 180, capacity: 200 },
+  { name: 'Learning Resource Center', count: 210, capacity: 350 },
+  { name: 'Amir Temur Building',      count: 320, capacity: 500 },
+  { name: 'Shakhrisabz Building',     count: 285, capacity: 450 },
+  { name: 'Istiqbol Building',        count: 240, capacity: 400 },
+  { name: 'Lyceum',                   count: 145, capacity: 250 },
+  { name: 'Sports Hall',              count: 95,  capacity: 200 },
 ];
 
 const DUMMY_STATS = {
-  totalOccupancy: 1007,
-  totalCapacity:  1370,
+  totalOccupancy: 1295,
+  totalCapacity:  2150,
   activeAlerts:   2,
   sensorUptime:   98,
   predictedPeak:  '14:00',

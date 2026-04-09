@@ -7,26 +7,27 @@ import '../../styles/dashboard.css';
 
 // ── Dummy data (replace with real API calls when endpoint available) ──
 const WEEKLY_CHART = [
-  { day: 'Mon', library: 68, union: 72, eng: 41 },
-  { day: 'Tue', library: 75, union: 66, eng: 55 },
-  { day: 'Wed', library: 82, union: 80, eng: 60 },
-  { day: 'Thu', library: 90, union: 85, eng: 48 },
-  { day: 'Fri', library: 70, union: 78, eng: 35 },
-  { day: 'Sat', library: 40, union: 45, eng: 15 },
-  { day: 'Sun', library: 20, union: 22, eng: 8 },
+  { day: 'Mon', lrc: 68, atb: 72, shb: 41 },
+  { day: 'Tue', lrc: 75, atb: 66, shb: 55 },
+  { day: 'Wed', lrc: 82, atb: 80, shb: 60 },
+  { day: 'Thu', lrc: 90, atb: 85, shb: 48 },
+  { day: 'Fri', lrc: 70, atb: 78, shb: 35 },
+  { day: 'Sat', lrc: 40, atb: 45, shb: 15 },
+  { day: 'Sun', lrc: 20, atb: 22, shb: 8 },
 ];
 
 const SUMMARY_STATS = [
   { label: 'Avg Daily Visitors', value: '14,820', change: '+12%' },
   { label: 'Peak Occupancy',     value: '92%',   change: '+4%' },
   { label: 'Avg Stay Duration',  value: '1.4 hrs', change: '-5%' },
-  { label: 'Active Sensors',     value: '248',   change: 'Stable' },
+  { label: 'Active Sensors',     value: '17',    change: 'Stable' },
 ];
 
 const BUILDING_TABLE = [
-  { name: 'Main Library',     footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High' },
-  { name: 'Student Union',    footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
-  { name: 'Engineering Hall', footfall: 12400, avgOcc: 31, peak: '09:00–11:00', risk: 'Low' },
+  { name: 'Learning Resource Center', footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High'     },
+  { name: 'Amir Temur Building',      footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
+  { name: 'Shakhrisabz Building',     footfall: 22400, avgOcc: 45, peak: '09:00–11:00', risk: 'Low'      },
+  { name: 'Istiqbol Building',        footfall: 18890, avgOcc: 40, peak: '10:00–12:00', risk: 'Low'      },
 ];
 
 const RISK_COLORS: Record<string, string> = { High: 'var(--status-red)', Moderate: 'var(--status-yellow)', Low: 'var(--status-green)' };
@@ -103,9 +104,9 @@ const AdminStatisticsPage: React.FC = () => {
                 <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
                 <Tooltip contentStyle={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 8, fontSize: '0.8rem' }} formatter={(v) => [`${v}%`]} />
-                <Line type="monotone" dataKey="library" stroke="var(--primary-teal)" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="union" stroke="#3b82f6" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="eng" stroke="#a855f7" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="lrc" stroke="var(--primary-teal)" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="atb" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="shb" stroke="#a855f7" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>

@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Thermometer } from 'lucide-react';
 
 const BUILDINGS = [
-  { id: 'bldg-lib', name: 'Main Library', color: 'var(--primary-teal)' },
-  { id: 'bldg-eng', name: 'Engineering Block', color: 'var(--status-yellow)' },
-  { id: 'bldg-sci', name: 'Science Complex', color: 'var(--primary-teal)' },
-  { id: 'bldg-union', name: 'Student Union', color: 'var(--status-red)' },
-  { id: 'bldg-arts', name: 'Arts Center', color: 'var(--primary-teal)' },
-  { id: 'bldg-gym', name: 'Fitness & Recreation', color: 'var(--primary-teal)' }
+  { id: 'bldg-lrc',    name: 'Learning Resource Center', color: 'var(--primary-teal)' },
+  { id: 'bldg-atb',    name: 'Amir Temur Building',      color: 'var(--status-yellow)' },
+  { id: 'bldg-shb',    name: 'Shakhrisabz Building',     color: 'var(--primary-teal)' },
+  { id: 'bldg-ib',     name: 'Istiqbol Building',        color: 'var(--status-red)' },
+  { id: 'bldg-lyceum', name: 'Lyceum',                   color: 'var(--primary-teal)' },
+  { id: 'bldg-sports', name: 'Sports Hall',              color: 'var(--primary-teal)' },
 ];
 
 const ViewerCampusMap: React.FC = () => {
@@ -61,44 +61,52 @@ const ViewerCampusMap: React.FC = () => {
         
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: '2rem' }}>
             
-            <button 
+            <button
                onClick={() => navigate(`/live/building/${BUILDINGS[0].id}`)}
-               style={{ position: 'absolute', top: '15%', left: '20%', width: '220px', height: '140px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[0].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
+               style={{ position: 'absolute', top: '15%', left: '20%', width: '220px', height: '140px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[0].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit', textAlign: 'center', padding: '0.5rem' }}
                className="hover-lift"
             >
               {BUILDINGS[0].name}
             </button>
 
-            <button 
+            <button
                onClick={() => navigate(`/live/building/${BUILDINGS[1].id}`)}
-               style={{ position: 'absolute', top: '10%', right: '25%', width: '180px', height: '200px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[1].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
+               style={{ position: 'absolute', top: '10%', right: '25%', width: '180px', height: '200px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[1].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit', textAlign: 'center', padding: '0.5rem' }}
                className="hover-lift"
             >
               {BUILDINGS[1].name}
             </button>
 
-            <button 
+            <button
                onClick={() => navigate(`/live/building/${BUILDINGS[2].id}`)}
-               style={{ position: 'absolute', top: '45%', left: '35%', width: '300px', height: '160px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[2].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
+               style={{ position: 'absolute', top: '45%', left: '35%', width: '280px', height: '160px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[2].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit', textAlign: 'center', padding: '0.5rem' }}
                className="hover-lift"
             >
               {BUILDINGS[2].name}
             </button>
 
-            <button 
+            <button
                onClick={() => navigate(`/live/building/${BUILDINGS[3].id}`)}
-               style={{ position: 'absolute', bottom: '15%', left: '15%', width: '200px', height: '150px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[3].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
+               style={{ position: 'absolute', bottom: '15%', left: '15%', width: '200px', height: '150px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[3].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit', textAlign: 'center', padding: '0.5rem' }}
                className="hover-lift"
             >
               {BUILDINGS[3].name}
             </button>
 
-            <button 
+            <button
                onClick={() => navigate(`/live/building/${BUILDINGS[4].id}`)}
-               style={{ position: 'absolute', bottom: '25%', right: '15%', width: '160px', height: '220px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[4].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit' }}
+               style={{ position: 'absolute', bottom: '25%', right: '15%', width: '160px', height: '180px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[4].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit', textAlign: 'center', padding: '0.5rem' }}
                className="hover-lift"
             >
               {BUILDINGS[4].name}
+            </button>
+
+            <button
+               onClick={() => navigate(`/live/building/${BUILDINGS[5].id}`)}
+               style={{ position: 'absolute', top: '38%', right: '8%', width: '150px', height: '130px', backgroundColor: 'var(--bg-panel)', border: `2px solid ${BUILDINGS[5].color}`, borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--text-main)', fontWeight: 600, fontSize: '1rem', transition: 'var(--transition-base)', boxShadow: 'var(--shadow-sm)', fontFamily: 'inherit', textAlign: 'center', padding: '0.5rem' }}
+               className="hover-lift"
+            >
+              {BUILDINGS[5].name}
             </button>
         </div>
       </div>

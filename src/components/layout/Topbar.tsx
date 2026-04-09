@@ -172,6 +172,7 @@ const Topbar: React.FC = () => {
           {/* Logout */}
           <button
             onClick={() => {
+              fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});
               const form = document.createElement('form');
               form.method = 'POST';
               form.action = 'http://localhost:8082/logout';

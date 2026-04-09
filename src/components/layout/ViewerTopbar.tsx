@@ -8,6 +8,7 @@ const ViewerTopbar: React.FC = () => {
   const { user } = useAuth();
 
   const handleLogout = () => {
+    fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'http://localhost:8082/logout';
@@ -50,7 +51,6 @@ const ViewerTopbar: React.FC = () => {
       flexShrink: 0,
     }}>
 
-      {/* ── Brand ─────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         <span style={{
           fontSize: '0.9375rem',

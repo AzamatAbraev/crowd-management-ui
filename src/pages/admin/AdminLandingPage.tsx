@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio } from 'lucide-react';
+import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
@@ -51,6 +51,14 @@ const ALL_SECTIONS: SectionDef[] = [
     route: '/admin/statistics',
   },
   {
+    id: 'grafana',
+    label: 'Grafana Dashboards',
+    description: 'Live and historical occupancy charts powered by Grafana.',
+    icon: <Activity size={32} />,
+    accentColor: '#f46800',
+    route: '/admin/grafana',
+  },
+  {
     id: 'users',
     label: 'User Management',
     description: 'Manage users and Keycloak role assignments.',
@@ -67,6 +75,7 @@ const AdminLandingPage: React.FC = () => {
   const { user, isTheKing, isSystemAdmin, isFacilityManager } = useAuth();
 
   const handleLogout = () => {
+    fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'http://localhost:8082/logout';

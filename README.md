@@ -1,3 +1,10 @@
+
+ >[!IMPORTANT]                                                           
+ > This service is part of the [Crowd Management                        
+  System](https://github.com/AzamatAbraev/crowd-management-system)         monorepo. Clone the full system from there — do not clone this repo      individually. 
+
+
+
 # People Counter Frontend
 
 The web interface for the crowd management platform. It provides live occupancy views, floor plans, analytics, device management, and user administration. Authentication is handled by the gateway — the frontend never communicates with Keycloak directly.

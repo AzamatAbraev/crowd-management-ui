@@ -43,7 +43,6 @@ const Topbar: React.FC = () => {
       zIndex: 10,
     }}>
 
-      {/* ── Left: LIVE indicator + time ───────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flexShrink: 0 }}>
         <div style={{
           display: 'flex',
@@ -76,7 +75,6 @@ const Topbar: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Center: Search ────────────────────────────────── */}
       <div style={{ flex: 1, maxWidth: '380px' }}>
         <div style={{
           display: 'flex',
@@ -108,10 +106,8 @@ const Topbar: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Right: Icon actions + user ────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', flexShrink: 0 }}>
 
-        {/* Theme toggle */}
         <button
           onClick={toggleTheme}
           className="btn-icon"
@@ -121,7 +117,6 @@ const Topbar: React.FC = () => {
           {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
-        {/* Notifications */}
         <button className="btn-icon" style={{ position: 'relative', color: 'var(--text-muted)' }}>
           <Bell size={18} />
           <span style={{
@@ -136,10 +131,8 @@ const Topbar: React.FC = () => {
           }} />
         </button>
 
-        {/* Vertical separator */}
         <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--border-color)', margin: '0 var(--space-2)' }} />
 
-        {/* User profile */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.2 }}>
@@ -150,7 +143,6 @@ const Topbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Avatar */}
           <div style={{
             width: '34px',
             height: '34px',
@@ -169,7 +161,6 @@ const Topbar: React.FC = () => {
             {initials}
           </div>
 
-          {/* Logout */}
           <button
             onClick={() => {
               fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});

@@ -22,7 +22,6 @@ const TimetablePage = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Load Metadata once on mount
   useEffect(() => {
     const loadMeta = async () => {
       try {

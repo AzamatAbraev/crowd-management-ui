@@ -9,7 +9,6 @@ interface OccupancyData {
 
 const MAX_AREA_CAPACITY = 50;
 
-// Dummy historical data per hour block for the chart
 const HOURLY_DUMMY = [
   { label: '8am', pct: 10 }, { label: '9am', pct: 35 }, { label: '10am', pct: 75 },
   { label: '11am', pct: 90 }, { label: '12pm', pct: 65 }, { label: '1pm', pct: 50 },
@@ -17,7 +16,6 @@ const HOURLY_DUMMY = [
   { label: '5pm', pct: 15 },
 ];
 
-// Dummy sensor events for the area feed
 const DUMMY_EVENTS = [
   { time: '10:42', type: 'entry', count: 3, icon: '→' },
   { time: '10:38', type: 'exit', count: 1, icon: '←' },
@@ -37,7 +35,6 @@ const ViewerAreaDetails: React.FC = () => {
       const response = await api.get<OccupancyData>('/people/count');
       setDeviceCounts(response.data.deviceCounts || {});
     } catch {
-      // fail silently, show 0
     }
   };
 

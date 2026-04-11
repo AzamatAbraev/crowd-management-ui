@@ -48,7 +48,6 @@ const Sidebar: React.FC = () => {
       flexShrink: 0,
     }}>
 
-      {/* ── Logo ───────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-8)', padding: '0 var(--space-2)' }}>
         <div style={{
           backgroundColor: 'var(--primary-teal)',
@@ -72,7 +71,6 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Navigation ─────────────────────────────────────── */}
       <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
         <div className="section-label" style={{ padding: '0 var(--space-3)', marginBottom: 'var(--space-2)' }}>
           Navigation
@@ -107,16 +105,13 @@ const Sidebar: React.FC = () => {
                 }
               }}
               onMouseLeave={e => {
-                // NavLink re-applies its style function; just clear overrides
                 const el = e.currentTarget;
-                // Check isActive by reading current borderLeft
                 if (el.style.borderLeft !== '2px solid var(--primary-teal)') {
                   el.style.backgroundColor = 'transparent';
                   el.style.color = 'var(--text-muted)';
                 }
               }}
             >
-              {/* Optical icon centering: 18px visual, wrapped in fixed container */}
               <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 18, height: 18, flexShrink: 0 }}>
                 <item.icon size={17} />
               </span>
@@ -140,7 +135,6 @@ const Sidebar: React.FC = () => {
           ))}
       </nav>
 
-      {/* ── Support Button ──────────────────────────────────── */}
       <div style={{ paddingTop: 'var(--space-4)', borderTop: '1px solid var(--border-color)', marginTop: 'var(--space-4)' }}>
         <button
           style={{

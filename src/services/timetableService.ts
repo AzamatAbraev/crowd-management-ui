@@ -6,15 +6,11 @@ import type {
 } from "../types/timetable";
 import { api } from "../server";
 
-/**
- * Fetches the filtered timetable entries
- */
 export const fetchTimetable = async (
   filters: TimetableFilters,
 ): Promise<TimetableEntry[]> => {
   const params: Record<string, string> = {};
 
-  // Clean up filters: only send non-empty values to the backend
   Object.entries(filters).forEach(([key, value]) => {
     if (value && value.trim() !== "") {
       params[key] = value;
@@ -26,7 +22,6 @@ export const fetchTimetable = async (
     { params },
   );
 
-  // Your ResponseBuilder sends 'success' or '200'
   if (response.data.status !== "success" && response.data.code !== 200) {
     throw new Error(response.data.message);
   }

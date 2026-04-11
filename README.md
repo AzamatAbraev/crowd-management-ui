@@ -50,7 +50,6 @@ Services in `src/services/`:
 | `timetableService.ts` | Room schedule data |
 | `userManagementService.ts` | Admin user CRUD |
 
-Authentication state is managed in `src/contexts/AuthContext.tsx`.
 
 ## Running with Docker
 

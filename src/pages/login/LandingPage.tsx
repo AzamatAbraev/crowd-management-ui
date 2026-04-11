@@ -10,7 +10,7 @@ const LandingPage: React.FC = () => {
   useEffect(() => {
     api.get('/people/count')
       .then(() => navigate('/home'))
-      .catch(() => { /* stay on landing */ });
+      .catch(() => {});
   }, [navigate]);
 
   const login = () => {
@@ -38,7 +38,6 @@ const LandingPage: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-base)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
 
-      {/* ── Navbar ──────────────────────────────────────────────── */}
       <nav style={{
         height: 'var(--topbar-height)',
         padding: '0 var(--space-16)',
@@ -52,7 +51,6 @@ const LandingPage: React.FC = () => {
         top: 0,
         zIndex: 10,
       }}>
-        {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <div style={{
             backgroundColor: 'var(--primary-teal)',
@@ -83,10 +81,8 @@ const LandingPage: React.FC = () => {
         </div>
       </nav>
 
-      {/* ── Hero ────────────────────────────────────────────────── */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-16) var(--space-8)', textAlign: 'center' }}>
 
-        {/* Eyebrow label */}
         <div className="badge badge-teal animate-in stagger-1" style={{ marginBottom: 'var(--space-6)', fontSize: 'var(--text-xs)', letterSpacing: '0.1em' }}>
           UNIVERSITY CAMPUS INTELLIGENCE
         </div>
@@ -133,7 +129,6 @@ const LandingPage: React.FC = () => {
           </button>
         </div>
 
-        {/* ── Feature Cards ────────────────────────────────────── */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -191,7 +186,6 @@ const LandingPage: React.FC = () => {
         </div>
       </main>
 
-      {/* ── Footer ──────────────────────────────────────────────── */}
       <footer style={{
         padding: 'var(--space-6) var(--space-16)',
         borderTop: '1px solid var(--border-color)',

@@ -19,7 +19,7 @@ export interface Floor {
 export interface Room {
   id: string;
   name: string;
-  occupancy: number; // 0-100
+  occupancy: number;
   size: "large" | "medium" | "small";
   activeUsers?: number;
 }

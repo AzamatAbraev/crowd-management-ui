@@ -15,7 +15,6 @@ interface OccupancyData {
   deviceCounts: Record<string, number>;
 }
 
-// Counts how many seconds ago a timestamp string was
 const secondsAgo = (ts: string | undefined): number => {
   if (!ts) return Infinity;
   const d = new Date(ts);
@@ -31,7 +30,6 @@ const formatLastSeen = (ts: string | undefined): string => {
   return `${Math.floor(secs / 3600)}h ago`;
 };
 
-// ── Fleet stat pill ────────────────────────────────────────────────────────────
 const FleetStat: React.FC<{ icon: React.ReactNode; label: string; value: number; color: string }> = ({ icon, label, value, color }) => (
   <div style={{
     display: 'flex', alignItems: 'center', gap: 'var(--space-3)',
@@ -61,10 +59,6 @@ const SensorsPage: React.FC = () => {
 
   const API_URL = '/people/count';
 
-  // ── Metadata fetch ───────────────────────────────────────────────────────────
-  // Previously called only once (on mount). Now also polled every 10 seconds
-  // so device ONLINE/OFFLINE status from MQTT LWT is reflected in the UI
-  // without a page refresh.
   const fetchMetadata = useCallback(async () => {
     console.log(buildingsData);
 
@@ -86,7 +80,6 @@ const SensorsPage: React.FC = () => {
     }
   }, []);
 
-  // ── Count fetch ──────────────────────────────────────────────────────────────
   const fetchCount = useCallback(async (): Promise<void> => {
     try {
       const response: AxiosResponse<OccupancyData> = await api.get(API_URL);
@@ -108,11 +101,8 @@ const SensorsPage: React.FC = () => {
     }
   }, []);
 
-  // ── Polling effects ──────────────────────────────────────────────────────────
   useEffect(() => {
     fetchMetadata();
-    // Re-fetch device metadata every 10s so ONLINE/OFFLINE state from
-    // MQTT LWT is reflected without a manual refresh
     const metaInterval = setInterval(fetchMetadata, 10000);
     return () => clearInterval(metaInterval);
   }, [fetchMetadata]);
@@ -124,7 +114,6 @@ const SensorsPage: React.FC = () => {
     return () => clearInterval(countInterval);
   }, [isPolling, fetchCount]);
 
-  // ── Derived fleet stats ──────────────────────────────────────────────────────
   const allDevices = Object.values(devicesData);
   const onlineDevices = allDevices.filter(d => d.status === 'ONLINE');
   const offlineDevices = allDevices.filter(d => d.status === 'OFFLINE');
@@ -135,7 +124,6 @@ const SensorsPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
 
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div className="animate-in stagger-1" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: 'var(--space-3)', letterSpacing: '-0.02em' }}>
@@ -148,7 +136,6 @@ const SensorsPage: React.FC = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-          {/* API connection status indicator */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8,
             backgroundColor: isConnected ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
@@ -174,10 +161,6 @@ const SensorsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Fleet Status Summary ────────────────────────────────────────────── */}
-      {/* These numbers come from the real Device entities updated by MQTT LWT.
-          Previously this section didn't exist — the only info was the hardcoded
-          "Active Nodes: 20" text. Now it's real and live-refreshed every 10s. */}
       {totalFleet > 0 && (
         <div style={{ display: 'flex', gap: '0.875rem' }}>
           <FleetStat icon={<Server size={20} />} label="Total Fleet" value={totalFleet} color="var(--text-muted)" />
@@ -187,7 +170,6 @@ const SensorsPage: React.FC = () => {
         </div>
       )}
 
-      {/* ── Main Count Display ──────────────────────────────────────────────── */}
       <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)', padding: 'var(--space-12) var(--space-8)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{
           backgroundColor: 'var(--bg-base)', border: '1px solid var(--border-color)',
@@ -216,7 +198,6 @@ const SensorsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ── Per-Device Node Grid ─────────────────────────────────────────────── */}
       {Object.keys(deviceCounts).length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.75rem' }}>
@@ -235,10 +216,8 @@ const SensorsPage: React.FC = () => {
                 const devMeta = devicesData[device];
                 const isOnline = devMeta?.status === 'ONLINE';
                 const isOffline = devMeta?.status === 'OFFLINE';
-                // A device is "stale" if its lastSeen is > 60 seconds ago, regardless of DB status
                 const stale = secondsAgo(devMeta?.lastSeen) > 60;
 
-                // Border colour: green accent if sending entries, red for exits, grey otherwise
                 const accentColor = value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--border-color)';
 
                 return (
@@ -256,14 +235,12 @@ const SensorsPage: React.FC = () => {
                     onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                     onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'none'; }}
                   >
-                    {/* Card header: name + delta */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                         <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>
                           {devMeta?.name || device.toUpperCase()}
                         </span>
 
-                        {/* Online / Offline / Unknown indicator — now reflects real MQTT LWT status */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.72rem', fontWeight: 700 }}>
                           <div style={{
                             width: 7, height: 7, borderRadius: '50%',
@@ -279,7 +256,6 @@ const SensorsPage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Net delta */}
                       <div style={{
                         fontSize: '1.5rem', fontWeight: 800,
                         color: value > 0 ? 'var(--primary-teal)' : value < 0 ? 'var(--status-red)' : 'var(--text-main)',
@@ -288,7 +264,6 @@ const SensorsPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Card footer: location + last seen */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 5, borderTop: '1px solid var(--border-color)', paddingTop: '0.75rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--text-muted)' }}>
                         <MapPin size={11} />

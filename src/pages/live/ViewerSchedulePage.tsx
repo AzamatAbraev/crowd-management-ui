@@ -43,7 +43,6 @@ const ViewerSchedulePage: React.FC = () => {
         );
         setEntries(sorted);
       } else {
-        // Use mock data filtered by current filters
         let mock = MOCK_ENTRIES;
         if (filters.day) mock = mock.filter(e => e.day === filters.day);
         if (filters.classroom) mock = mock.filter(e => e.classroom?.toLowerCase().includes(filters.classroom!.toLowerCase()));
@@ -74,7 +73,6 @@ const ViewerSchedulePage: React.FC = () => {
     return e.subject?.toLowerCase().includes(q) || e.className?.toLowerCase().includes(q) || e.teacherName?.toLowerCase().includes(q) || e.classroom?.toLowerCase().includes(q);
   });
 
-  // Group by day
   const grouped: Record<string, TimetableEntry[]> = {};
   displayed.forEach(e => {
     if (!grouped[e.day]) grouped[e.day] = [];

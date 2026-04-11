@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Download } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
-// --- DUMMY DATA ---
-// TODO: Replace with API call to /analytics/occupancy?range=7d or similar.
 const WEEKLY_CHART = [
   { day: 'Mon', lrc: 68, atb: 72, shb: 41 },
   { day: 'Tue', lrc: 75, atb: 66, shb: 55 },
@@ -14,7 +12,6 @@ const WEEKLY_CHART = [
   { day: 'Sun', lrc: 20, atb: 22, shb: 8  },
 ];
 
-// TODO: Replace with API call to /analytics/summary?range=7d
 const SUMMARY_STATS = [
   { label: 'Avg Daily Visitors', value: '14,820', change: '+12%', up: true },
   { label: 'Peak Occupancy',     value: '92%',   change: '+4%',  up: false },
@@ -22,7 +19,6 @@ const SUMMARY_STATS = [
   { label: 'Active Sensors',     value: '248',   change: 'Stable', up: true },
 ];
 
-// TODO: Replace with API call to /analytics/buildings
 const BUILDING_TABLE = [
   { name: 'Learning Resource Center', footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High'     },
   { name: 'Amir Temur Building',      footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
@@ -37,7 +33,6 @@ const AnalyticsPage: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      {/* Header */}
       <div className="animate-in stagger-1" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>Historical Analytics</h1>
@@ -64,7 +59,6 @@ const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Summary Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 'var(--space-4)' }}>
         {SUMMARY_STATS.map((s, i) => (
           <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-5)', boxShadow: 'var(--shadow-sm)' }}>
@@ -77,7 +71,6 @@ const AnalyticsPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Occupancy Trend Chart */}
       <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-5)' }}>
           <div>
@@ -107,7 +100,6 @@ const AnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Buildings Table */}
       <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ padding: 'var(--space-4) var(--space-6)', borderBottom: '1px solid var(--border-color)', fontWeight: 700, fontSize: '0.9375rem', color: 'var(--text-main)', letterSpacing: '-0.01em' }}>Building Summary</div>
         <table className="data-table">

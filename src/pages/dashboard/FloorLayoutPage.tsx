@@ -10,8 +10,6 @@ const BUILDINGS = [
   { id: 'Sports Hall',  name: 'Sports Hall',                        floors: 2 },
 ];
 
-// Rooms sourced from timetable.xml classrooms + iot-device-simulator config.py
-// Rooms with "PC Lab" tag match the "CL" classrooms in the timetable
 const BUILDING_FLOOR_ROOMS: Record<string, Record<string, { room: string; pct: number; isLab?: boolean }[]>> = {
   'LRC': {
     '1': [{ room: 'Room 113', pct: 55 }],
@@ -103,14 +101,12 @@ const FloorLayoutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Main area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.25rem', minWidth: 0 }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)' }}>{building.name} – Floor {selectedFloor}</h1>
           <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Live room occupancy</p>
         </div>
 
-        {/* Legend */}
         <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.75rem', fontWeight: 600, flexWrap: 'wrap' }}>
           {[['Low (≤55%)', 'var(--primary-teal)'], ['Medium (56–80%)', 'var(--status-yellow)'], ['High (>80%)', 'var(--status-red)']].map(([label, color]) => (
             <div key={String(label)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
@@ -122,7 +118,6 @@ const FloorLayoutPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Rooms grid */}
         {rooms.length === 0 ? (
           <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--bg-panel)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>No rooms configured for this floor.</div>
         ) : (

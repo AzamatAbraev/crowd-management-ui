@@ -5,7 +5,6 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
 
-// ── Dummy data (replace with real API calls when endpoint available) ──
 const WEEKLY_CHART = [
   { day: 'Mon', lrc: 68, atb: 72, shb: 41 },
   { day: 'Tue', lrc: 75, atb: 66, shb: 55 },
@@ -18,16 +17,16 @@ const WEEKLY_CHART = [
 
 const SUMMARY_STATS = [
   { label: 'Avg Daily Visitors', value: '14,820', change: '+12%' },
-  { label: 'Peak Occupancy',     value: '92%',   change: '+4%' },
-  { label: 'Avg Stay Duration',  value: '1.4 hrs', change: '-5%' },
-  { label: 'Active Sensors',     value: '17',    change: 'Stable' },
+  { label: 'Peak Occupancy', value: '92%', change: '+4%' },
+  { label: 'Avg Stay Duration', value: '1.4 hrs', change: '-5%' },
+  { label: 'Active Sensors', value: '17', change: 'Stable' },
 ];
 
 const BUILDING_TABLE = [
-  { name: 'Learning Resource Center', footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High'     },
-  { name: 'Amir Temur Building',      footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
-  { name: 'Shakhrisabz Building',     footfall: 22400, avgOcc: 45, peak: '09:00–11:00', risk: 'Low'      },
-  { name: 'Istiqbol Building',        footfall: 18890, avgOcc: 40, peak: '10:00–12:00', risk: 'Low'      },
+  { name: 'Learning Resource Center', footfall: 42501, avgOcc: 64, peak: '14:00–16:00', risk: 'High' },
+  { name: 'Amir Temur Building', footfall: 38122, avgOcc: 62, peak: '12:00–13:30', risk: 'Moderate' },
+  { name: 'Shakhrisabz Building', footfall: 22400, avgOcc: 45, peak: '09:00–11:00', risk: 'Low' },
+  { name: 'Istiqbol Building', footfall: 18890, avgOcc: 40, peak: '10:00–12:00', risk: 'Low' },
 ];
 
 const RISK_COLORS: Record<string, string> = { High: 'var(--status-red)', Moderate: 'var(--status-yellow)', Low: 'var(--status-green)' };

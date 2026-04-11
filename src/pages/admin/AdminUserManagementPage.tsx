@@ -9,10 +9,8 @@ import { userManagementService, type KeycloakUser, type CreateUserPayload } from
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
 
-// ─── Constants ───────────────────────────────────────────────────────────────
 const SYSTEM_ROLES = ['offline_access', 'uma_authorization', 'default-roles-crowd-management'];
 
-// ─── Toast ───────────────────────────────────────────────────────────────────
 type ToastType = 'success' | 'error';
 const Toast: React.FC<{ message: string; type: ToastType; onClose: () => void }> = ({ message, type, onClose }) => (
   <div style={{
@@ -31,7 +29,6 @@ const Toast: React.FC<{ message: string; type: ToastType; onClose: () => void }>
   </div>
 );
 
-// ─── Modal ────────────────────────────────────────────────────────────────────
 const Modal: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => (
   <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
     <div className="glass-panel" style={{ width: '100%', maxWidth: 500, padding: '2rem', borderRadius: 16, backgroundColor: 'var(--bg-panel)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -44,7 +41,6 @@ const Modal: React.FC<{ title: string; onClose: () => void; children: React.Reac
   </div>
 );
 
-// ─── Field Input ─────────────────────────────────────────────────────────────
 const FieldInput: React.FC<{ label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; required?: boolean }> = ({ label, value, onChange, type = 'text', placeholder, required }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
     <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -55,7 +51,6 @@ const FieldInput: React.FC<{ label: string; value: string; onChange: (v: string)
   </div>
 );
 
-// ─── Action Button ────────────────────────────────────────────────────────────
 const ActionBtn: React.FC<{ color: string; icon: React.ReactNode; label: string; onClick: () => void; fullWidth?: boolean }> = ({ color, icon, label, onClick, fullWidth }) => (
   <button onClick={onClick} style={{
     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -70,7 +65,6 @@ const ActionBtn: React.FC<{ color: string; icon: React.ReactNode; label: string;
   </button>
 );
 
-// ─── User Detail Panel (Right Slide-In) ──────────────────────────────────────
 interface DetailPanelProps {
   user: KeycloakUser;
   currentUsername: string | undefined;
@@ -95,10 +89,8 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
       display: 'flex', flexDirection: 'column', boxShadow: '-8px 0 32px rgba(0,0,0,0.15)',
       animation: 'slideIn 0.22s ease',
     }}>
-      {/* Header */}
       <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {/* Avatar */}
           <div style={{
             width: 48, height: 48, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
             backgroundColor: 'var(--primary-teal-transparent)', color: 'var(--primary-teal)', fontWeight: 800, fontSize: '1.1rem',
@@ -118,10 +110,8 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
         </button>
       </div>
 
-      {/* Body */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-        {/* Info */}
         <section>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>Profile</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -140,7 +130,6 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
           </div>
         </section>
 
-        {/* Status */}
         <section>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>Status</div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '0.45rem 1rem', borderRadius: 20, fontWeight: 700, fontSize: '0.8rem', backgroundColor: user.enabled ? '#10b98122' : '#ef444422', color: user.enabled ? '#10b981' : '#ef4444' }}>
@@ -149,7 +138,6 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
           </div>
         </section>
 
-        {/* Roles */}
         <section>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>Assigned Roles</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -164,14 +152,12 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
           </div>
         </section>
 
-        {/* User ID (for debugging, subtle) */}
         <section>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem' }}>User ID</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontFamily: 'monospace', wordBreak: 'break-all', padding: '0.5rem 0.75rem', backgroundColor: 'var(--bg-dark)', borderRadius: 6 }}>{user.id}</div>
         </section>
       </div>
 
-      {/* Actions Footer */}
       <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <ActionBtn color="#3b82f6" icon={<Edit2 size={14} />} label="Edit Profile" onClick={onEdit} />
@@ -187,7 +173,6 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
   );
 };
 
-// ─── Main Page ────────────────────────────────────────────────────────────────
 type ModalMode = 'create' | 'edit' | 'password' | 'roles' | null;
 
 const AdminUserManagementPage: React.FC = () => {
@@ -226,7 +211,7 @@ const AdminUserManagementPage: React.FC = () => {
   }, [searchQuery]);
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
-  useEffect(() => { userManagementService.getAllRealmRoles().then(setAllRoles).catch(() => {}); }, []);
+  useEffect(() => { userManagementService.getAllRealmRoles().then(setAllRoles).catch(() => { }); }, []);
 
   const openPanel = (u: KeycloakUser) => setSelectedUser(u);
   const closePanel = () => setSelectedUser(null);
@@ -286,7 +271,6 @@ const AdminUserManagementPage: React.FC = () => {
     try {
       await userManagementService.setUserEnabled(selectedUser.id, !selectedUser.enabled);
       showToast(`User ${!selectedUser.enabled ? 'enabled' : 'disabled'}`, 'success');
-      // Optimistically update panel user immediately
       setSelectedUser(u => u ? { ...u, enabled: !u.enabled } : u);
       fetchUsers();
     } catch { showToast('Failed to update status', 'error'); }
@@ -321,7 +305,6 @@ const AdminUserManagementPage: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
 
-      {/* Topbar */}
       <nav style={{ padding: '1.25rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
@@ -345,10 +328,8 @@ const AdminUserManagementPage: React.FC = () => {
         </button>
       </nav>
 
-      {/* Main content — shrinks when panel is open */}
       <main style={{ flex: 1, padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', marginRight: selectedUser ? 380 : 0, transition: 'margin-right 0.22s ease' }}>
 
-        {/* Search bar + count */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: 9, padding: '0.5rem 1rem', flex: 1, maxWidth: 400 }}>
             <Search size={16} color="var(--text-muted)" />
@@ -363,7 +344,6 @@ const AdminUserManagementPage: React.FC = () => {
           </span>
         </div>
 
-        {/* Table */}
         <div className="glass-panel" style={{ overflow: 'hidden' }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
@@ -397,7 +377,6 @@ const AdminUserManagementPage: React.FC = () => {
                       onMouseOver={e => { if (!isSelected) e.currentTarget.style.backgroundColor = 'var(--bg-panel-active)'; }}
                       onMouseOut={e => { if (!isSelected) e.currentTarget.style.backgroundColor = i % 2 === 0 ? 'transparent' : 'var(--bg-panel-hover)'; }}
                     >
-                      {/* User cell: avatar + name + username */}
                       <td style={{ padding: '0.85rem 1rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <div style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: 'var(--primary-teal-transparent)', color: 'var(--primary-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.9rem', flexShrink: 0 }}>
@@ -412,15 +391,12 @@ const AdminUserManagementPage: React.FC = () => {
                           </div>
                         </div>
                       </td>
-                      {/* Email */}
                       <td style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)', fontSize: '0.85rem' }}>{u.email || '—'}</td>
-                      {/* Status badge */}
                       <td style={{ padding: '0.85rem 1rem' }}>
                         <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 700, backgroundColor: u.enabled ? '#10b98122' : '#ef444422', color: u.enabled ? '#10b981' : '#ef4444' }}>
                           {u.enabled ? 'Active' : 'Disabled'}
                         </span>
                       </td>
-                      {/* Role pills (max 2 + overflow count) */}
                       <td style={{ padding: '0.85rem 1rem' }}>
                         <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                           {visibleRoles.slice(0, 2).map(r => (
@@ -434,7 +410,6 @@ const AdminUserManagementPage: React.FC = () => {
                           {visibleRoles.length === 0 && <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>—</span>}
                         </div>
                       </td>
-                      {/* Chevron indicator */}
                       <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
                         <ChevronRight size={16} color="var(--text-muted)" style={{ transform: isSelected ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }} />
                       </td>
@@ -447,7 +422,6 @@ const AdminUserManagementPage: React.FC = () => {
         </div>
       </main>
 
-      {/* Slide-in Detail Panel */}
       {selectedUser && (
         <UserDetailPanel
           user={selectedUser}
@@ -461,9 +435,7 @@ const AdminUserManagementPage: React.FC = () => {
         />
       )}
 
-      {/* ── Modals ── */}
 
-      {/* Create User */}
       {modalMode === 'create' && (
         <Modal title="Create New User" onClose={closeModal}>
           <form onSubmit={handleCreate} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -488,7 +460,6 @@ const AdminUserManagementPage: React.FC = () => {
         </Modal>
       )}
 
-      {/* Edit User */}
       {modalMode === 'edit' && selectedUser && (
         <Modal title={`Edit ${selectedUser.username}`} onClose={closeModal}>
           <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -507,7 +478,6 @@ const AdminUserManagementPage: React.FC = () => {
         </Modal>
       )}
 
-      {/* Reset Password */}
       {modalMode === 'password' && selectedUser && (
         <Modal title={`Reset Password — ${selectedUser.username}`} onClose={closeModal}>
           <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -526,7 +496,6 @@ const AdminUserManagementPage: React.FC = () => {
         </Modal>
       )}
 
-      {/* Role Management */}
       {modalMode === 'roles' && selectedUser && (
         <Modal title={`Roles — ${selectedUser.username}`} onClose={closeModal}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>

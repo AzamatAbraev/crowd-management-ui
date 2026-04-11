@@ -30,7 +30,6 @@ export interface ResetPasswordPayload {
   temporary: boolean;
 }
 
-// Helper: unwrap the ApiResponse wrapper from Spring Boot
 const unwrap = (response: any) => response.data?.data ?? response.data;
 
 export const userManagementService = {

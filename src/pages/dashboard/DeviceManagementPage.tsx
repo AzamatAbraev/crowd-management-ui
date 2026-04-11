@@ -27,7 +27,6 @@ const DeviceManagementPage: React.FC = () => {
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({ id: '', name: '', type: 'ULTRASONIC_SENSOR', location: '' });
@@ -51,19 +50,16 @@ const DeviceManagementPage: React.FC = () => {
   useEffect(() => {
     fetchDevices();
     fetchBuildings();
-    // Optional: Auto-refresh every 10 seconds for real-time monitoring
     const interval = setInterval(fetchDevices, 10000);
     return () => clearInterval(interval);
   }, []);
 
-  // Filter devices based on search
   const filteredDevices = devices.filter(d =>
     d.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (d.location && d.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (d.name && d.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  // Compute Fleet Stats
   const totalDevs = devices.length;
   const onlineDevs = devices.filter(d => d.status === 'ONLINE').length;
   const offlineDevs = devices.filter(d => d.status === 'OFFLINE').length;
@@ -165,7 +161,6 @@ const DeviceManagementPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', height: '100%' }}>
 
-      {/* HEADER */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ margin: 0, fontSize: '1.6rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -193,7 +188,6 @@ const DeviceManagementPage: React.FC = () => {
         </div>
       </div>
 
-      {/* FLEET OVERVIEW CARDS */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem' }}>
         {[
           { label: 'Total Fleet', value: totalDevs, icon: Server, color: 'var(--text-main)' },
@@ -213,13 +207,10 @@ const DeviceManagementPage: React.FC = () => {
         ))}
       </div>
 
-      {/* MAIN CONTENT AREA */}
       <div style={{ display: 'flex', gap: '1.5rem', flex: 1, minHeight: 0 }}>
 
-        {/* LEFT COMPONENT: DATA GRID */}
         <div className="glass-panel" style={{ flex: selectedDevice ? 2 : 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', transition: 'flex 0.3s ease' }}>
 
-          {/* Toolbar */}
           <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ position: 'relative', width: '300px' }}>
               <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
@@ -245,7 +236,6 @@ const DeviceManagementPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Table */}
           <div style={{ flex: 1, overflowY: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead style={{ position: 'sticky', top: 0, backgroundColor: 'var(--bg-panel)', zIndex: 1, borderBottom: '1px solid var(--border-color)' }}>
@@ -312,7 +302,6 @@ const DeviceManagementPage: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT COMPONENT: DETAIL DRAWER */}
         {selectedDevice && (
           <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', animation: 'slideIn 0.3s ease-out' }}>
 
@@ -331,7 +320,6 @@ const DeviceManagementPage: React.FC = () => {
 
             <div style={{ padding: '1.5rem', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-              {/* Identity & Status */}
               <div style={{ padding: '1rem', backgroundColor: 'var(--bg-dark)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Current Status</span>
@@ -349,7 +337,6 @@ const DeviceManagementPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Network & Power Diagnostics */}
               <div>
                 <h3 style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '1rem', fontWeight: 600 }}>Diagnostics</h3>
 
@@ -371,7 +358,6 @@ const DeviceManagementPage: React.FC = () => {
 
             </div>
 
-            {/* Action Buttons */}
             <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 onClick={openEditModal}
@@ -464,7 +450,6 @@ const DeviceManagementPage: React.FC = () => {
         )}
       </div>
 
-      {/* MODALS */}
       {(showAddModal || showEditModal) && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div className="glass-panel" style={{ width: '400px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', backgroundColor: 'var(--bg-panel)' }}>
@@ -473,7 +458,6 @@ const DeviceManagementPage: React.FC = () => {
             </h2>
 
             <form onSubmit={showAddModal ? handleAddSubmit : handleEditSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {/* ID Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Device ID (e.g. MAC / Serial)</label>
                 <input
@@ -485,7 +469,6 @@ const DeviceManagementPage: React.FC = () => {
                 />
               </div>
 
-              {/* Name Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Name</label>
                 <input
@@ -496,7 +479,6 @@ const DeviceManagementPage: React.FC = () => {
                 />
               </div>
 
-              {/* Type Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Type</label>
                 <select
@@ -512,7 +494,6 @@ const DeviceManagementPage: React.FC = () => {
                 </select>
               </div>
 
-              {/* Location Field */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <label style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Location (Building / Floor / Room)</label>
                 <input

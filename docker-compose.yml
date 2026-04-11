@@ -4,11 +4,7 @@ services:
     container_name: frontend
     restart: unless-stopped
     ports:
-      - "5173:80" # keeps your existing port, maps to nginx inside
-    # depends_on:
-    #   - gateway
-    # external_links:
-    #   - gateway
+      - "5173:80"
 
 networks:
   default:

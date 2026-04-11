@@ -79,7 +79,6 @@ const OverviewPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
 
-      {/* ── Page Header ─────────────────────────────────────────── */}
       <div className="animate-in stagger-1">
         <h1 style={{ fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: 'var(--space-1)' }}>
           Live Overview
@@ -89,7 +88,6 @@ const OverviewPage: React.FC = () => {
         </p>
       </div>
 
-      {/* ── KPI Cards ────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-4)' }}>
         {topStats.map((s, i) => (
           <div
@@ -144,7 +142,6 @@ const OverviewPage: React.FC = () => {
         ))}
       </div>
 
-      {/* ── Zone Occupancy ───────────────────────────────────────── */}
       <div
         className="animate-in stagger-6"
         style={{
@@ -155,7 +152,6 @@ const OverviewPage: React.FC = () => {
           boxShadow: 'var(--shadow-sm)',
         }}
       >
-        {/* Table header */}
         <div style={{
           padding: 'var(--space-4) var(--space-6)',
           borderBottom: '1px solid var(--border-color)',
@@ -174,7 +170,6 @@ const OverviewPage: React.FC = () => {
           <div className="live-dot" />
         </div>
 
-        {/* Zone rows */}
         <div style={{ padding: 'var(--space-4) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
           {zones.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 'var(--space-8)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>

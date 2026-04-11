@@ -36,7 +36,6 @@ const OccupancyPage = () => {
   useEffect(() => {
     fetchCount();
 
-    // Poll every 3 seconds
     const interval = setInterval(fetchCount, 3000);
 
     return () => clearInterval(interval);

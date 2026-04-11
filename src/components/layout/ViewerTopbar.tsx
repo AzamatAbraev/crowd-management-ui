@@ -65,7 +65,6 @@ const ViewerTopbar: React.FC = () => {
         </span>
       </div>
 
-      {/* ── Nav Links ─────────────────────────────────────── */}
       <nav style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
         <NavLink to="/live" end style={navLinkStyle}>
           <Map size={14} /> Campus
@@ -75,9 +74,7 @@ const ViewerTopbar: React.FC = () => {
         </NavLink>
       </nav>
 
-      {/* ── User + Logout ──────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-        {/* Avatar */}
         <div style={{
           width: '32px',
           height: '32px',

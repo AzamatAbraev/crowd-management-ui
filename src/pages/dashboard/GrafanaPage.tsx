@@ -10,7 +10,6 @@ const GrafanaPage: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
-      {/* Topbar */}
       <nav style={{ padding: '1.25rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
@@ -37,7 +36,6 @@ const GrafanaPage: React.FC = () => {
         </a>
       </nav>
 
-      {/* Iframe */}
       <div style={{ flex: 1, margin: '1.5rem 2.5rem', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--border-color)', minHeight: 0 }}>
         <iframe
           src={GRAFANA_DASHBOARD_URL}

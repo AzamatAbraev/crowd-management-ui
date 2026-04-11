@@ -13,7 +13,6 @@ import type { Device } from '../../types/device';
 import type { Building } from '../../types/building';
 import '../../styles/dashboard.css';
 
-// ── Types ─────────────────────────────────────────────────────────────────────
 interface OccupancyData {
   count: number;
   lastDevice: string;
@@ -30,7 +29,6 @@ interface EventLogEntry {
   total: number;
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 const secondsAgo = (ts: string | undefined): number => {
   if (!ts) return Infinity;
   const d = new Date(ts);
@@ -46,7 +44,6 @@ const formatLastSeen = (ts: string | undefined): string => {
   return `${Math.floor(s / 3600)}h ago`;
 };
 
-// ── Sub-components ────────────────────────────────────────────────────────────
 
 const StatCard: React.FC<{ icon: React.ReactNode; label: string; value: string | number; color: string; subtitle?: string }> = ({ icon, label, value, color, subtitle }) => (
   <div className="glass-panel" style={{ padding: '1.25rem 1.5rem', display: 'flex', alignItems: 'center', gap: '1rem', flex: 1 }}>
@@ -61,22 +58,20 @@ const StatCard: React.FC<{ icon: React.ReactNode; label: string; value: string |
   </div>
 );
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
 const AdminLiveMonitorPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [occupancy, setOccupancy]       = useState<OccupancyData | null>(null);
-  const [devices, setDevices]           = useState<Record<string, Device>>({});
-  const [buildings, setBuildings]       = useState<Record<string, Building>>({});
-  const [isPolling, setIsPolling]       = useState(true);
-  const [lastUpdated, setLastUpdated]   = useState('');
-  const [apiStatus, setApiStatus]       = useState<'connecting' | 'live' | 'error'>('connecting');
-  const [eventLog, setEventLog]         = useState<EventLogEntry[]>([]);
-  const eventIdRef                      = useRef(0);
-  const prevCountRef                    = useRef<Record<string, number>>({});
+  const [occupancy, setOccupancy] = useState<OccupancyData | null>(null);
+  const [devices, setDevices] = useState<Record<string, Device>>({});
+  const [buildings, setBuildings] = useState<Record<string, Building>>({});
+  const [isPolling, setIsPolling] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState('');
+  const [apiStatus, setApiStatus] = useState<'connecting' | 'live' | 'error'>('connecting');
+  const [eventLog, setEventLog] = useState<EventLogEntry[]>([]);
+  const eventIdRef = useRef(0);
+  const prevCountRef = useRef<Record<string, number>>({});
 
-  // ── Fetch device + building metadata ─────────────────────────────────────
   const fetchMeta = useCallback(async () => {
     try {
       const [devs, bldgs] = await Promise.all([
@@ -93,7 +88,6 @@ const AdminLiveMonitorPage: React.FC = () => {
     } catch { /* silent */ }
   }, []);
 
-  // ── Fetch live occupancy count ────────────────────────────────────────────
   const fetchOccupancy = useCallback(async () => {
     try {
       const res: AxiosResponse<OccupancyData> = await api.get('/people/count');
@@ -102,12 +96,11 @@ const AdminLiveMonitorPage: React.FC = () => {
       setLastUpdated(new Date().toLocaleTimeString());
       setApiStatus('live');
 
-      // Generate event log entries by comparing previous deviceCounts with new
       const prev = prevCountRef.current;
       const newEntries: EventLogEntry[] = [];
       Object.entries(data.deviceCounts || {}).forEach(([deviceId, newVal]) => {
         const oldVal = prev[deviceId] ?? 0;
-        const diff   = newVal - oldVal;
+        const diff = newVal - oldVal;
         if (diff !== 0) {
           eventIdRef.current += 1;
           newEntries.push({
@@ -122,7 +115,7 @@ const AdminLiveMonitorPage: React.FC = () => {
       prevCountRef.current = { ...data.deviceCounts };
 
       if (newEntries.length > 0) {
-        setEventLog(prev => [...newEntries, ...prev].slice(0, 50)); // keep last 50
+        setEventLog(prev => [...newEntries, ...prev].slice(0, 50));
       }
     } catch {
       setApiStatus('error');
@@ -142,12 +135,11 @@ const AdminLiveMonitorPage: React.FC = () => {
     return () => clearInterval(countInt);
   }, [isPolling, fetchOccupancy]);
 
-  // ── Derived stats ─────────────────────────────────────────────────────────
-  const allDevs     = Object.values(devices);
+  const allDevs = Object.values(devices);
   const onlineCount = allDevs.filter(d => d.status === 'ONLINE').length;
   const offlineCount = allDevs.filter(d => d.status === 'OFFLINE').length;
-  const staleCount  = allDevs.filter(d => d.status === 'ONLINE' && secondsAgo(d.lastSeen) > 60).length;
-  const totalCount  = occupancy?.count ?? 0;
+  const staleCount = allDevs.filter(d => d.status === 'ONLINE' && secondsAgo(d.lastSeen) > 60).length;
+  const totalCount = occupancy?.count ?? 0;
   const activeNodes = occupancy?.activeNodes ?? 0;
 
   const statusColor = apiStatus === 'live' ? 'var(--status-green)' : apiStatus === 'error' ? 'var(--status-red)' : 'var(--status-yellow)';
@@ -187,22 +179,18 @@ const AdminLiveMonitorPage: React.FC = () => {
         </div>
       </nav>
 
-      {/* ── Main Content ───────────────────────────────────────────────────── */}
       <main style={{ flex: 1, padding: '1.75rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-        {/* ── Fleet stat cards ──────────────────────────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.875rem' }}>
-          <StatCard icon={<Activity size={22} />}     label="People Inside"  value={totalCount}    color="#3b82f6"              subtitle="current occupancy" />
-          <StatCard icon={<Server size={22} />}       label="Total Fleet"    value={allDevs.length} color="var(--text-muted)"   subtitle="registered devices" />
-          <StatCard icon={<Wifi size={22} />}         label="Online"         value={onlineCount}   color="var(--status-green)"  subtitle="healthy devices" />
-          <StatCard icon={<WifiOff size={22} />}      label="Offline"        value={offlineCount}  color="var(--status-red)"    subtitle="via MQTT LWT" />
-          <StatCard icon={<Cpu size={22} />}          label="Reporting Now"  value={activeNodes}   color="var(--primary-teal)"  subtitle="sent telemetry" />
+          <StatCard icon={<Activity size={22} />} label="People Inside" value={totalCount} color="#3b82f6" subtitle="current occupancy" />
+          <StatCard icon={<Server size={22} />} label="Total Fleet" value={allDevs.length} color="var(--text-muted)" subtitle="registered devices" />
+          <StatCard icon={<Wifi size={22} />} label="Online" value={onlineCount} color="var(--status-green)" subtitle="healthy devices" />
+          <StatCard icon={<WifiOff size={22} />} label="Offline" value={offlineCount} color="var(--status-red)" subtitle="via MQTT LWT" />
+          <StatCard icon={<Cpu size={22} />} label="Reporting Now" value={activeNodes} color="var(--primary-teal)" subtitle="sent telemetry" />
         </div>
 
-        {/* ── Two-column: device grid + event log ──────────────────────────── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.25rem', flex: 1, alignItems: 'start' }}>
 
-          {/* ── Left: per-device grid ───────────────────────────────────────── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h2 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-main)' }}>
@@ -219,11 +207,11 @@ const AdminLiveMonitorPage: React.FC = () => {
               {Object.entries(occupancy?.deviceCounts ?? {})
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([deviceId, netDelta]) => {
-                  const dev     = devices[deviceId];
-                  const bldg    = dev?.location ? buildings[dev.location] : null;
-                  const isOnline  = dev?.status === 'ONLINE';
+                  const dev = devices[deviceId];
+                  const bldg = dev?.location ? buildings[dev.location] : null;
+                  const isOnline = dev?.status === 'ONLINE';
                   const isOffline = dev?.status === 'OFFLINE';
-                  const stale   = isOnline && secondsAgo(dev?.lastSeen) > 60;
+                  const stale = isOnline && secondsAgo(dev?.lastSeen) > 60;
                   const dotColor = isOffline ? 'var(--status-red)' : stale ? 'var(--status-yellow)' : isOnline ? 'var(--status-green)' : 'var(--text-muted)';
                   const statusLabel = isOffline ? 'OFFLINE' : stale ? 'STALE' : isOnline ? 'ONLINE' : '—';
 
@@ -234,7 +222,6 @@ const AdminLiveMonitorPage: React.FC = () => {
                       display: 'flex', flexDirection: 'column', gap: '0.6rem',
                       opacity: isOffline ? 0.7 : 1, transition: 'all 0.3s',
                     }}>
-                      {/* Header row */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                         <div>
                           <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)' }}>
@@ -246,7 +233,6 @@ const AdminLiveMonitorPage: React.FC = () => {
                           </div>
                         </div>
 
-                        {/* Net delta badge */}
                         <div style={{
                           fontSize: '1.3rem', fontWeight: 800,
                           color: netDelta > 0 ? 'var(--primary-teal)' : netDelta < 0 ? 'var(--status-red)' : 'var(--text-muted)',
@@ -255,7 +241,6 @@ const AdminLiveMonitorPage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Location */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                         <MapPin size={10} />
                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -263,7 +248,6 @@ const AdminLiveMonitorPage: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Last seen + firmware */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', paddingTop: '0.5rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '0.7rem', color: isOffline ? 'var(--status-red)' : 'var(--text-muted)' }}>
                           <Clock size={10} />
@@ -279,7 +263,6 @@ const AdminLiveMonitorPage: React.FC = () => {
                   );
                 })}
 
-              {/* Offline devices not in deviceCounts (never sent telemetry this session) */}
               {allDevs.filter(d => d.status === 'OFFLINE' && !(occupancy?.deviceCounts ?? {})[d.id]).map(dev => (
                 <div key={dev.id} style={{
                   padding: '1rem', borderRadius: 10, border: '1px solid rgba(239,68,68,0.35)',
@@ -303,7 +286,6 @@ const AdminLiveMonitorPage: React.FC = () => {
             </div>
           </div>
 
-          {/* ── Right: Event Log ─────────────────────────────────────────────── */}
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', maxHeight: '78vh', position: 'sticky', top: '1.75rem' }}>
             <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>Event Log</div>

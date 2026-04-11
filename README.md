@@ -1,75 +1,78 @@
-# React + TypeScript + Vite
+# People Counter Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The web interface for the crowd management platform. It provides live occupancy views, floor plans, analytics, device management, and user administration. Authentication is handled by the gateway — the frontend never communicates with Keycloak directly.
 
-Currently, two official plugins are available:
+## What it provides
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Live views** — campus map, building floor plans, area occupancy in real time
+- **Schedule page** — timetable for rooms, sourced from the backend
+- **Occupancy analytics** — historical charts backed by InfluxDB data via the API
+- **Admin panel** — device management, user management, system overview
+- **Role-based access** — admin features are only accessible to users with the appropriate Keycloak role
 
-## React Compiler
+## Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- React 19, TypeScript
+- Vite 7 (build tool)
+- React Router v7
+- Recharts (charts)
+- Axios (HTTP)
+- Lucide React (icons)
+- Nginx (production serving inside Docker)
 
-Note: This will impact Vite dev & build performances.
+## Pages and routing
 
-## Expanding the ESLint configuration
+| Route | Description |
+|---|---|
+| `/home` | Landing page after login |
+| `/live/campus` | Campus-wide occupancy map |
+| `/live/building` | Floor plan view for a building |
+| `/live/area` | Detailed view for a specific room or area |
+| `/live/schedule` | Room timetable |
+| `/occupancy` | Historical occupancy charts |
+| `/admin` | Admin landing |
+| `/admin/users` | User management (create, update, reset password) |
+| `/admin/devices` | Device registry and status |
+| `/admin/system` | System management |
+| `/admin/monitor` | Live device monitoring |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## API communication
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+All API calls go through the gateway at `http://localhost:8082`. The gateway forwards requests to the backend and attaches the user's token automatically. The frontend does not hold or manage tokens.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Services in `src/services/`:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| File | Purpose |
+|---|---|
+| `dashboardService.ts` | Live occupancy data |
+| `buildingService.ts` | Building and room data |
+| `deviceService.ts` | Device registry and health |
+| `timetableService.ts` | Room schedule data |
+| `userManagementService.ts` | Admin user CRUD |
+
+Authentication state is managed in `src/contexts/AuthContext.tsx`.
+
+## Running with Docker
+
+The Dockerfile has two stages: Node 22 builds the app with `npm run build`, then Nginx serves the output. No local Node installation is required to run the production build.
+
+```bash
+docker compose up -d
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The container maps port `5173` on the host to port `80` inside the container (Nginx).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Running locally for development
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+The dev server starts at `http://localhost:5173`. The gateway must also be running for API calls to work.
+
+## Important notes
+
+- `node_modules/` is not committed. Run `npm install` to restore it for local development. Docker builds do not need it.
+- The production build is fully static (HTML/JS/CSS) and served by Nginx. The `nginx.conf` file in the project root handles client-side routing (all paths fall back to `index.html`).
+- The frontend is accessible without authentication only for public occupancy endpoints. All other routes require a valid session established through the gateway.

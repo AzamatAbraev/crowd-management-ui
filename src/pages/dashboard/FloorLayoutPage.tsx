@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft, LayoutGrid } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import '../../styles/dashboard.css';
 
 const BUILDINGS = [
   { id: 'LRC',          name: 'Learning Resource Center',           floors: 2 },
@@ -72,6 +75,8 @@ const colorFor = (pct: number) =>
   pct > 80 ? 'var(--status-red)' : pct > 55 ? 'var(--status-yellow)' : 'var(--primary-teal)';
 
 const FloorLayoutPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedBuilding, setSelectedBuilding] = useState(BUILDINGS[0].id);
   const [selectedFloor, setSelectedFloor] = useState(1);
 
@@ -79,73 +84,94 @@ const FloorLayoutPage: React.FC = () => {
   const rooms = BUILDING_FLOOR_ROOMS[building.id]?.[String(selectedFloor)] ?? [];
 
   return (
-    <div style={{ display: 'flex', gap: '1.5rem', height: '100%' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
 
-      <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '1.5rem', flexShrink: 0 }}>
-        <div>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Building</div>
-          {BUILDINGS.map(b => (
-            <button key={b.id} onClick={() => { setSelectedBuilding(b.id); setSelectedFloor(1); }} style={{ width: '100%', textAlign: 'left', padding: '0.6rem 0.75rem', marginBottom: '0.25rem', borderRadius: '8px', border: 'none', backgroundColor: selectedBuilding === b.id ? 'var(--primary-teal)' : 'transparent', color: selectedBuilding === b.id ? '#fff' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}>
-              {b.name}
-            </button>
-          ))}
-        </div>
-
-        <div>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Floor</div>
-          {Array.from({ length: building.floors }, (_, i) => i + 1).reverse().map(f => (
-            <button key={f} onClick={() => setSelectedFloor(f)} style={{ width: '100%', textAlign: 'left', padding: '0.6rem 0.75rem', marginBottom: '0.25rem', borderRadius: '8px', border: 'none', backgroundColor: selectedFloor === f ? 'var(--primary-teal-transparent)' : 'transparent', color: selectedFloor === f ? 'var(--primary-teal)' : 'var(--text-muted)', fontWeight: selectedFloor === f ? 700 : 500, fontSize: '0.875rem', cursor: 'pointer' }}>
-              Floor {f}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.25rem', minWidth: 0 }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)' }}>{building.name} – Floor {selectedFloor}</h1>
-          <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>Live room occupancy</p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.75rem', fontWeight: 600, flexWrap: 'wrap' }}>
-          {[['Low (≤55%)', 'var(--primary-teal)'], ['Medium (56–80%)', 'var(--status-yellow)'], ['High (>80%)', 'var(--status-red)']].map(([label, color]) => (
-            <div key={String(label)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
-              <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: String(color) }} /> {label}
+      <nav style={{ padding: '1.25rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button onClick={() => navigate('/admin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
+            <ChevronLeft size={18} /> Back
+          </button>
+          <div style={{ width: 1, height: 24, backgroundColor: 'var(--border-color)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ backgroundColor: 'var(--primary-teal)', padding: '0.4rem', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <LayoutGrid size={22} color="#000" />
             </div>
-          ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: 'var(--status-blue)' }} /> PC Lab
+            <div>
+              <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)' }}>Floor Layout</h1>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Room Occupancy · {user?.username}</div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <main style={{ flex: 1, padding: '2rem 2.5rem', display: 'flex', gap: '1.5rem' }}>
+
+        <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '1.5rem', flexShrink: 0 }}>
+          <div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Building</div>
+            {BUILDINGS.map(b => (
+              <button key={b.id} onClick={() => { setSelectedBuilding(b.id); setSelectedFloor(1); }} style={{ width: '100%', textAlign: 'left', padding: '0.6rem 0.75rem', marginBottom: '0.25rem', borderRadius: '8px', border: 'none', backgroundColor: selectedBuilding === b.id ? 'var(--primary-teal)' : 'transparent', color: selectedBuilding === b.id ? '#fff' : 'var(--text-muted)', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer' }}>
+                {b.name}
+              </button>
+            ))}
+          </div>
+
+          <div>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Floor</div>
+            {Array.from({ length: building.floors }, (_, i) => i + 1).reverse().map(f => (
+              <button key={f} onClick={() => setSelectedFloor(f)} style={{ width: '100%', textAlign: 'left', padding: '0.6rem 0.75rem', marginBottom: '0.25rem', borderRadius: '8px', border: 'none', backgroundColor: selectedFloor === f ? 'var(--primary-teal-transparent)' : 'transparent', color: selectedFloor === f ? 'var(--primary-teal)' : 'var(--text-muted)', fontWeight: selectedFloor === f ? 700 : 500, fontSize: '0.875rem', cursor: 'pointer' }}>
+                Floor {f}
+              </button>
+            ))}
           </div>
         </div>
 
-        {rooms.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--bg-panel)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>No rooms configured for this floor.</div>
-        ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', flex: 1, alignContent: 'start' }}>
-            {rooms.map((r, i) => {
-              const c = colorFor(r.pct);
-              return (
-                <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: `2px solid ${c}`, borderRadius: '10px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
-                    <div>
-                      <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>{r.room}</span>
-                      {r.isLab && (
-                        <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--status-blue)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                          PC Lab
-                        </div>
-                      )}
-                    </div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: c, backgroundColor: `${c}20`, padding: '2px 7px', borderRadius: '8px', flexShrink: 0 }}>{r.pct}%</span>
-                  </div>
-                  <div style={{ height: '5px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: `${r.pct}%`, backgroundColor: c, borderRadius: '3px' }} />
-                  </div>
-                </div>
-              );
-            })}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1.25rem', minWidth: 0 }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)' }}>{building.name} — Floor {selectedFloor}</h2>
+            <p style={{ margin: '0.2rem 0 0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>Live room occupancy</p>
           </div>
-        )}
-      </div>
+
+          <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.75rem', fontWeight: 600, flexWrap: 'wrap' }}>
+            {[['Low (≤55%)', 'var(--primary-teal)'], ['Medium (56–80%)', 'var(--status-yellow)'], ['High (>80%)', 'var(--status-red)']].map(([label, color]) => (
+              <div key={String(label)} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: String(color) }} /> {label}
+              </div>
+            ))}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-muted)' }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '2px', backgroundColor: 'var(--status-blue)' }} /> PC Lab
+            </div>
+          </div>
+
+          {rooms.length === 0 ? (
+            <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-muted)', backgroundColor: 'var(--bg-panel)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>No rooms configured for this floor.</div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', alignContent: 'start' }}>
+              {rooms.map((r, i) => {
+                const c = colorFor(r.pct);
+                return (
+                  <div key={i} style={{ backgroundColor: 'var(--bg-panel)', border: `2px solid ${c}`, borderRadius: '10px', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                      <div>
+                        <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.9rem' }}>{r.room}</span>
+                        {r.isLab && (
+                          <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--status-blue)', marginTop: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            PC Lab
+                          </div>
+                        )}
+                      </div>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: c, backgroundColor: `${c}20`, padding: '2px 7px', borderRadius: '8px', flexShrink: 0 }}>{r.pct}%</span>
+                    </div>
+                    <div style={{ height: '5px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${r.pct}%`, backgroundColor: c, borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 };

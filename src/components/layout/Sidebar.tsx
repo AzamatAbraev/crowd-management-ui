@@ -6,7 +6,6 @@ import {
   BarChart3,
   Radio,
   BellRing,
-  Settings,
   GraduationCap,
   CalendarRange,
   Cpu,
@@ -26,14 +25,13 @@ const Sidebar: React.FC = () => {
   const { hasAnyRole } = useAuth();
 
   const navItems: NavItem[] = [
-    { name: 'Live Overview',        path: '/dashboard/overview',  icon: LayoutDashboard, roles: ['view-occupancy'] },
-    { name: 'Floor Layout',         path: '/dashboard/floor',     icon: Building2,       roles: ['view-buildings'] },
-    { name: 'Timetable',            path: '/dashboard/timetable', icon: CalendarRange,   roles: ['view-timetable'] },
-    { name: 'Historical Analytics', path: '/dashboard/analytics', icon: BarChart3,       roles: ['view-occupancy'] },
-    { name: 'Sensors',              path: '/dashboard/sensors',   icon: Radio,           roles: ['view-devices'] },
-    { name: 'Device Management',    path: '/dashboard/devices',   icon: Cpu,             roles: ['manage-devices'] },
-    { name: 'Alerts',               path: '/dashboard/alerts',    icon: BellRing,        badge: 3 },
-    { name: 'Settings',             path: '/dashboard/settings',  icon: Settings,        roles: ['admin'] },
+    { name: 'Live Overview', path: '/admin/overview', icon: LayoutDashboard, roles: ['view-occupancy'] },
+    { name: 'Floor Layout', path: '/admin/floor', icon: Building2, roles: ['view-buildings'] },
+    { name: 'Timetable', path: '/admin/timetable', icon: CalendarRange, roles: ['view-timetable'] },
+    { name: 'Historical Analytics', path: '/admin/analytics', icon: BarChart3, roles: ['view-occupancy'] },
+    { name: 'Sensors', path: '/admin/sensors', icon: Radio, roles: ['view-devices'] },
+    { name: 'Device Management', path: '/admin/devices', icon: Cpu, roles: ['manage-devices'] },
+    { name: 'Notices', path: '/admin/notices', icon: BellRing },
   ];
 
   return (

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Users, AlertTriangle, Wifi, TrendingUp } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, AlertTriangle, Wifi, TrendingUp, ChevronLeft, LayoutDashboard } from 'lucide-react';
 import { api } from '../../server';
+import { useAuth } from '../../contexts/AuthContext';
+import '../../styles/dashboard.css';
 
 interface OccupancyData { deviceCounts: Record<string, number>; }
 interface ZoneRow { name: string; count: number; capacity: number; }
@@ -23,6 +26,8 @@ const DUMMY_STATS = {
 };
 
 const OverviewPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [zones, setZones] = useState<ZoneRow[]>(DUMMY_ZONES);
   const [stats, setStats] = useState(DUMMY_STATS);
 
@@ -77,147 +82,111 @@ const OverviewPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
 
-      <div className="animate-in stagger-1">
-        <h1 style={{ fontSize: '1.375rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: 'var(--space-1)' }}>
-          Live Overview
-        </h1>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-          Real-time campus occupancy — refreshes every 10 seconds
-        </p>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-4)' }}>
-        {topStats.map((s, i) => (
-          <div
-            key={i}
-            className={`animate-in stagger-${i + 2}`}
-            style={{
-              backgroundColor: 'var(--bg-panel)',
-              border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-xl)',
-              padding: 'var(--space-5)',
-              boxShadow: 'var(--shadow-sm)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-3)',
-              transition: 'var(--transition-base)',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'none'; }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                color: 'var(--text-muted)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.07em',
-              }}>
-                {s.label}
-              </span>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: s.tint,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}>
-                <s.icon size={16} color={s.color} />
-              </div>
+      <nav style={{ padding: '1.25rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button onClick={() => navigate('/admin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
+            <ChevronLeft size={18} /> Back
+          </button>
+          <div style={{ width: 1, height: 24, backgroundColor: 'var(--border-color)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ backgroundColor: 'var(--primary-teal)', padding: '0.4rem', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <LayoutDashboard size={22} color="#000" />
             </div>
             <div>
-              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.03em', lineHeight: 1.1, fontVariantNumeric: 'tabular-nums' }}>
-                {s.value}
-              </div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginTop: 'var(--space-1)', fontWeight: 500 }}>
-                {s.sub}
-              </div>
+              <h1 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)' }}>Live Overview</h1>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Campus · {user?.username}</div>
             </div>
           </div>
-        ))}
-      </div>
-
-      <div
-        className="animate-in stagger-6"
-        style={{
-          backgroundColor: 'var(--bg-panel)',
-          border: '1px solid var(--border-color)',
-          borderRadius: 'var(--radius-xl)',
-          overflow: 'hidden',
-          boxShadow: 'var(--shadow-sm)',
-        }}
-      >
-        <div style={{
-          padding: 'var(--space-4) var(--space-6)',
-          borderBottom: '1px solid var(--border-color)',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
-          <div>
-            <h2 style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.01em' }}>
-              Zone Occupancy
-            </h2>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', marginTop: '2px' }}>
-              Live headcount across monitored zones
-            </p>
-          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 12px', borderRadius: 20, backgroundColor: 'var(--primary-teal-transparent)', border: '1px solid var(--primary-teal)', fontSize: '0.78rem', fontWeight: 700, color: 'var(--primary-teal)' }}>
           <div className="live-dot" />
+          Live · 10s refresh
+        </div>
+      </nav>
+
+      <main style={{ flex: 1, padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+          {topStats.map((s, i) => (
+            <div
+              key={i}
+              className="glass-panel"
+              style={{
+                padding: '1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                transition: 'var(--transition-base)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  {s.label}
+                </span>
+                <div style={{ width: '32px', height: '32px', borderRadius: 8, backgroundColor: s.tint, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <s.icon size={16} color={s.color} />
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1.1 }}>
+                  {s.value}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 4, fontWeight: 500 }}>
+                  {s.sub}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <div style={{ padding: 'var(--space-4) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          {zones.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: 'var(--space-8)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-              No data found yet — waiting for sensor data
+        <div className="glass-panel" style={{ overflow: 'hidden' }}>
+          <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2 style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
+                Zone Occupancy
+              </h2>
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2, marginBottom: 0 }}>
+                Live headcount across monitored zones
+              </p>
             </div>
-          ) : zones.map((z, i) => {
-            const pct = Math.min(100, Math.round((z.count / z.capacity) * 100));
-            const barColor = pct > 85 ? 'var(--status-red)' : pct > 60 ? 'var(--status-yellow)' : 'var(--primary-teal)';
-            return (
-              <div key={i}>
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 'var(--space-2)',
-                  fontSize: '0.875rem',
-                }}>
-                  <span style={{ fontWeight: 500, color: 'var(--text-main)' }}>{z.name}</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                    <span style={{ color: 'var(--text-muted)', fontSize: 'var(--text-xs)', fontVariantNumeric: 'tabular-nums' }}>
-                      {z.count.toLocaleString()} / {z.capacity.toLocaleString()}
-                    </span>
-                    <span style={{
-                      fontWeight: 700,
-                      color: barColor,
-                      fontSize: 'var(--text-xs)',
-                      fontVariantNumeric: 'tabular-nums',
-                      minWidth: '36px',
-                      textAlign: 'right',
-                    }}>
-                      {pct}%
-                    </span>
+            <div className="live-dot" />
+          </div>
+
+          <div style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {zones.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+                No data found yet — waiting for sensor data
+              </div>
+            ) : zones.map((z, i) => {
+              const pct = Math.min(100, Math.round((z.count / z.capacity) * 100));
+              const barColor = pct > 85 ? 'var(--status-red)' : pct > 60 ? 'var(--status-yellow)' : 'var(--primary-teal)';
+              return (
+                <div key={i}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', fontSize: '0.875rem' }}>
+                    <span style={{ fontWeight: 500, color: 'var(--text-main)' }}>{z.name}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.72rem' }}>
+                        {z.count.toLocaleString()} / {z.capacity.toLocaleString()}
+                      </span>
+                      <span style={{ fontWeight: 700, color: barColor, fontSize: '0.72rem', minWidth: '36px', textAlign: 'right' }}>
+                        {pct}%
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ height: '6px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: 99, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${pct}%`, backgroundColor: barColor, borderRadius: 99, transition: 'width 0.6s ease' }} />
                   </div>
                 </div>
-                <div style={{ height: '6px', backgroundColor: 'var(--bg-panel-hover)', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%',
-                    width: `${pct}%`,
-                    backgroundColor: barColor,
-                    borderRadius: 'var(--radius-full)',
-                    transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }} />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
-      </div>
+
+      </main>
     </div>
   );
 };

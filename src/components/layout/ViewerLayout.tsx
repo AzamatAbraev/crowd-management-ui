@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import ViewerTopbar from './ViewerTopbar';
 import { ThemeProvider } from './ThemeContext';
+import NoticeBanner from '../notices/NoticeBanner';
 import '../../styles/dashboard.css';
 
 const ViewerLayout: React.FC = () => {
@@ -9,6 +10,7 @@ const ViewerLayout: React.FC = () => {
     <ThemeProvider>
       <div className="dashboard-layout" style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw' }}>
         <ViewerTopbar />
+        <NoticeBanner />
         <main style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-8)', backgroundColor: 'var(--bg-base)' }}>
            <div style={{ maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
              <Outlet />

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import { ThemeProvider } from './ThemeContext';
+import NoticeBanner from '../notices/NoticeBanner';
 import '../../styles/dashboard.css';
 
 const DashboardLayout: React.FC = () => {
@@ -12,6 +13,7 @@ const DashboardLayout: React.FC = () => {
         <Sidebar />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <Topbar />
+          <NoticeBanner />
           <main style={{ flex: 1, overflowY: 'auto', padding: 'var(--space-8)', backgroundColor: 'var(--bg-base)' }}>
             <Outlet />
           </main>

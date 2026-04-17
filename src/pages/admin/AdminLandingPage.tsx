@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity } from 'lucide-react';
+import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity, Building2, CalendarRange, BellRing } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
@@ -21,26 +21,40 @@ const ALL_SECTIONS: SectionDef[] = [
     label: 'Live Monitor',
     description: 'Real-time device feed and occupancy log.',
     icon: <Radio size={32} />,
-    accentColor: 'var(--status-green)',
+    accentColor: 'var(--status-blue)',
     route: '/admin/monitor',
-    badge: 'Live',
+  },
+  {
+    id: 'floor',
+    label: 'Floor Layout',
+    description: 'Visual floor plans with per-room occupancy percentages.',
+    icon: <Building2 size={32} />,
+    accentColor: 'var(--primary-teal)',
+    route: '/admin/floor',
+  },
+  {
+    id: 'timetable',
+    label: 'Timetable',
+    description: 'Class schedules and room booking overview.',
+    icon: <CalendarRange size={32} />,
+    accentColor: 'var(--status-purple)',
+    route: '/admin/timetable',
+  },
+  {
+    id: 'notices',
+    label: 'Room Notices',
+    description: 'Post and manage room closure and maintenance alerts.',
+    icon: <BellRing size={32} />,
+    accentColor: 'var(--status-red)',
+    route: '/admin/notices',
   },
   {
     id: 'devices',
     label: 'Device Management',
     description: 'Register, monitor, and configure IoT sensors.',
     icon: <Cpu size={32} />,
-    accentColor: 'var(--primary-teal)',
-    route: '/admin/devices',
-  },
-  {
-    id: 'system',
-    label: 'System Management',
-    description: 'Alert thresholds, configurations, and access rules.',
-    icon: <Settings size={32} />,
     accentColor: 'var(--status-blue)',
-    route: '/admin/system',
-    allowedFor: ['theking', 'system_admin'],
+    route: '/admin/devices',
   },
   {
     id: 'statistics',
@@ -59,6 +73,15 @@ const ALL_SECTIONS: SectionDef[] = [
     route: '/admin/grafana',
   },
   {
+    id: 'system',
+    label: 'System Management',
+    description: 'Alert thresholds, configurations, and access rules.',
+    icon: <Settings size={32} />,
+    accentColor: 'var(--status-blue)',
+    route: '/admin/system',
+    allowedFor: ['theking', 'system_admin'],
+  },
+  {
     id: 'users',
     label: 'User Management',
     description: 'Manage users and Keycloak role assignments.',
@@ -75,7 +98,7 @@ const AdminLandingPage: React.FC = () => {
   const { user, isTheKing, isSystemAdmin, isFacilityManager } = useAuth();
 
   const handleLogout = () => {
-    fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});
+    fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => { });
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'http://localhost:8082/logout';

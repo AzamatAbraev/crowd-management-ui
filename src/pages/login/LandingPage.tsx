@@ -64,7 +64,7 @@ const LandingPage: React.FC = () => {
             <ShieldCheck size={20} color="#fff" />
           </div>
           <span style={{ fontSize: '0.9375rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-main)' }}>
-            Joy Bo'shmi
+            Palantir
           </span>
         </div>
 
@@ -195,7 +195,7 @@ const LandingPage: React.FC = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-        <span>© 2026 Joy Bo'shmi Campus Systems</span>
+        <span>© 2026 Palantir Campus Systems</span>
         <span style={{ color: 'var(--text-placeholder)' }}>Authorized access only</span>
       </footer>
     </div>

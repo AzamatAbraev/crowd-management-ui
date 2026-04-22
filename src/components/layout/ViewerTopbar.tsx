@@ -1,11 +1,12 @@
 import React from 'react';
-import { LogOut, CalendarRange, Map } from 'lucide-react';
+import { LogOut, CalendarRange, Map, Bell } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
 
 const ViewerTopbar: React.FC = () => {
-  const { user } = useAuth();
+  const { user, isFacilityManager, isSystemAdmin, isTheKing } = useAuth();
+  const canManageNotices = isFacilityManager || isSystemAdmin || isTheKing;
 
   const handleLogout = () => {
     fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});
@@ -58,7 +59,7 @@ const ViewerTopbar: React.FC = () => {
           letterSpacing: '-0.02em',
           color: 'var(--text-main)',
         }}>
-          Joy Bo'shmi
+          Palantir
         </span>
         <span className="badge badge-teal" style={{ letterSpacing: '0.06em' }}>
           VIEWER
@@ -75,6 +76,29 @@ const ViewerTopbar: React.FC = () => {
       </nav>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        {canManageNotices && (
+          <NavLink
+            to="/admin/notices"
+            style={({ isActive }) => ({
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-md)',
+              textDecoration: 'none',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              color: isActive ? 'var(--primary-teal)' : 'var(--text-muted)',
+              backgroundColor: isActive ? 'var(--primary-teal-transparent)' : 'transparent',
+              transition: 'var(--transition-fast)',
+            })}
+          >
+            <Bell size={14} /> Manage Notices
+          </NavLink>
+        )}
+
+        <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--border-color)' }} />
+
         <div style={{
           width: '32px',
           height: '32px',

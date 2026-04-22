@@ -1,6 +1,6 @@
 import React from 'react';
-import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity, Building2, CalendarRange, BellRing } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity, Building2, CalendarRange, BellRing, Map } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
 
@@ -141,12 +141,20 @@ const AdminLandingPage: React.FC = () => {
             <ShieldCheck size={20} color="#fff" />
           </div>
           <span style={{ fontSize: '0.9375rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-main)' }}>
-            Joy Bo'shmi
+            Palantir
           </span>
           <span className="badge badge-teal" style={{ letterSpacing: '0.06em' }}>ADMIN</span>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <Link
+            to="/live"
+            className="btn-icon"
+            title="Viewer — Campus Map"
+            style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+          >
+            <Map size={18} />
+          </Link>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)', lineHeight: 1.2 }}>
               {user ? `${user.firstName} ${user.lastName}` : 'Administrator'}
@@ -236,8 +244,6 @@ const AdminLandingPage: React.FC = () => {
               onMouseDown={e => { e.currentTarget.style.transform = 'scale(0.98)'; }}
               onMouseUp={e => { e.currentTarget.style.transform = 'translateY(-4px)'; }}
             >
-              {/* Top accent line */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', backgroundColor: section.accentColor, borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0', opacity: 0.7 }} />
 
               {/* Icon */}
               <div style={{

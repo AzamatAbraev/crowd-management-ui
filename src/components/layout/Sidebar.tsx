@@ -61,7 +61,7 @@ const Sidebar: React.FC = () => {
         </div>
         <div>
           <div style={{ fontSize: '0.9375rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--text-main)', lineHeight: 1.2 }}>
-            Joy Bo'shmi
+            Palantir
           </div>
           <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)', fontWeight: 500, marginTop: '1px' }}>
             Campus Systems

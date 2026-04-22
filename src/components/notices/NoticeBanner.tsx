@@ -68,6 +68,20 @@ const NoticeBanner: React.FC = () => {
             }}>
               {notice.roomName}{notice.buildingId ? ` · ${notice.buildingId}` : ''}
             </span>
+            {(notice.startTime || notice.endTime) && (
+              <span style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                flexShrink: 0,
+                whiteSpace: 'nowrap' as const,
+              }}>
+                {notice.startTime && notice.endTime
+                  ? `${notice.startTime} – ${notice.endTime}`
+                  : notice.startTime
+                  ? `From ${notice.startTime}`
+                  : `Until ${notice.endTime}`}
+              </span>
+            )}
             <span style={{
               fontSize: '0.8125rem',
               color: 'var(--text-muted)',

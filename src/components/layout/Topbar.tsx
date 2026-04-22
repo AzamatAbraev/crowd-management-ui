@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, Sun, Moon, LogOut } from 'lucide-react';
+import { Search, Bell, Sun, Moon, LogOut, Map } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -107,6 +108,15 @@ const Topbar: React.FC = () => {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)', flexShrink: 0 }}>
+
+        <Link
+          to="/live"
+          title="Viewer — Campus Map"
+          className="btn-icon"
+          style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+        >
+          <Map size={18} />
+        </Link>
 
         <button
           onClick={toggleTheme}

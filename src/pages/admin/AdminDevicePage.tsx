@@ -89,7 +89,7 @@ const AdminDevicePage: React.FC = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: '100vh', backgroundColor: 'var(--bg-dark)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       {/* Topbar */}
       <nav style={{ padding: '1.25rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -118,7 +118,7 @@ const AdminDevicePage: React.FC = () => {
         </div>
       </nav>
 
-      <main style={{ flex: 1, padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <main style={{ flex: 1, padding: '2rem 2.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', minHeight: 0, overflow: 'hidden' }}>
         {/* Stats row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1rem' }}>
           {[
@@ -139,9 +139,9 @@ const AdminDevicePage: React.FC = () => {
           ))}
         </div>
 
-        {/* Main area: table + side panel */}
+        {/* Main area: table */}
         <div style={{ display: 'flex', gap: '1.5rem', flex: 1, minHeight: 0 }}>
-          <div className="glass-panel" style={{ flex: selectedDevice ? 2 : 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', transition: 'flex 0.3s ease' }}>
+          <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             {/* Toolbar */}
             <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
               <div style={{ position: 'relative', flex: 1, maxWidth: 320 }}>
@@ -198,70 +198,88 @@ const AdminDevicePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Device detail panel */}
-          {selectedDevice && (
-            <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', animation: 'slideIn 0.25s ease' }}>
-              <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                  <h2 style={{ margin: '0 0 0.2rem 0', fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700 }}>{selectedDevice.name || selectedDevice.id}</h2>
-                  <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>ID: {selectedDevice.id}</span>
-                </div>
-                <button onClick={() => setSelectedDevice(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}><X size={18} /></button>
-              </div>
-
-              <div style={{ padding: '1.25rem 1.5rem', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ padding: '1rem', backgroundColor: 'var(--bg-dark)', borderRadius: 8, border: '1px solid var(--border-color)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Current Status</span>
-                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: statusColor(selectedDevice.status) }}>{selectedDevice.status}</span>
-                  </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                    <div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} /> Location</div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 500 }}>{selectedDevice.location || 'Unassigned'}</div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.2rem', display: 'flex', alignItems: 'center', gap: 4 }}><Clock size={11} /> Uptime</div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontWeight: 500 }}>{calcUptime(selectedDevice.registeredAt)} hrs</div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '0.75rem', fontWeight: 700 }}>Diagnostics</h3>
-                  {[
-                    { label: 'Firmware', value: selectedDevice.firmwareVersion || 'Unknown' },
-                    { label: 'Health', value: selectedDevice.health, color: selectedDevice.health === 'CRITICAL' ? 'var(--status-red)' : 'var(--status-green)' },
-                    { label: 'Type', value: selectedDevice.type },
-                  ].map(({ label, value, color }) => (
-                    <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>{label}</span>
-                      <span style={{ color: color ?? 'var(--text-main)', fontWeight: 600 }}>{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                <button onClick={openEdit} style={{ flex: 1, padding: '0.6rem', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: 7, cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
-                  <Edit2 size={13} /> Edit
-                </button>
-                {selectedDevice.status !== 'MAINTENANCE' ? (
-                  <button onClick={() => handleStatusUpdate(selectedDevice.id, 'MAINTENANCE')} style={{ flex: 1, padding: '0.6rem', backgroundColor: 'rgba(245,158,11,0.1)', border: '1px solid var(--status-yellow)', color: 'var(--status-yellow)', borderRadius: 7, cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
-                    Maintenance
-                  </button>
-                ) : (
-                  <button onClick={() => handleStatusUpdate(selectedDevice.id, 'ONLINE')} style={{ flex: 1, padding: '0.6rem', backgroundColor: 'rgba(16,185,129,0.1)', border: '1px solid var(--status-green)', color: 'var(--status-green)', borderRadius: 7, cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
-                    Mark Online
-                  </button>
-                )}
-                <button onClick={() => handleDelete(selectedDevice.id)} style={{ flex: 1, padding: '0.6rem', backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid var(--status-red)', color: 'var(--status-red)', borderRadius: 7, cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 5 }}>
-                  <Trash2 size={13} /> Delete
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </main>
+
+      {/* Device detail modal */}
+      {selectedDevice && (
+        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }} onClick={() => setSelectedDevice(null)}>
+          <div className="glass-panel" style={{ width: 480, backgroundColor: 'var(--bg-panel)', display: 'flex', flexDirection: 'column', animation: 'slideIn 0.2s ease', maxHeight: '85vh', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            {/* Modal header */}
+            <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ padding: '0.55rem', backgroundColor: statusBg(selectedDevice.status), borderRadius: 8, border: `1px solid ${statusColor(selectedDevice.status)}` }}>
+                  <Cpu size={20} color={statusColor(selectedDevice.status)} />
+                </div>
+                <div>
+                  <h2 style={{ margin: '0 0 0.2rem 0', fontSize: '1.15rem', color: 'var(--text-main)', fontWeight: 700 }}>{selectedDevice.name || selectedDevice.id}</h2>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>ID: {selectedDevice.id}</span>
+                </div>
+              </div>
+              <button onClick={() => setSelectedDevice(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex', padding: 4 }}><X size={18} /></button>
+            </div>
+
+            {/* Modal body */}
+            <div style={{ padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Status badge */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.9rem 1rem', backgroundColor: 'var(--bg-dark)', borderRadius: 8, border: '1px solid var(--border-color)' }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>Status</span>
+                <span style={{ padding: '4px 12px', borderRadius: 20, fontSize: '0.75rem', fontWeight: 700, backgroundColor: statusBg(selectedDevice.status), color: statusColor(selectedDevice.status) }}>{selectedDevice.status}</span>
+              </div>
+
+              {/* Info grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                {[
+                  { icon: MapPin, label: 'Location', value: selectedDevice.location || 'Unassigned' },
+                  { icon: Clock, label: 'Uptime', value: `${calcUptime(selectedDevice.registeredAt)} hrs` },
+                  { icon: Cpu, label: 'Type', value: selectedDevice.type },
+                  { icon: selectedDevice.batteryLevel !== null && selectedDevice.batteryLevel <= 20 ? BatteryWarning : Battery, label: 'Power', value: selectedDevice.batteryLevel !== null ? `${selectedDevice.batteryLevel}%` : 'AC' },
+                ].map(({ icon: Icon, label, value }) => (
+                  <div key={label} style={{ padding: '0.9rem', backgroundColor: 'var(--bg-dark)', borderRadius: 8, border: '1px solid var(--border-color)' }}>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '0.35rem', display: 'flex', alignItems: 'center', gap: 4, textTransform: 'uppercase', fontWeight: 700 }}>
+                      <Icon size={11} /> {label}
+                    </div>
+                    <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: 600 }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Last seen */}
+              <div style={{ padding: '0.9rem 1rem', backgroundColor: 'var(--bg-dark)', borderRadius: 8, border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>Last Seen</span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-main)' }}>{selectedDevice.lastSeen || 'Never'}</span>
+              </div>
+
+              {/* Firmware */}
+              {selectedDevice.firmwareVersion && (
+                <div style={{ padding: '0.9rem 1rem', backgroundColor: 'var(--bg-dark)', borderRadius: 8, border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontWeight: 600 }}>Firmware</span>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-main)', fontFamily: 'monospace' }}>{selectedDevice.firmwareVersion}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Modal actions */}
+            <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.6rem' }}>
+              <button onClick={openEdit} style={{ flex: 1, padding: '0.65rem', backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+                <Edit2 size={14} /> Edit
+              </button>
+              {selectedDevice.status !== 'MAINTENANCE' ? (
+                <button onClick={() => handleStatusUpdate(selectedDevice.id, 'MAINTENANCE')} style={{ flex: 1, padding: '0.65rem', backgroundColor: 'rgba(245,158,11,0.1)', border: '1px solid var(--status-yellow)', color: 'var(--status-yellow)', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+                  <AlertTriangle size={14} /> Maintenance
+                </button>
+              ) : (
+                <button onClick={() => handleStatusUpdate(selectedDevice.id, 'ONLINE')} style={{ flex: 1, padding: '0.65rem', backgroundColor: 'rgba(16,185,129,0.1)', border: '1px solid var(--status-green)', color: 'var(--status-green)', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+                  <Wifi size={14} /> Mark Online
+                </button>
+              )}
+              <button onClick={() => handleDelete(selectedDevice.id)} style={{ flex: 1, padding: '0.65rem', backgroundColor: 'rgba(239,68,68,0.1)', border: '1px solid var(--status-red)', color: 'var(--status-red)', borderRadius: 8, cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
+                <Trash2 size={14} /> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add/Edit Modal */}
       {(showAddModal || showEditModal) && (

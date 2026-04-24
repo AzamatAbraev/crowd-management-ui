@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, BarChart3, Users, Building2, LayoutDashboard, ArrowRight } from 'lucide-react';
+import { ShieldCheck, LayoutDashboard, ArrowRight } from 'lucide-react';
 import '../../styles/dashboard.css';
 
 const LandingPage: React.FC = () => {
@@ -8,23 +8,23 @@ const LandingPage: React.FC = () => {
     window.location.href = "http://localhost:8082/oauth2/authorization/keycloak";
   };
 
-  const features = [
-    {
-      icon: <Users size={24} color="var(--primary-teal)" />,
-      title: 'Live Footfall',
-      desc: 'Real-time capacity tracking across every campus zone.',
-    },
-    {
-      icon: <Building2 size={24} color="var(--primary-teal)" />,
-      title: 'Floor Layouts',
-      desc: 'Room status mapped to architectural floor blueprints.',
-    },
-    {
-      icon: <BarChart3 size={24} color="var(--primary-teal)" />,
-      title: 'Deep Analytics',
-      desc: '90-day trends, building efficiency, and space utilisation.',
-    },
-  ];
+  // const features = [
+  //   {
+  //     icon: <Users size={24} color="var(--primary-teal)" />,
+  //     title: 'Live Footfall',
+  //     desc: 'Real-time capacity tracking across every campus zone.',
+  //   },
+  //   {
+  //     icon: <Building2 size={24} color="var(--primary-teal)" />,
+  //     title: 'Floor Layouts',
+  //     desc: 'Room status mapped to architectural floor blueprints.',
+  //   },
+  //   {
+  //     icon: <BarChart3 size={24} color="var(--primary-teal)" />,
+  //     title: 'Deep Analytics',
+  //     desc: '90-day trends, building efficiency, and space utilisation.',
+  //   },
+  // ];
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-base)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
@@ -120,7 +120,7 @@ const LandingPage: React.FC = () => {
           </button>
         </div>
 
-        <div style={{
+        {/* <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: 'var(--space-6)',
@@ -174,7 +174,7 @@ const LandingPage: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
       </main>
 
       <footer style={{

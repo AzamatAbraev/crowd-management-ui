@@ -17,7 +17,14 @@ import ViewerSchedulePage from './pages/live/ViewerSchedulePage';
 import FloorLayoutPage from './pages/dashboard/FloorLayoutPage';
 import GrafanaPage from './pages/dashboard/GrafanaPage';
 import NoticesPage from './pages/dashboard/NoticesPage';
+import NotFoundPage from './pages/NotFoundPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+
+const RequireAuth = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  return user ? children : <Navigate to="/404" replace />;
+};
 
 const RequireTheKing = ({ children }: { children: React.ReactNode }) => {
   const { isTheKing, loading } = useAuth();
@@ -50,9 +57,10 @@ const RequireManager = ({ children }: { children: React.ReactNode }) => {
 };
 
 const SmartRedirect = () => {
-  const { isAdmin, isManager, loading } = useAuth();
+  const { user, isAdmin, isManager, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
 
+  if (!user) return <Navigate to="/" replace />;
   if (isAdmin) return <Navigate to="/admin" replace />;
   if (isManager) return <Navigate to="/admin/overview" replace />;
   return <Navigate to="/live" replace />;
@@ -72,7 +80,7 @@ export default function App() {
           <Route path="/admin/grafana" element={<RequireAdmin><GrafanaPage /></RequireAdmin>} />
           <Route path="/admin/system" element={<RequireSystemAdmin><AdminSystemManagementPage /></RequireSystemAdmin>} />
           <Route path="/admin/users" element={<RequireTheKing><AdminUserManagementPage /></RequireTheKing>} />
-          <Route path="/live" element={<ViewerLayout />}>
+          <Route path="/live" element={<RequireAuth><ViewerLayout /></RequireAuth>}>
             <Route index element={<ViewerCampusMap />} />
             <Route path="building/:buildingId" element={<ViewerBuildingPlan />} />
             <Route path="area/:areaId" element={<ViewerAreaDetails />} />
@@ -82,6 +90,8 @@ export default function App() {
           <Route path="/admin/floor" element={<RequireManager><FloorLayoutPage /></RequireManager>} />
           <Route path="/admin/timetable" element={<RequireManager><TimetablePage /></RequireManager>} />
           <Route path="/admin/notices" element={<RequireManager><NoticesPage /></RequireManager>} />
+          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </AuthProvider>

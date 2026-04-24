@@ -1,17 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ShieldCheck, BarChart3, Users, Building2, LayoutDashboard, ArrowRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { api } from '../../server';
 import '../../styles/dashboard.css';
 
 const LandingPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    api.get('/people/count')
-      .then(() => navigate('/home'))
-      .catch(() => {});
-  }, [navigate]);
 
   const login = () => {
     window.location.href = "http://localhost:8082/oauth2/authorization/keycloak";

@@ -50,13 +50,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const response = await api.get('/user/me').catch(() => null);
         
-        if (response && response.data) {
-           setUser({
-               username: response.data.username || response.data.preferred_username || 'Unknown',
-               firstName: response.data.firstName || response.data.given_name || 'User',
-               lastName: response.data.lastName || response.data.family_name || '',
-               roles: response.data.roles || []
-           });
+        const d = response?.data;
+        const resolvedUsername = d?.username || d?.preferred_username;
+        if (d && typeof d === 'object' && resolvedUsername) {
+          setUser({
+            username: resolvedUsername,
+            firstName: d.firstName || d.given_name || '',
+            lastName: d.lastName || d.family_name || '',
+            roles: Array.isArray(d.roles) ? d.roles : [],
+          });
         }
       } catch (error) {
         console.error("Failed to fetch user context", error);

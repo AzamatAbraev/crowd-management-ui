@@ -47,6 +47,7 @@ const DEVICE_REGISTRY: Record<string, DeviceInfo> = {
   'esp8266_29': { building: 'SHB',         floor: 'floor_3', room: 'SHB304 CL', isLab: true },
   'esp8266_30': { building: 'SHB',         floor: 'floor_4', room: 'SHB408 CL', isLab: true },
   'esp8266_31': { building: 'SHB',         floor: 'floor_4', room: 'SHB404' },
+  'camera_01':  { building: 'library',     floor: 'floor_1', room: 'Entrance' },
 };
 
 const BUILDING_IOT_NAME: Record<string, string> = {

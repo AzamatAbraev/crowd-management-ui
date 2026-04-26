@@ -16,54 +16,55 @@ interface DeviceInfo {
 }
 
 const DEVICE_REGISTRY: Record<string, DeviceInfo> = {
-  'esp8266_01': { building: 'library',     floor: 'floor_1', room: '113' },
-  'esp8266_02': { building: 'library',     floor: 'floor_2', room: '' },
-  'esp8266_03': { building: 'ATB',         floor: 'floor_1', room: 'Canteen' },
-  'esp8266_04': { building: 'ATB',         floor: 'floor_2', room: 'Room 214' },
-  'esp8266_05': { building: 'ATB',         floor: 'floor_3', room: 'Room 311' },
-  'esp8266_06': { building: 'IB',          floor: 'floor_1', room: 'Canteen' },
-  'esp8266_07': { building: 'IB',          floor: 'floor_2', room: 'Room 214' },
-  'esp8266_08': { building: 'IB',          floor: 'floor_3', room: 'Room 311' },
-  'esp8266_09': { building: 'IB',          floor: 'floor_4', room: 'Room 311' },
-  'esp8266_10': { building: 'SHB',         floor: 'floor_1', room: 'Student Zone' },
-  'esp8266_11': { building: 'SHB',         floor: 'floor_2', room: 'Room 216' },
-  'esp8266_12': { building: 'SHB',         floor: 'floor_3', room: '' },
-  'esp8266_13': { building: 'SHB',         floor: 'floor_4', room: 'Room 406' },
+  'esp8266_01': { building: 'library', floor: 'floor_1', room: '113' },
+  'esp8266_02': { building: 'library', floor: 'floor_2', room: '' },
+  'esp8266_03': { building: 'ATB', floor: 'floor_1', room: 'Canteen' },
+  'esp8266_04': { building: 'ATB', floor: 'floor_2', room: 'Room 214' },
+  'esp8266_05': { building: 'ATB', floor: 'floor_3', room: 'Room 311' },
+  'esp8266_06': { building: 'IB', floor: 'floor_1', room: 'Canteen' },
+  'esp8266_07': { building: 'IB', floor: 'floor_2', room: 'Room 214' },
+  'esp8266_08': { building: 'IB', floor: 'floor_3', room: 'Room 311' },
+  'esp8266_09': { building: 'IB', floor: 'floor_4', room: 'Room 311' },
+  'esp8266_10': { building: 'SHB', floor: 'floor_1', room: 'Student Zone' },
+  'esp8266_11': { building: 'SHB', floor: 'floor_2', room: 'Room 216' },
+  'esp8266_12': { building: 'SHB', floor: 'floor_3', room: '' },
+  'esp8266_13': { building: 'SHB', floor: 'floor_4', room: 'Room 406' },
   'esp8266_14': { building: 'Sports Hall', floor: 'floor_1', room: '' },
   'esp8266_15': { building: 'Sports Hall', floor: 'floor_2', room: 'GYM' },
-  'esp8266_16': { building: 'Lyceum',      floor: 'floor_2', room: 'Lyceum Hall' },
-  'esp8266_17': { building: 'Lyceum',      floor: 'floor_1', room: 'Canteen' },
-  'esp8266_18': { building: 'ATB',         floor: 'floor_2', room: 'ATB212 CL', isLab: true },
-  'esp8266_19': { building: 'ATB',         floor: 'floor_2', room: 'ATB214 CL', isLab: true },
-  'esp8266_20': { building: 'ATB',         floor: 'floor_2', room: 'ATB207' },
-  'esp8266_21': { building: 'ATB',         floor: 'floor_3', room: 'ATB301' },
-  'esp8266_22': { building: 'ATB',         floor: 'floor_3', room: 'ATB306' },
-  'esp8266_23': { building: 'IB',          floor: 'floor_2', room: 'IB202 CL',  isLab: true },
-  'esp8266_24': { building: 'IB',          floor: 'floor_2', room: 'IB208 CL',  isLab: true },
-  'esp8266_25': { building: 'IB',          floor: 'floor_2', room: 'IB215 CL',  isLab: true },
-  'esp8266_26': { building: 'IB',          floor: 'floor_3', room: 'IB301' },
-  'esp8266_27': { building: 'IB',          floor: 'floor_3', room: 'IB311 CL',  isLab: true },
-  'esp8266_28': { building: 'SHB',         floor: 'floor_3', room: 'SHB303 CL', isLab: true },
-  'esp8266_29': { building: 'SHB',         floor: 'floor_3', room: 'SHB304 CL', isLab: true },
-  'esp8266_30': { building: 'SHB',         floor: 'floor_4', room: 'SHB408 CL', isLab: true },
-  'esp8266_31': { building: 'SHB',         floor: 'floor_4', room: 'SHB404' },
-  'camera_01':  { building: 'library',     floor: 'floor_1', room: 'Entrance' },
+  'esp8266_16': { building: 'Lyceum', floor: 'floor_2', room: 'Lyceum Hall' },
+  'esp8266_17': { building: 'Lyceum', floor: 'floor_1', room: 'Canteen' },
+  'esp8266_18': { building: 'ATB', floor: 'floor_2', room: 'ATB212 CL', isLab: true },
+  'esp8266_19': { building: 'ATB', floor: 'floor_2', room: 'ATB214 CL', isLab: true },
+  'esp8266_20': { building: 'ATB', floor: 'floor_2', room: 'ATB207' },
+  'esp8266_21': { building: 'ATB', floor: 'floor_3', room: 'ATB301' },
+  'esp8266_22': { building: 'ATB', floor: 'floor_3', room: 'ATB306' },
+  'esp8266_23': { building: 'IB', floor: 'floor_2', room: 'IB202 CL', isLab: true },
+  'esp8266_24': { building: 'IB', floor: 'floor_2', room: 'IB208 CL', isLab: true },
+  'esp8266_25': { building: 'IB', floor: 'floor_2', room: 'IB215 CL', isLab: true },
+  'esp8266_26': { building: 'IB', floor: 'floor_3', room: 'IB301' },
+  'esp8266_27': { building: 'IB', floor: 'floor_3', room: 'IB311 CL', isLab: true },
+  'esp8266_28': { building: 'SHB', floor: 'floor_3', room: 'SHB303 CL', isLab: true },
+  'esp8266_29': { building: 'SHB', floor: 'floor_3', room: 'SHB304 CL', isLab: true },
+  'esp8266_30': { building: 'SHB', floor: 'floor_4', room: 'SHB408 CL', isLab: true },
+  'esp8266_31': { building: 'SHB', floor: 'floor_4', room: 'SHB404' },
+  'camera_01': { building: 'library', floor: 'floor_1', room: 'Entrance' },
+  'esp8266_real_device': { building: 'library', floor: 'floor_1', room: 'meeting_room' },
 };
 
 const BUILDING_IOT_NAME: Record<string, string> = {
-  'bldg-lrc':    'library',
-  'bldg-atb':    'ATB',
-  'bldg-shb':    'SHB',
-  'bldg-ib':     'IB',
+  'bldg-lrc': 'library',
+  'bldg-atb': 'ATB',
+  'bldg-shb': 'SHB',
+  'bldg-ib': 'IB',
   'bldg-lyceum': 'Lyceum',
   'bldg-sports': 'Sports Hall',
 };
 
 const BUILDING_NAMES: Record<string, string> = {
-  'bldg-lrc':    'Learning Resource Center',
-  'bldg-atb':    'Amir Temur Building',
-  'bldg-shb':    'Shakhrisabz Building',
-  'bldg-ib':     'Istiqbol Building',
+  'bldg-lrc': 'Learning Resource Center',
+  'bldg-atb': 'Amir Temur Building',
+  'bldg-shb': 'Shakhrisabz Building',
+  'bldg-ib': 'Istiqbol Building',
   'bldg-lyceum': 'Lyceum',
   'bldg-sports': 'Sports Hall',
 };
@@ -72,7 +73,7 @@ const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frid
 const MAX_AREA_CAPACITY = 50;
 
 const formatFloor = (floor: string) => floor.replace('floor_', 'Floor ');
-const formatRoom  = (room: string)  => room.trim() === '' ? 'General Area' : room;
+const formatRoom = (room: string) => room.trim() === '' ? 'General Area' : room;
 
 const parseTimeMins = (t: string): number => {
   const [h, m] = t.split(':').map(Number);
@@ -87,8 +88,8 @@ const ViewerBuildingPlan: React.FC = () => {
   const navigate = useNavigate();
 
   const [deviceCounts, setDeviceCounts] = useState<Record<string, number>>({});
-  const [timetable, setTimetable]       = useState<TimetableEntry[]>([]);
-  const [loading, setLoading]           = useState(true);
+  const [timetable, setTimetable] = useState<TimetableEntry[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchCounts = async (): Promise<void> => {
     try {
@@ -125,7 +126,7 @@ const ViewerBuildingPlan: React.FC = () => {
     timetable.forEach(entry => {
       if (!entry.startTime || !entry.endTime || !entry.classroom) return;
       const start = parseTimeMins(entry.startTime);
-      const end   = parseTimeMins(entry.endTime);
+      const end = parseTimeMins(entry.endTime);
       if (nowMins >= start && nowMins < end) {
         map.set(normalizeClassroom(entry.classroom), entry);
       }
@@ -140,14 +141,14 @@ const ViewerBuildingPlan: React.FC = () => {
     return Object.entries(DEVICE_REGISTRY)
       .filter(([, info]) => info.building === iotBuilding)
       .map(([deviceId, info]) => {
-        const roomCode  = normalizeClassroom(info.room || '');
-        const booking   = roomCode ? bookedRooms.get(roomCode) : undefined;
+        const roomCode = normalizeClassroom(info.room || '');
+        const booking = roomCode ? bookedRooms.get(roomCode) : undefined;
         return {
           deviceId,
-          floor:   info.floor,
-          room:    info.room,
-          isLab:   info.isLab ?? false,
-          count:   Math.max(0, deviceCounts[deviceId] || 0),
+          floor: info.floor,
+          room: info.room,
+          isLab: info.isLab ?? false,
+          count: Math.max(0, deviceCounts[deviceId] || 0),
           booking,
         };
       })
@@ -249,9 +250,9 @@ const ViewerBuildingPlan: React.FC = () => {
               let percentage = Math.round((count / MAX_AREA_CAPACITY) * 100);
               if (percentage > 100) percentage = 100;
               const isCrowded = percentage > 85;
-              const isActive  = percentage > 50;
+              const isActive = percentage > 50;
               const indicatorColor = isCrowded ? 'var(--status-red)' : isActive ? 'var(--status-yellow)' : 'var(--primary-teal)';
-              const statusText     = isCrowded ? 'Crowded' : isActive ? 'Active' : 'Quiet';
+              const statusText = isCrowded ? 'Crowded' : isActive ? 'Active' : 'Quiet';
 
               return (
                 <div

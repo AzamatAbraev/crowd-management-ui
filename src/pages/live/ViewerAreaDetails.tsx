@@ -58,7 +58,6 @@ const ViewerAreaDetails: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
 
-      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1.5rem' }}>
         <button
           onClick={() => navigate(-1)}
@@ -76,7 +75,6 @@ const ViewerAreaDetails: React.FC = () => {
             </p>
           </div>
 
-          {/* Live Occupancy Badge */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', backgroundColor: 'var(--bg-panel)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Live Occupancy</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -89,13 +87,10 @@ const ViewerAreaDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Content Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
 
-        {/* Left Column: Stats + Chart */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
-          {/* Quick Stats Row */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             {[
               { label: 'Current Count', value: String(rawCount), icon: Activity, color: indicatorColor },
@@ -113,7 +108,6 @@ const ViewerAreaDetails: React.FC = () => {
             ))}
           </div>
 
-          {/* Hourly Occupancy Chart */}
           <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem' }}>
             <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '1rem' }}>Today's Occupancy Flow</div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '80px' }}>
@@ -129,7 +123,6 @@ const ViewerAreaDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Capacity progress */}
           <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Capacity Used</span>
@@ -142,7 +135,6 @@ const ViewerAreaDetails: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Column: Sensor Event Feed */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div style={{ backgroundColor: 'var(--bg-panel)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.25rem', flex: 1 }}>
             <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -164,7 +156,6 @@ const ViewerAreaDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Alerts panel */}
           <div style={{ backgroundColor: 'var(--bg-panel)', border: `1px solid ${isCrowded ? 'var(--status-red)' : 'var(--border-color)'}`, borderRadius: '12px', padding: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
               <AlertTriangle size={16} color={isCrowded ? 'var(--status-red)' : 'var(--text-muted)'} />

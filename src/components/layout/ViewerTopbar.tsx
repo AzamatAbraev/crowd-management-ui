@@ -9,7 +9,7 @@ const ViewerTopbar: React.FC = () => {
   const canManageNotices = isFacilityManager || isSystemAdmin || isTheKing;
 
   const handleLogout = () => {
-    fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => {});
+    fetch('http://localhost:3000/logout', { mode: 'no-cors', credentials: 'include' }).catch(() => { });
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = 'http://localhost:8082/logout';
@@ -78,7 +78,7 @@ const ViewerTopbar: React.FC = () => {
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         {canManageNotices && (
           <NavLink
-            to="/admin/notices"
+            to="/admin/"
             style={({ isActive }) => ({
               display: 'flex',
               alignItems: 'center',
@@ -93,7 +93,7 @@ const ViewerTopbar: React.FC = () => {
               transition: 'var(--transition-fast)',
             })}
           >
-            <Bell size={14} /> Manage Notices
+            <Bell size={14} /> Admin
           </NavLink>
         )}
 

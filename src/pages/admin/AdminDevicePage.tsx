@@ -23,7 +23,7 @@ const AdminDevicePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [formData, setFormData] = useState({ id: '', name: '', type: 'ULTRASONIC_SENSOR', location: '' });
+  const [formData, setFormData] = useState({ id: '', name: '', type: 'ULTRASONIC_SENSOR', site: 'main_campus', building: '', floor: '', room: '' });
 
   const fetchDevices = async () => {
     setLoading(true);
@@ -67,24 +67,27 @@ const AdminDevicePage: React.FC = () => {
     else alert('Failed to delete device');
   };
 
+  const buildLocation = () => [formData.building, formData.floor, formData.room].filter(Boolean).join(' / ');
+
   const handleAddSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const nd = await deviceService.createDevice({ id: formData.id, name: formData.name, type: formData.type, location: formData.location });
-    if (nd) { setDevices(p => [...p, nd]); setShowAddModal(false); setFormData({ id: '', name: '', type: 'ULTRASONIC_SENSOR', location: '' }); }
+    const nd = await deviceService.createDevice({ id: formData.id, name: formData.name, type: formData.type, location: buildLocation() });
+    if (nd) { setDevices(p => [...p, nd]); setShowAddModal(false); setFormData({ id: '', name: '', type: 'ULTRASONIC_SENSOR', site: 'main_campus', building: '', floor: '', room: '' }); }
     else alert('Failed to provision device. It may already exist.');
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDevice) return;
-    const ud = await deviceService.updateDevice(selectedDevice.id, { name: formData.name, type: formData.type as DeviceType, location: formData.location });
+    const ud = await deviceService.updateDevice(selectedDevice.id, { name: formData.name, type: formData.type as DeviceType, location: buildLocation() });
     if (ud) { setDevices(p => p.map(d => d.id === ud.id ? ud : d)); setSelectedDevice(ud); setShowEditModal(false); }
     else alert('Failed to update device.');
   };
 
   const openEdit = () => {
     if (!selectedDevice) return;
-    setFormData({ id: selectedDevice.id, name: selectedDevice.name || '', type: selectedDevice.type || 'ULTRASONIC_SENSOR', location: selectedDevice.location || '' });
+    const parts = (selectedDevice.location || '').split(' / ');
+    setFormData({ id: selectedDevice.id, name: selectedDevice.name || '', type: selectedDevice.type || 'ULTRASONIC_SENSOR', site: 'main_campus', building: parts[0] || '', floor: parts[1] || '', room: parts[2] || '' });
     setShowEditModal(true);
   };
 
@@ -111,7 +114,7 @@ const AdminDevicePage: React.FC = () => {
           <button onClick={fetchDevices} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.55rem 1rem', borderRadius: 8, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)', color: 'var(--text-main)', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem' }}>
             <RefreshCw size={14} /> Refresh
           </button>
-          <button onClick={() => { setFormData({ id: '', name: '', type: 'ULTRASONIC_SENSOR', location: '' }); setShowAddModal(true); }}
+          <button onClick={() => { setFormData({ id: '', name: '', type: 'ULTRASONIC_SENSOR', site: 'main_campus', building: '', floor: '', room: '' }); setShowAddModal(true); }}
             style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '0.55rem 1.1rem', borderRadius: 8, border: 'none', backgroundColor: 'var(--primary-teal)', color: '#fff', cursor: 'pointer', fontWeight: 700, fontSize: '0.875rem' }}>
             <Plus size={14} /> Add Device
           </button>
@@ -308,12 +311,32 @@ const AdminDevicePage: React.FC = () => {
                 </select>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Location (Building)</label>
-                <select required value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })}
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Site</label>
+                <input value={formData.site} onChange={e => setFormData({ ...formData, site: e.target.value })}
+                  placeholder="e.g. main_campus"
+                  style={{ padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', outline: 'none' }} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Building</label>
+                <select required value={formData.building} onChange={e => setFormData({ ...formData, building: e.target.value })}
                   style={{ padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', outline: 'none' }}>
                   <option value="" disabled>Select a building</option>
-                  {buildings.map(b => <option key={b.id} value={b.id}>{b.name} ({b.id})</option>)}
+                  {buildings.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                 </select>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Floor</label>
+                  <input value={formData.floor} onChange={e => setFormData({ ...formData, floor: e.target.value })}
+                    placeholder="e.g. floor_1"
+                    style={{ padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
+                </div>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  <label style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Room</label>
+                  <input value={formData.room} onChange={e => setFormData({ ...formData, room: e.target.value })}
+                    placeholder="e.g. meeting_room"
+                    style={{ padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
+                </div>
               </div>
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
                 <button type="button" onClick={() => { setShowAddModal(false); setShowEditModal(false); }} style={{ flex: 1, padding: '0.6rem', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: 7, cursor: 'pointer', fontWeight: 600 }}>Cancel</button>

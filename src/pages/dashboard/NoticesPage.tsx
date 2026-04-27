@@ -11,6 +11,7 @@ import {
   RefreshCw,
   X,
   ChevronLeft,
+
 } from 'lucide-react';
 import { noticeService } from '../../services/noticeService';
 import { buildingService } from '../../services/buildingService';
@@ -79,11 +80,6 @@ const NoticesPage: React.FC = () => {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const handleResolve = async (id: string) => {
-    await noticeService.resolveNotice(id);
-    await fetchNotices();
   };
 
   const handleDelete = async (id: string) => {
@@ -238,22 +234,6 @@ const NoticesPage: React.FC = () => {
                       {isAdmin && (
                         <td style={{ padding: '0.85rem 1.25rem' }}>
                           <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            {notice.active && (
-                              <button
-                                onClick={() => handleResolve(notice.id)}
-                                title="Mark as resolved"
-                                style={{
-                                  display: 'flex', alignItems: 'center', gap: '4px',
-                                  padding: '4px 8px', borderRadius: 6,
-                                  border: '1px solid var(--status-green)',
-                                  backgroundColor: 'var(--status-green-tint)',
-                                  color: 'var(--status-green)', fontSize: '0.75rem',
-                                  fontWeight: 600, cursor: 'pointer',
-                                }}
-                              >
-                                <CheckCircle size={11} /> Resolve
-                              </button>
-                            )}
                             <button
                               onClick={() => handleDelete(notice.id)}
                               title="Delete notice"

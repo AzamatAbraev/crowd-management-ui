@@ -28,11 +28,6 @@ export const noticeService = {
     return response.data.data;
   },
 
-  resolveNotice: async (id: string): Promise<RoomNotice> => {
-    const response = await api.patch<ApiResponse<RoomNotice>>(`/notices/${id}/resolve`);
-    return response.data.data;
-  },
-
   deleteNotice: async (id: string): Promise<void> => {
     await api.delete(`/notices/${id}`);
   },

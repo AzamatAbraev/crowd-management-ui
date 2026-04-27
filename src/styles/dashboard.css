@@ -1,14 +1,6 @@
-/* ============================================================
-   DESIGN EXCELLENCE SYSTEM — Palantir Campus Management
-   Tokens, Typography, Elevation, Animations, Base Styles
-   ============================================================ */
-
-/* ── Google Fonts ─────────────────────────────────────────── */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-/* ── Light Mode Design Tokens ─────────────────────────────── */
 :root {
-  /* Spatial / 8pt Grid Scale */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -20,14 +12,14 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  --bg-base: #edeef0; /* Page background — cool warm-gray */
-  --bg-dark: #edeef0; /* alias kept for compatibility */
-  --bg-panel: #fafafa; /* Content surface / cards */
-  --bg-panel-hover: #f2f3f5; /* Hovered panel state */
-  --bg-panel-active: #e8e9ec; /* Pressed / active panel */
-  --bg-overlay: #ffffff; /* Modals, dropdowns (highest) */
+  --bg-base: #edeef0;
+  --bg-dark: #edeef0;
+  --bg-panel: #fafafa;
+  --bg-panel-hover: #f2f3f5;
+  --bg-panel-active: #e8e9ec;
+  --bg-overlay: #ffffff;
 
-  --primary-teal: #1c1c1e; /* near-black with cool undertone */
+  --primary-teal: #1c1c1e;
   --primary-teal-hover: #2d2d30;
   --primary-teal-dark: #111113;
   --primary-teal-transparent: rgba(28, 28, 30, 0.07);
@@ -37,10 +29,10 @@
   --border-strong: #c4c5cb;
   --border-focus: var(--primary-teal);
 
-  --text-main: #111113; /* Near-black — never pure black */
-  --text-secondary: #3a3a3c; /* Dark gray */
-  --text-muted: #636366; /* Mid gray */
-  --text-placeholder: #aeaeb2; /* Placeholder */
+  --text-main: #111113;
+  --text-secondary: #3a3a3c;
+  --text-muted: #636366;
+  --text-placeholder: #aeaeb2;
 
   --status-red: #d93025;
   --status-red-tint: rgba(217, 48, 37, 0.09);

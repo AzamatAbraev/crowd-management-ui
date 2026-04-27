@@ -209,9 +209,7 @@ const ViewerBuildingPlan: React.FC = () => {
                       overflow: 'hidden',
                     }}
                   >
-                    <div style={{ position: 'absolute', top: 0, right: 0, width: '60px', height: '60px', background: 'repeating-linear-gradient(-45deg, var(--status-amber) 0px, var(--status-amber) 2px, transparent 2px, transparent 8px)', opacity: 0.15, borderRadius: '0 12px 0 0' }} />
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
                         <div style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)' }}>
                           {formatRoom(room)}

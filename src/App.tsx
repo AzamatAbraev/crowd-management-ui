@@ -14,7 +14,6 @@ import ViewerCampusMap from './pages/live/ViewerCampusMap';
 import ViewerBuildingPlan from './pages/live/ViewerBuildingPlan';
 import ViewerAreaDetails from './pages/live/ViewerAreaDetails';
 import ViewerSchedulePage from './pages/live/ViewerSchedulePage';
-import FloorLayoutPage from './pages/dashboard/FloorLayoutPage';
 import GrafanaPage from './pages/dashboard/GrafanaPage';
 import NoticesPage from './pages/dashboard/NoticesPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -87,7 +86,6 @@ export default function App() {
             <Route path="schedule" element={<ViewerSchedulePage />} />
           </Route>
           <Route path="/admin/overview" element={<RequireManager><OverviewPage /></RequireManager>} />
-          <Route path="/admin/floor" element={<RequireManager><FloorLayoutPage /></RequireManager>} />
           <Route path="/admin/timetable" element={<RequireManager><TimetablePage /></RequireManager>} />
           <Route path="/admin/notices" element={<RequireManager><NoticesPage /></RequireManager>} />
           <Route path="/404" element={<NotFoundPage />} />

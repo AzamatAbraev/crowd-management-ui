@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
-  Building2,
   BarChart3,
   Radio,
   BellRing,
@@ -26,7 +25,6 @@ const Sidebar: React.FC = () => {
 
   const navItems: NavItem[] = [
     { name: 'Live Overview', path: '/admin/overview', icon: LayoutDashboard, roles: ['view-occupancy'] },
-    { name: 'Floor Layout', path: '/admin/floor', icon: Building2, roles: ['view-buildings'] },
     { name: 'Timetable', path: '/admin/timetable', icon: CalendarRange, roles: ['view-timetable'] },
     { name: 'Historical Analytics', path: '/admin/analytics', icon: BarChart3, roles: ['view-occupancy'] },
     { name: 'Sensors', path: '/admin/sensors', icon: Radio, roles: ['view-devices'] },

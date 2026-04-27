@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity, Building2, CalendarRange, BellRing, Map } from 'lucide-react';
+import { Cpu, Settings, LogOut, ShieldCheck, Users, BarChart2, Radio, Activity, CalendarRange, BellRing, Map } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
@@ -23,14 +23,6 @@ const ALL_SECTIONS: SectionDef[] = [
     icon: <Radio size={32} />,
     accentColor: 'var(--status-blue)',
     route: '/admin/monitor',
-  },
-  {
-    id: 'floor',
-    label: 'Floor Layout',
-    description: 'Visual floor plans with per-room occupancy percentages.',
-    icon: <Building2 size={32} />,
-    accentColor: 'var(--primary-teal)',
-    route: '/admin/floor',
   },
   {
     id: 'timetable',

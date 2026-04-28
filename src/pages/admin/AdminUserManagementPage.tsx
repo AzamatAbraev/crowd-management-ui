@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Users, Search, Plus, Edit2, Trash2, ShieldCheck, ShieldOff,
-  Key, Tag, X, ChevronLeft, CheckCircle, AlertCircle, Loader,
+  Key, X, ChevronLeft, CheckCircle, AlertCircle, Loader,
   Mail, User, ChevronRight,
 } from 'lucide-react';
 import { userManagementService, type KeycloakUser, type CreateUserPayload } from '../../services/userManagementService';
@@ -73,11 +73,10 @@ interface DetailPanelProps {
   onDelete: () => void;
   onToggleEnabled: () => void;
   onResetPassword: () => void;
-  onManageRoles: () => void;
 }
 
 const UserDetailPanel: React.FC<DetailPanelProps> = ({
-  user, currentUsername, onClose, onEdit, onDelete, onToggleEnabled, onResetPassword, onManageRoles,
+  user, currentUsername, onClose, onEdit, onDelete, onToggleEnabled, onResetPassword,
 }) => {
   const visibleRoles = (user.roles ?? []).filter(r => !SYSTEM_ROLES.includes(r));
   const isSelf = user.username === currentUsername;
@@ -161,9 +160,8 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
       <div style={{ padding: '1.25rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: 8 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
           <ActionBtn color="#3b82f6" icon={<Edit2 size={14} />} label="Edit Profile" onClick={onEdit} />
-          <ActionBtn color="#8a9eff" icon={<Tag size={14} />} label="Manage Roles" onClick={onManageRoles} />
           <ActionBtn color="#f59e0b" icon={<Key size={14} />} label="Reset Password" onClick={onResetPassword} />
-          <ActionBtn color={user.enabled ? '#ef4444' : '#10b981'} icon={user.enabled ? <ShieldOff size={14} /> : <ShieldCheck size={14} />} label={user.enabled ? 'Disable' : 'Enable'} onClick={onToggleEnabled} />
+          <ActionBtn color={user.enabled ? '#ef4444' : '#10b981'} icon={user.enabled ? <ShieldOff size={14} /> : <ShieldCheck size={14} />} label={user.enabled ? 'Disable' : 'Enable'} onClick={onToggleEnabled} fullWidth />
         </div>
         {!isSelf && (
           <ActionBtn color="#ef4444" icon={<Trash2 size={14} />} label="Delete User" onClick={onDelete} fullWidth />
@@ -173,7 +171,7 @@ const UserDetailPanel: React.FC<DetailPanelProps> = ({
   );
 };
 
-type ModalMode = 'create' | 'edit' | 'password' | 'roles' | null;
+type ModalMode = 'create' | 'edit' | 'password' | null;
 
 const AdminUserManagementPage: React.FC = () => {
   const navigate = useNavigate();
@@ -182,8 +180,6 @@ const AdminUserManagementPage: React.FC = () => {
   const [users, setUsers] = useState<KeycloakUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [allRoles, setAllRoles] = useState<string[]>([]);
-
   const [selectedUser, setSelectedUser] = useState<KeycloakUser | null>(null);
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
@@ -191,7 +187,6 @@ const AdminUserManagementPage: React.FC = () => {
 
   const [formData, setFormData] = useState({ username: '', firstName: '', lastName: '', email: '', password: '', temporaryPassword: true });
   const [pwdData, setPwdData] = useState({ newPassword: '', temporary: true });
-  const [userRoles, setUserRoles] = useState<string[]>([]);
 
   const showToast = (message: string, type: ToastType) => {
     setToast({ message, type });
@@ -211,7 +206,6 @@ const AdminUserManagementPage: React.FC = () => {
   }, [searchQuery]);
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
-  useEffect(() => { userManagementService.getAllRealmRoles().then(setAllRoles).catch(() => { }); }, []);
 
   const openPanel = (u: KeycloakUser) => setSelectedUser(u);
   const closePanel = () => setSelectedUser(null);
@@ -231,16 +225,7 @@ const AdminUserManagementPage: React.FC = () => {
 
   const openPassword = () => { setPwdData({ newPassword: '', temporary: true }); setModalMode('password'); };
 
-  const openRoles = async () => {
-    if (!selectedUser) return;
-    setModalMode('roles');
-    try {
-      const roles = await userManagementService.getUserRoles(selectedUser.id);
-      setUserRoles(roles);
-    } catch { showToast('Failed to fetch roles', 'error'); }
-  };
-
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleCreate = async (e: React.SubmitEvent) => {
     e.preventDefault(); setSaving(true);
     try {
       await userManagementService.createUser(formData as CreateUserPayload);
@@ -250,7 +235,7 @@ const AdminUserManagementPage: React.FC = () => {
     } finally { setSaving(false); }
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.SubmitEvent) => {
     e.preventDefault(); if (!selectedUser) return; setSaving(true);
     try {
       await userManagementService.updateUser(selectedUser.id, { firstName: formData.firstName, lastName: formData.lastName, email: formData.email });
@@ -276,30 +261,12 @@ const AdminUserManagementPage: React.FC = () => {
     } catch { showToast('Failed to update status', 'error'); }
   };
 
-  const handleResetPassword = async (e: React.FormEvent) => {
+  const handleResetPassword = async (e: React.SubmitEvent) => {
     e.preventDefault(); if (!selectedUser) return; setSaving(true);
     try {
       await userManagementService.resetPassword(selectedUser.id, pwdData);
       showToast('Password reset', 'success'); closeModal();
     } catch { showToast('Failed to reset password', 'error'); } finally { setSaving(false); }
-  };
-
-  const handleAssignRole = async (roleName: string) => {
-    if (!selectedUser || userRoles.includes(roleName)) return;
-    try {
-      await userManagementService.assignRole(selectedUser.id, roleName);
-      setUserRoles(p => [...p, roleName]);
-      showToast(`Role "${roleName}" assigned`, 'success');
-    } catch { showToast('Failed to assign role', 'error'); }
-  };
-
-  const handleRemoveRole = async (roleName: string) => {
-    if (!selectedUser) return;
-    try {
-      await userManagementService.removeRole(selectedUser.id, roleName);
-      setUserRoles(p => p.filter(r => r !== roleName));
-      showToast(`Role "${roleName}" removed`, 'success');
-    } catch { showToast('Failed to remove role', 'error'); }
   };
 
   return (
@@ -431,7 +398,6 @@ const AdminUserManagementPage: React.FC = () => {
           onDelete={handleDelete}
           onToggleEnabled={handleToggleEnabled}
           onResetPassword={openPassword}
-          onManageRoles={openRoles}
         />
       )}
 
@@ -493,39 +459,6 @@ const AdminUserManagementPage: React.FC = () => {
               </button>
             </div>
           </form>
-        </Modal>
-      )}
-
-      {modalMode === 'roles' && selectedUser && (
-        <Modal title={`Roles — ${selectedUser.username}`} onClose={closeModal}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-            <div>
-              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.6rem' }}>Current Roles</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {userRoles.filter(r => !SYSTEM_ROLES.includes(r)).length === 0
-                  ? <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No custom roles assigned</span>
-                  : userRoles.filter(r => !SYSTEM_ROLES.includes(r)).map(r => (
-                    <span key={r} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, fontSize: '0.8rem', fontWeight: 600, backgroundColor: 'var(--primary-teal-transparent)', color: 'var(--primary-teal)' }}>
-                      {r}
-                      <button onClick={() => handleRemoveRole(r)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-teal)', display: 'flex', padding: 0 }}><X size={12} /></button>
-                    </span>
-                  ))
-                }
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.6rem' }}>Available Roles</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {allRoles.filter(r => !SYSTEM_ROLES.includes(r) && !userRoles.includes(r)).map(r => (
-                  <button key={r} onClick={() => handleAssignRole(r)} style={{ padding: '4px 12px', borderRadius: 20, fontSize: '0.8rem', fontWeight: 600, border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-muted)', cursor: 'pointer', transition: 'all 0.2s' }}
-                    onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary-teal)'; e.currentTarget.style.color = 'var(--primary-teal)'; }}
-                    onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'var(--text-muted)'; }}>
-                    + {r}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
         </Modal>
       )}
 

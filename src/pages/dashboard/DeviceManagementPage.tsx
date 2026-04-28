@@ -112,7 +112,7 @@ const DeviceManagementPage: React.FC = () => {
     }
   };
 
-  const handleAddSubmit = async (e: React.FormEvent) => {
+  const handleAddSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     const newDevice = await deviceService.createDevice({
       id: formData.id,
@@ -129,7 +129,7 @@ const DeviceManagementPage: React.FC = () => {
     }
   };
 
-  const handleEditSubmit = async (e: React.FormEvent) => {
+  const handleEditSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!selectedDevice) return;
     const updatedDevice = await deviceService.updateDevice(selectedDevice.id, {

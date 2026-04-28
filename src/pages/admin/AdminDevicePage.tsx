@@ -69,14 +69,14 @@ const AdminDevicePage: React.FC = () => {
 
   const buildLocation = () => [formData.building, formData.floor, formData.room].filter(Boolean).join(' / ');
 
-  const handleAddSubmit = async (e: React.FormEvent) => {
+  const handleAddSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     const nd = await deviceService.createDevice({ id: formData.id, name: formData.name, type: formData.type, location: buildLocation() });
     if (nd) { setDevices(p => [...p, nd]); setShowAddModal(false); setFormData({ id: '', name: '', type: 'ULTRASONIC_SENSOR', site: 'main_campus', building: '', floor: '', room: '' }); }
     else alert('Failed to provision device. It may already exist.');
   };
 
-  const handleEditSubmit = async (e: React.FormEvent) => {
+  const handleEditSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!selectedDevice) return;
     const ud = await deviceService.updateDevice(selectedDevice.id, { name: formData.name, type: formData.type as DeviceType, location: buildLocation() });

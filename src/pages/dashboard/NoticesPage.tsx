@@ -21,10 +21,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import '../../styles/dashboard.css';
 
 const TYPE_CONFIG: Record<NoticeType, { color: string; bg: string; Icon: React.ElementType; label: string }> = {
-  CLOSURE:     { color: 'var(--status-red)',    bg: 'var(--status-red-tint)',    Icon: AlertCircle,   label: 'Closed' },
+  CLOSURE: { color: 'var(--status-red)', bg: 'var(--status-red-tint)', Icon: AlertCircle, label: 'Closed' },
   UNAVAILABLE: { color: 'var(--status-yellow)', bg: 'var(--status-yellow-tint)', Icon: AlertTriangle, label: 'Unavailable' },
-  MAINTENANCE: { color: 'var(--status-amber)',  bg: 'var(--status-amber-tint)',  Icon: Wrench,        label: 'Maintenance' },
-  RESTORED:    { color: 'var(--status-green)',  bg: 'var(--status-green-tint)',  Icon: CheckCircle,   label: 'Restored' },
+  MAINTENANCE: { color: 'var(--status-amber)', bg: 'var(--status-amber-tint)', Icon: Wrench, label: 'Maintenance' },
+  RESTORED: { color: 'var(--status-green)', bg: 'var(--status-green-tint)', Icon: CheckCircle, label: 'Restored' },
 };
 
 const EMPTY_FORM: CreateNoticeRequest = {
@@ -305,15 +305,15 @@ const NoticesPage: React.FC = () => {
                     style={{ padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none' }}
                   />
                 </div>
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+                <div style={{ flex: 1, display: 'flex', minWidth: '0', flexDirection: 'column', gap: 5 }}>
                   <label style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Building</label>
                   <select
                     value={form.buildingId}
                     onChange={e => setForm(f => ({ ...f, buildingId: e.target.value }))}
-                    style={{ padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none' }}
+                    style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: 7, border: '1px solid var(--border-color)', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', fontSize: '0.875rem', outline: 'none' }}
                   >
                     <option value="">— Select building —</option>
-                    {buildings.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    {buildings.map(b => <option key={b.id} value={b.id}>{b.id}</option>)}
                   </select>
                 </div>
               </div>

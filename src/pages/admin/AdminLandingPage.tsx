@@ -105,7 +105,7 @@ const AdminLandingPage: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-base)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
 
-      {/* ── Topbar ──────────────────────────────────────────────── */}
+      {/*Topbar*/}
       <nav style={{
         height: 'var(--topbar-height)',
         padding: '0 var(--space-10)',
@@ -167,7 +167,7 @@ const AdminLandingPage: React.FC = () => {
         </div>
       </nav>
 
-      {/* ── Main ────────────────────────────────────────────────── */}
+      {/* Main*/}
       <main style={{
         flex: 1,
         display: 'flex',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, LayoutDashboard, ArrowRight } from 'lucide-react';
+import { ShieldCheck, ArrowRight, LayoutDashboard } from 'lucide-react';
 import '../../styles/dashboard.css';
 
 const LandingPage: React.FC = () => {

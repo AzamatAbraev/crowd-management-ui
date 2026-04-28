@@ -9,7 +9,6 @@ import AdminDevicePage from './pages/admin/AdminDevicePage';
 import AdminSystemManagementPage from './pages/admin/AdminSystemManagementPage';
 import AdminStatisticsPage from './pages/admin/AdminStatisticsPage';
 import AdminLiveMonitorPage from './pages/admin/AdminLiveMonitorPage';
-import OverviewPage from './pages/dashboard/OverviewPage';
 import ViewerCampusMap from './pages/live/ViewerCampusMap';
 import ViewerBuildingPlan from './pages/live/ViewerBuildingPlan';
 import ViewerAreaDetails from './pages/live/ViewerAreaDetails';
@@ -85,7 +84,6 @@ export default function App() {
             <Route path="area/:areaId" element={<ViewerAreaDetails />} />
             <Route path="schedule" element={<ViewerSchedulePage />} />
           </Route>
-          <Route path="/admin/overview" element={<RequireManager><OverviewPage /></RequireManager>} />
           <Route path="/admin/timetable" element={<RequireManager><TimetablePage /></RequireManager>} />
           <Route path="/admin/notices" element={<RequireManager><NoticesPage /></RequireManager>} />
           <Route path="/404" element={<NotFoundPage />} />

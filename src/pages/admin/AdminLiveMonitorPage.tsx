@@ -147,7 +147,7 @@ const AdminLiveMonitorPage: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-dark)', color: 'var(--text-main)', display: 'flex', flexDirection: 'column' }}>
 
-      {/* ── Topbar ─────────────────────────────────────────────────────────── */}
+      {/* Topbar */}
       <nav style={{ padding: '1.1rem 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-panel)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <button onClick={() => navigate('/admin')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600 }}>
@@ -166,7 +166,7 @@ const AdminLiveMonitorPage: React.FC = () => {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-          {/* API status pill */}
+          {/* API status */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 12px', borderRadius: 20, backgroundColor: statusColor + '18', border: `1px solid ${statusColor}44`, fontSize: '0.8rem', fontWeight: 700, color: statusColor }}>
             <div style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: statusColor, animation: apiStatus === 'live' ? 'pulse 1.5s infinite' : 'none' }} />
             {apiStatus === 'live' ? `Live · ${lastUpdated}` : apiStatus === 'error' ? 'API Error' : 'Connecting…'}
